@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.mapper.tk.ScheduleLogMapper">
+
+    <resultMap id="BaseResultMap" type="com.zdx.entity.tk.ScheduleLog">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="status" column="status" jdbcType="BIT"/>
+            <result property="startTime" column="start_time" jdbcType="TIMESTAMP"/>
+            <result property="oldTime" column="old_time" jdbcType="TIMESTAMP"/>
+            <result property="exceptionInfo" column="exception_info" jdbcType="VARCHAR"/>
+            <result property="jobId" column="job_id" jdbcType="BIGINT"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,status,
+        start_time,old_time,exception_info,
+        job_id
+    </sql>
+</mapper>

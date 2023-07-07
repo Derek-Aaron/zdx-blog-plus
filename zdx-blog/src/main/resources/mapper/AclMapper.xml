@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.mapper.us.AclMapper">
+
+    <resultMap id="BaseResultMap" type="com.zdx.entity.us.Acl">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="subject" column="subject" jdbcType="VARCHAR"/>
+            <result property="resource" column="resource" jdbcType="VARCHAR"/>
+            <result property="params" column="params" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,subject,resource,
+        params,description
+    </sql>
+</mapper>

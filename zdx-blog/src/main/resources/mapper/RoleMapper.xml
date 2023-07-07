@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zdx.mapper.us.RoleMapper">
+
+    <resultMap id="BaseResultMap" type="com.zdx.entity.us.Role">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="display" column="display" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        id,name,display,
+        description
+    </sql>
+    <select id="getRolesByUserId" resultType="com.zdx.entity.us.Role">
+        select r.* from us_role r left join us_role_user ru on r.id = ru.role_id  where ru.user_id = #{userId}
+    </select>
+</mapper>
