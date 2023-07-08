@@ -23,3 +23,11 @@ export const resetPassword =  (data) => {
         data: data
     })
 }
+
+export const updateUserStatus = (data) => {
+    return request({
+        url:'/zdx.user/updateUserStatus',
+        method:'post',
+        data: data
+    })
+}

@@ -1,10 +1,13 @@
 package com.zdx;
 
+import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
+import com.zdx.enums.DictTypeEnum;
 import com.zdx.enums.GenderEnum;
 import com.zdx.enums.MenuTypeEnum;
+import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
@@ -59,6 +62,18 @@ class ZdxBlogApplicationTests {
         menu.setParentId(1676834060471316481L);
         menu.setParams("zdx:menu");
         menuService.saveOrUpdate(menu);
+    }
+
+    @Autowired
+    private DictService dictService;
+    @Test
+    public void addDict() {
+        Dict dict = new Dict();
+        dict.setName("性别");
+        dict.setKey("zdx-dict-gender");
+        dict.setType(DictTypeEnum.ENUMS.name());
+        dict.setInvoke("class:com.zdx.enums.GenderEnum");
+        dictService.saveDict(dict);
     }
 
 }

@@ -1,8 +1,10 @@
 package com.zdx.service.us.impl;
 
+import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.controller.dto.ResetPwd;
+import com.zdx.controller.dto.UserStatus;
 import com.zdx.entity.us.User;
 import com.zdx.mapper.us.UserMapper;
 import com.zdx.security.UserSessionFactory;
@@ -24,7 +26,24 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     public Boolean resetPwd(ResetPwd resetPwd) {
         LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(User::getPassword, resetPwd.getNewPassword());
-        updateWrapper.eq(User::getId, UserSessionFactory.getUserId());
+        if (ObjUtil.isNotNull(resetPwd.getUserId())) {
+            updateWrapper.eq(User::getId, resetPwd.getUserId());
+        } else {
+            updateWrapper.eq(User::getId, UserSessionFactory.getUserId());
+        }
+        return update(updateWrapper);
+    }
+
+    @Override
+    public Boolean updateUserStatus(UserStatus userStatus) {
+        LambdaUpdateWrapper<User> updateWrapper = new LambdaUpdateWrapper<>();
+        if (userStatus.getType().equals("disabled")) {
+            updateWrapper.set(User::getIsDisabled, userStatus.getIsDisabled());
+        }
+        if (userStatus.getType().equals("locked")) {
+            updateWrapper.set(User::getIsLocked, userStatus.getIsLocked());
+        }
+        updateWrapper.eq(User::getId, userStatus.getUserId());
         return update(updateWrapper);
     }
 }

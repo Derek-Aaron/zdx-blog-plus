@@ -1,6 +1,6 @@
-import useDictStore from '@/store/modules/dict'
-import { getDicts } from '@/api/system/dict/data'
-import {ref, toRefs} from "vue";
+import {useDictStore} from '@/stores/modules/useDictStore';
+import { getDicts } from '@/api/tk/dict'
+import { ref, toRefs } from "vue";
 
 /**
  * 获取字典数据
@@ -15,7 +15,7 @@ export function useDict(...args) {
         res.value[dictType] = dicts;
       } else {
         getDicts(dictType).then(resp => {
-          res.value[dictType] = resp.data.map(p => ({ label: p.dictLabel, value: p.dictValue, elTagType: p.listClass, elTagClass: p.cssClass }))
+          res.value[dictType] = resp.data.data
           useDictStore().setDict(dictType, res.value[dictType]);
         })
       }

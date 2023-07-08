@@ -3,6 +3,7 @@ package com.zdx.entity.us;
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -21,6 +22,7 @@ public class User extends BaseTimeEntity {
 
     private String username;
 
+    @JsonIgnore
     private String password;
 
     private String nickname;

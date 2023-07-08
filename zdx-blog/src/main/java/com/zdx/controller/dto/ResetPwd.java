@@ -11,6 +11,9 @@ import javax.validation.constraints.NotBlank;
 @ApiModel("重置密码")
 public class ResetPwd {
 
+    @ApiModelProperty("用户id")
+    private Long userId;
+
     @ApiModelProperty("老密码")
     private String oldPassword;
 

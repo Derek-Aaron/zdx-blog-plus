@@ -1,6 +1,7 @@
 package com.zdx.service.us;
 
 import com.zdx.controller.dto.ResetPwd;
+import com.zdx.controller.dto.UserStatus;
 import com.zdx.entity.us.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,4 +19,6 @@ public interface UserService extends IService<User> {
      * @return 返回
      */
     Boolean resetPwd(ResetPwd resetPwd);
+
+    Boolean updateUserStatus(UserStatus userStatus);
 }

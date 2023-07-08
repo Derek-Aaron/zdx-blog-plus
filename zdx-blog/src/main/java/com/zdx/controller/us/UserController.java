@@ -4,8 +4,13 @@ package com.zdx.controller.us;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.controller.BaseController;
+import com.zdx.controller.dto.RequestParams;
 import com.zdx.controller.dto.ResetPwd;
+import com.zdx.controller.dto.UserStatus;
 import com.zdx.controller.vo.UserProfile;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
@@ -31,13 +36,29 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Validated
 @Api("用户管理")
-public class UserController {
+public class UserController extends BaseController<User> {
 
     private final UserService userService;
 
     private final ApplicationContext applicationContext;
 
     private final PasswordEncoder passwordEncoder;
+
+    @Override
+    public IService<User> getService() {
+        return userService;
+    }
+
+    @Override
+    public Wrapper<User> getQueryWrapper(RequestParams params) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(params.hasParam("username"), User::getUsername, params.getParam("username"));
+        queryWrapper.like(params.hasParam("nickname"), User::getUsername, params.getParam("nickname"));
+        queryWrapper.like(params.hasParam("email"), User::getUsername, params.getParam("email"));
+        queryWrapper.like(params.hasParam("mobile"), User::getUsername, params.getParam("mobile"));
+        queryWrapper.eq(params.hasParam("personId"), User::getUsername, params.getParam("personId"));
+        return queryWrapper;
+    }
 
 
     @GetMapping("/profile")
@@ -83,5 +104,10 @@ public class UserController {
             return Result.success();
         }
         return Result.error();
+    }
+
+    @PostMapping("/updateUserStatus")
+    public Result<String> updateUserStatus(@RequestBody @Validated UserStatus userStatus) {
+        return userService.updateUserStatus(userStatus) ? Result.success() : Result.error();
     }
 }

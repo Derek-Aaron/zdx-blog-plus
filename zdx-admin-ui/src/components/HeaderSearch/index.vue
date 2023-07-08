@@ -1,6 +1,6 @@
 <template>
   <div :class="{ 'show': show }" class="header-search">
-    <el-icon @click="click"><Search /></el-icon>
+    <svg-icon class-name="search-icon" icon-class="search" @click.stop="click" />
     <el-select
         ref="headerSearchSelectRef"
         v-model="search"
@@ -8,7 +8,7 @@
         filterable
         default-first-option
         remote
-        placeholder="Search"
+        placeholder="请输入"
         class="header-search-select"
         @change="change"
     >
