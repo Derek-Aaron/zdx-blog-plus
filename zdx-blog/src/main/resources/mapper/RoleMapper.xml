@@ -15,6 +15,20 @@
         id,name,display,
         description
     </sql>
+    <insert id="addResources">
+        insert into us_user_roles(user_id,role_id) values
+        <foreach collection="resources" item="item" separator=",">
+            (#{subject},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="delResources">
+        delete from us_role_user where user_id = #{subject} and role_id in
+        <foreach collection="resources" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+
     <select id="getRolesByUserId" resultType="com.zdx.entity.us.Role">
         select r.* from us_role r left join us_role_user ru on r.id = ru.role_id  where ru.user_id = #{userId}
     </select>

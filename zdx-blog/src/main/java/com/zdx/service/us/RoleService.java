@@ -1,5 +1,6 @@
 package com.zdx.service.us;
 
+import com.zdx.controller.dto.AclDto;
 import com.zdx.entity.us.Role;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -18,4 +19,6 @@ public interface RoleService extends IService<Role> {
      * @return 角色
      */
     List<Role> getRolesByUserId(Long userId);
+
+    Boolean addOrDelResources(AclDto aclDto);
 }

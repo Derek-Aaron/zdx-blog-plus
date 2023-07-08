@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Component
 @RequiredArgsConstructor
-public class RefreshLoginTokenCacheHandle implements EventHandle {
+public class RefreshLoginTokenCacheEvent implements EventHandle {
 
     private final CacheTemplate<String, Object> cacheTemplate;
     @Override
@@ -26,7 +26,7 @@ public class RefreshLoginTokenCacheHandle implements EventHandle {
     @Override
     public void invokeEvent(EventObject event) {
         UserProfile userProfile = event.getSource(UserProfile.class);
-        UserPrincipal userSession = event.getAttribute("userSession", UserPrincipal.class);
+        UserPrincipal userSession = event.getAttribute(EventObject.Attribute.USER_SESSION, UserPrincipal.class);
         if (ObjUtil.isNotNull(userProfile) && ObjUtil.isNotNull(userSession)) {
             userSession.getUser().setNickname(userProfile.getNickname());
             userSession.getUser().setMobile(userProfile.getMobile());

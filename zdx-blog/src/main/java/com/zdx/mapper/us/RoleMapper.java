@@ -20,6 +20,23 @@ public interface RoleMapper extends BaseMapper<Role> {
      * @return 角色
      */
     List<Role> getRolesByUserId(@Param("userId") Long userId);
+
+    /**
+     * 删除角色
+     * @param subject 主体
+     * @param resources 资源
+     * @return 返回
+     */
+    Boolean delResources(@Param("subject") String subject, @Param("resources") List<String> resources);
+
+
+    /**
+     * 添加角色
+     * @param subject 主体
+     * @param resources 资源
+     * @return  返回
+     */
+    Boolean addResources(@Param("subject") String subject, @Param("resources") List<String> resources);
 }
 
 

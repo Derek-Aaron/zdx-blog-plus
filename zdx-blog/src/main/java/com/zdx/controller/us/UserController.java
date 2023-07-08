@@ -7,6 +7,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
 import com.zdx.controller.dto.RequestParams;
 import com.zdx.controller.dto.ResetPwd;
@@ -14,6 +15,7 @@ import com.zdx.controller.dto.UserStatus;
 import com.zdx.controller.vo.UserProfile;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.event.EventObject;
 import com.zdx.handle.Result;
 import com.zdx.security.UserSessionFactory;
@@ -35,7 +37,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/zdx.user")
 @RequiredArgsConstructor
 @Validated
-@Api("用户管理")
+@Api(tags = "用户管理")
 public class UserController extends BaseController<User> {
 
     private final UserService userService;
@@ -73,12 +75,13 @@ public class UserController extends BaseController<User> {
 
     @PostMapping("/updateProfile")
     @ApiOperation("更改个人用户信息")
+    @Log(type = LogEventEnum.SAVE, desc = "更改个人用户信息")
     public Result<String> updateProfile(@RequestBody @Validated UserProfile userProfile) {
         User user = BeanUtil.copyProperties(userProfile, User.class);
         user.setId(UserSessionFactory.getUserId());
         if (userService.saveOrUpdate(user)) {
             EventObject event = new EventObject(userProfile, EventObject.Attribute.REFRESH_LOGIN_TOKEN_CACHE);
-            event.setAttribute("userSession", UserSessionFactory.userDetails());
+            event.setAttribute(EventObject.Attribute.USER_SESSION, UserSessionFactory.userDetails());
             applicationContext.publishEvent(event);
             return Result.success();
         }
@@ -87,6 +90,7 @@ public class UserController extends BaseController<User> {
 
     @PostMapping("/resetPwd")
     @ApiOperation("重置密码")
+    @Log(type = LogEventEnum.PASSWORD, desc = "重置密码")
     public Result<String> resetPwd(@RequestBody @Validated ResetPwd resetPwd) {
         if (StrUtil.isNotBlank(resetPwd.getOldPassword())) {
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
@@ -107,7 +111,20 @@ public class UserController extends BaseController<User> {
     }
 
     @PostMapping("/updateUserStatus")
+    @ApiOperation("更改用户状态")
+    @Log(type = LogEventEnum.SAVE, desc = "更改用户状态")
     public Result<String> updateUserStatus(@RequestBody @Validated UserStatus userStatus) {
         return userService.updateUserStatus(userStatus) ? Result.success() : Result.error();
+    }
+
+    @Override
+    @PostMapping("/save")
+    @ApiOperation("保存用户数据")
+    @Log(type = LogEventEnum.SAVE, desc = "保存用户数据")
+    public Result<String> save(@RequestBody @Validated User data) {
+        if (StrUtil.isNotBlank(data.getPassword())) {
+            data.setPassword(passwordEncoder.encode(data.getPassword()));
+        }
+        return super.save(data);
     }
 }

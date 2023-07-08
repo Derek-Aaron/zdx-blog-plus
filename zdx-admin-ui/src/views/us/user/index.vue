@@ -4,10 +4,11 @@ import zdxPagination from "@/components/Pagination/index.vue";
 import zdxDictTag from "@/components/DictTag/index.vue"
 import zdxDialog from "@/components/Dialog/index.vue"
 import { onMounted, reactive, ref } from "vue";
-import { page, batchDel, save } from '@/api/base'
+import { page, batchDel, save, list } from '@/api/base'
 import { useDict } from "@/utils/dict";
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { updateUserStatus, resetPassword } from "@/api/us/user"
+import { getRoleIds } from "@/api/us/role"
 
 const { zdx_dict_gender } = useDict('zdx_dict_gender')
 
@@ -19,6 +20,7 @@ const pwdRef = ref()
 const loading = ref(false)
 const dialog = ref(false)
 const openPwd = ref(false)
+const openRole = ref(false)
 const userList = ref([])
 const total = ref(0)
 const ids = ref(0)
@@ -26,6 +28,8 @@ const entity = ref({})
 const title = ref('')
 const entityPwd = ref({})
 const entityId = ref('')
+const roleData = ref([])
+const roleIds = ref([])
 
 
 const queryParams = reactive({
@@ -103,6 +107,7 @@ const handleChange = (row, type) => {
 }
 
 const handleAdd = () => {
+   rules['password'] = [{ required: true, message: "用户密码不能为空", trigger: "blur" }]
    dialog.value = true
    title.value = '新增用户'
    entity.value = {}
@@ -116,28 +121,44 @@ const handleUpdate = (row) => {
       ElMessage.error('请选择实例')
       return
    }
+   rules['password'] = []
+
    dialog.value = true
    title.value = '编辑用户【' + entity.value.nickname + '】'
 
 }
 
 const handleDelete = (id) => {
-   let array = []
-   if (id instanceof String && id) {
-      array.push(id)
-   }
-   if (ids.value.length !== 0) {
-      array = ids.value
-   }
-   batchDel(module.value, array).then((res) => {
-      ElMessage.success(res.message);
-      pageUser()
+   ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+   }).then(() => {
+      let array = []
+      if (id instanceof String && id) {
+         array.push(id)
+      }
+      if (ids.value.length !== 0) {
+         array = ids.value
+      }
+      batchDel(module.value, array).then((res) => {
+         ElMessage.success(res.message);
+         pageUser()
+      })
    })
+
 }
 
 const handleResetPwd = (id) => {
    entityId.value = id
    openPwd.value = true
+}
+
+const handleAuthRole = (id) => {
+   getRoleIds(id).then(res => {
+      roleIds.value = res.data
+      openRole.value = true
+   })
 }
 
 const successHandle = (formEl) => {
@@ -173,11 +194,17 @@ const resetPwd = (formEl) => {
          console.log('error submit!', fields)
       }
    })
+}
+
+const roleChange = (val, direction, move) => {
 
 }
 
 onMounted(() => {
    pageUser()
+   list('role').then(res => {
+      roleData.value = res.data
+   })
 })
 </script>
 
@@ -259,15 +286,23 @@ onMounted(() => {
                   <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" />
                </el-tooltip>
                <el-tooltip content="删除" placement="top">
-                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row.id)"
-                     v-hasPermi="['system:user:remove']"></el-button>
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row.id)" />
                </el-tooltip>
-               <el-tooltip content="重置密码" placement="top">
-                  <el-button link type="primary" icon="Key" @click="handleResetPwd(scope.row.id)" />
-               </el-tooltip>
-               <el-tooltip content="分配角色" placement="top">
-                  <el-button link type="primary" icon="CircleCheck" @click="handleAuthRole(scope.row)" />
-               </el-tooltip>
+               <el-dropdown size="small" hide-on-click>
+                  <el-button text size="small" type="primary" icon="DArrowRight" plain>更多</el-button>
+                  <template #dropdown>
+                     <el-dropdown-item>
+                        <el-tooltip content="重置密码" placement="top">
+                           <el-button link type="primary" icon="Key" @click="handleResetPwd(scope.row.id)" />
+                        </el-tooltip>
+                     </el-dropdown-item>
+                     <el-dropdown-item>
+                        <el-tooltip content="分配角色" placement="top">
+                           <el-button link type="primary" icon="CircleCheck" @click="handleAuthRole(scope.row.id)" />
+                        </el-tooltip>
+                     </el-dropdown-item>
+                  </template>
+               </el-dropdown>
             </template>
          </el-table-column>
       </el-table>
@@ -290,18 +325,23 @@ onMounted(() => {
                </el-row>
                <el-row>
                   <el-col :span="12">
+                     <el-form-item label="密码" prop="password">
+                        <el-input v-model="entity.password" placeholder="请输入密码" maxlength="11" clearable show-password/>
+                     </el-form-item>
+                  </el-col>
+                  <el-col :span="12">
                      <el-form-item label="手机号码" prop="mobile">
                         <el-input v-model="entity.mobile" placeholder="请输入手机号码" maxlength="11" clearable />
                      </el-form-item>
                   </el-col>
+               </el-row>
+               <el-row>
                   <el-col :span="12">
                      <el-form-item label="邮箱" prop="email">
                         <el-input v-model="entity.email" placeholder="请输入邮箱" maxlength="50" />
                      </el-form-item>
                   </el-col>
-               </el-row>
-               <el-row>
-                  <el-col :span="24">
+                  <el-col :span="12">
                      <el-form-item label="用户性别">
                         <el-select v-model="entity.gender" placeholder="请选择">
                            <el-option v-for="dict in zdx_dict_gender" :key="dict.key" :label="dict.value"
@@ -343,7 +383,7 @@ onMounted(() => {
             </el-button>
          </template>
       </zdx-dialog>
-      <zdx-dialog title="重置密码" :dialog="openPwd" @close="openPwd = false" @success="resetPwd" :form-ref="pwdRef">
+      <zdx-dialog title="重置密码" :dialog="openPwd" @close="openPwd = false" @success="resetPwd">
          <template #content>
             <el-form :model="entityPwd" :rules="pwdRules" ref="pwdRef" label-width="80px">
                <el-row>
@@ -368,6 +408,16 @@ onMounted(() => {
             <el-button type="primary" @click="resetPwd(pwdRef)">
                提交
             </el-button>
+         </template>
+      </zdx-dialog>
+      <zdx-dialog title="添加角色" width="35%" :dialog="openRole" @close="openRole = false">
+         <template #content>
+            <el-row>
+               <el-col :span="24">
+                  <el-transfer :titles="['全部', '已有']" filterable filter-placeholder="请选择" v-model="roleIds"
+                     :data="roleData" :props="{ key: 'id', label: 'name' }" @change="dataChange" />
+               </el-col>
+            </el-row>
          </template>
       </zdx-dialog>
    </div>

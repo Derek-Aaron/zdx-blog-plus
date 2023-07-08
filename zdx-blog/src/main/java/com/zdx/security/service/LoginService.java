@@ -88,7 +88,7 @@ public class LoginService {
     private void loginEvent(HttpServletRequest request, UserPrincipal userPrincipal) {
         log.info("用户【{}】,ip【{}】,登录成功", userPrincipal.getUser().getUsername(), IpAddressUtil.getIp(request));
         EventObject event = new EventObject(userPrincipal, EventObject.Attribute.LOGINLOG);
-        event.setAttribute("request", request);
+        event.setAttribute(EventObject.Attribute.REQUEST, request);
         applicationContext.publishEvent(event);
         UserAgent userAgent = getUserAgent(request, userPrincipal);
         userPrincipal.setUserAgent(userAgent);

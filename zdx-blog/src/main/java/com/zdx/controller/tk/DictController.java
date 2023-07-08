@@ -7,6 +7,7 @@ import com.zdx.controller.dto.RequestParams;
 import com.zdx.entity.tk.Dict;
 import com.zdx.handle.Result;
 import com.zdx.service.tk.DictService;
+import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,6 +22,7 @@ import javax.validation.constraints.NotBlank;
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/zdx.dict")
+@Api(tags = "数据字典管理")
 public class DictController extends BaseController<Dict> {
 
     private final DictService dictService;

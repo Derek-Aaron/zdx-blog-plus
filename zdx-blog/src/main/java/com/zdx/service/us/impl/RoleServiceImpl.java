@@ -1,10 +1,12 @@
 package com.zdx.service.us.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.controller.dto.AclDto;
 import com.zdx.entity.us.Role;
 import com.zdx.service.us.RoleService;
 import com.zdx.mapper.us.RoleMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -20,6 +22,23 @@ public class RoleServiceImpl extends ServiceImpl<RoleMapper, Role>
     @Override
     public List<Role> getRolesByUserId(Long userId) {
         return baseMapper.getRolesByUserId(userId);
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public Boolean addOrDelResources(AclDto aclDto) {
+        String type = aclDto.getType();
+        if (type.equals("del")) {
+            for (String subject : aclDto.getSubjects()) {
+                baseMapper.delResources(subject, aclDto.getResources());
+            }
+        }
+        if (type.equals("add")) {
+            for (String subject : aclDto.getSubjects()) {
+                baseMapper.addResources(subject, aclDto.getResources());
+            }
+        }
+        return true;
     }
 }
 

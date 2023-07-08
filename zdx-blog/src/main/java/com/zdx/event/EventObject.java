@@ -1,5 +1,6 @@
 package com.zdx.event;
 
+import cn.hutool.core.util.ObjUtil;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -55,7 +56,8 @@ public class EventObject extends ApplicationEvent {
 	}
 
 	public <T> T getAttribute(String name, Class<T> clz) {
-		return clz.cast(this.attributes.get(name));
+		Object obj = this.attributes.get(name);
+		return ObjUtil.isNotNull(obj) ? clz.cast(obj) : null;
 	}
 
 	public EventObject setAttribute(String name, Object value) {
@@ -69,6 +71,11 @@ public class EventObject extends ApplicationEvent {
 		//登录后事件
 		public static final String LOGINLOG = "loginlog";
 		public static final String REFRESH_LOGIN_TOKEN_CACHE = "refresh_login_token_cache";
+		public static final String LOG_SAVE = "log_save";
+		public static final String USER_SESSION = "user_session";
+		public static final String REQUEST = "request";
+		public static final String THROWABLE = "throwable";
+		public static final String STOP_WATCH = "stop_Watch";
 
 		public static final String LOGOUT = "logout";
 		public static final String DELCONTENTCACHE = "delContent";

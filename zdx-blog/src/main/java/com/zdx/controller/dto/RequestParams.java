@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import javax.validation.constraints.Max;
 import java.util.*;
 
 
@@ -25,7 +26,7 @@ public class RequestParams {
     private Integer page;
 
     @ApiModelProperty("页数大小")
-//    @Size(max = 50, message = "{zdx.params.size}")
+    @Max(value = 50, message = "{zdx.params.size}")
     private Integer limit;
 
     public Object getParam(String key) {
