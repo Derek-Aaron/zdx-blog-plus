@@ -1,9 +1,13 @@
 package com.zdx.service.tk.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.Constants;
+import com.zdx.controller.dto.MenuStatic;
+import com.zdx.controller.dto.RequestParams;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Acl;
 import com.zdx.entity.us.Role;
@@ -13,6 +17,7 @@ import com.zdx.security.UserSessionFactory;
 import com.zdx.service.tk.MenuService;
 import com.zdx.mapper.tk.MenuMapper;
 import com.zdx.service.us.AclService;
+import com.zdx.utils.TreeUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -57,6 +62,23 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
         }
         return menus.stream().map(menu -> BeanUtil.copyProperties(menu, Router.class)).toList();
     }
+
+    @Override
+    public List<Tree<Menu>> tree(RequestParams params) {
+        LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(params.hasParam("name"), Menu::getName, params.getParam("name"));
+        queryWrapper.eq(params.hasParam("isDisabled"), Menu::getIsDisabled, params.getParam("isDisabled", Boolean.class));
+        return TreeUtil.createTree(list(queryWrapper), "order");
+    }
+
+    @Override
+    public Boolean updateMenuStatic(MenuStatic menuStatic) {
+        LambdaUpdateWrapper<Menu> updateWrapper = new LambdaUpdateWrapper<>();
+        updateWrapper.set(Menu::getIsDisabled, menuStatic.getIsDisabled());
+        updateWrapper.eq(Menu::getId, menuStatic.getMenuId());
+        return update(updateWrapper);
+    }
+
 }
 
 

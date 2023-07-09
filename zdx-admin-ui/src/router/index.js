@@ -37,6 +37,30 @@ const router = createRouter({
             title: '个人中心',
           },
           component: () => import('@/views/us/user/profile/index.vue')
+        },
+        {
+          path:'/role',
+          name:'role',
+          meta:{
+            title: '角色管理',
+          },
+          component: () => import('@/views/us/role/index.vue')
+        },
+        {
+          path:'/menu',
+          name:'menu',
+          meta:{
+            title: '菜单管理',
+          },
+          component: () => import('@/views/tk/menu/index.vue')
+        },
+        {
+          path:'/auth',
+          name:'auth',
+          meta:{
+            title: '登录管理',
+          },
+          component: () => import('@/views/us/auth/index.vue')
         }
       ]
     }

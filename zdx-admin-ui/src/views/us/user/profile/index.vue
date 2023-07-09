@@ -18,11 +18,11 @@
                 <div class="pull-right">{{ state.user.username }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="user" />昵称
+                <svg-icon icon-class="nickname" />昵称
                 <div class="pull-right">{{ state.user.nickname }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="phone" />手机号码
+                <svg-icon icon-class="mobile" />手机号码
                 <div class="pull-right">{{ state.user.mobile }}</div>
               </li>
               <li class="list-group-item">
@@ -30,7 +30,7 @@
                 <div class="pull-right">{{ state.user.email }}</div>
               </li>
               <li class="list-group-item">
-                <svg-icon icon-class="peoples" />所属角色
+                <svg-icon icon-class="role" />所属角色
                 <div class="pull-right">{{ state.user.roleNames }}</div>
               </li>
               <li class="list-group-item">

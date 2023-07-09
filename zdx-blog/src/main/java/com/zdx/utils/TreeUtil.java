@@ -2,6 +2,7 @@ package com.zdx.utils;
 
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.lang.tree.TreeNodeConfig;
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.ReflectUtil;
 
 import java.lang.reflect.Field;
@@ -45,7 +46,9 @@ public class TreeUtil {
 						String name = field.getName();
 						name = "get" + name.toUpperCase(Locale.ROOT).charAt(0) + name.substring(1);
 						Method method = ReflectUtil.getPublicMethod(object.getClass(), name);
-						tree.putExtra(field.getName(), method.invoke(object));
+						if (ObjUtil.isNotNull(method)) {
+							tree.putExtra(field.getName(), method.invoke(object));
+						}
 					} catch (Exception e) {
 						throw new RuntimeException(e);
 					}

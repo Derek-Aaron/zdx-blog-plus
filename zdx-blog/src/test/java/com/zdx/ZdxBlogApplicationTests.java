@@ -69,10 +69,10 @@ class ZdxBlogApplicationTests {
     @Test
     public void addDict() {
         Dict dict = new Dict();
-        dict.setName("性别");
-        dict.setKey("zdx-dict-gender");
+        dict.setName("菜单类型");
+        dict.setKey("zdx_dict_menu_type");
         dict.setType(DictTypeEnum.ENUMS.name());
-        dict.setInvoke("class:com.zdx.enums.GenderEnum");
+        dict.setInvoke("class:com.zdx.enums.MenuTypeEnum");
         dictService.saveDict(dict);
     }
 

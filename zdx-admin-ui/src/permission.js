@@ -28,6 +28,7 @@ function loadingData(obj, next) {
 }
 
 router.beforeEach((to, from, next) => {
+    useStore().useSetting.setTitle(to.meta.title)
     NProgress.start()
     if (to.path === "/" || to.path === '/callback'){
         next()

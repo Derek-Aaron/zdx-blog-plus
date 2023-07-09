@@ -54,6 +54,10 @@ public class RequestParams {
         if (clazz == Long.class) {
             return clazz.cast(Long.parseLong(value.toString()));
         }
+
+        if (clazz == Boolean.class) {
+            return clazz.cast(Boolean.parseBoolean(value.toString()));
+        }
         if (clazz == Double.class) {
             return clazz.cast(Double.parseDouble(value.toString()));
         }

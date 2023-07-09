@@ -3,6 +3,7 @@ package com.zdx.controller.us;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.RandomUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -122,8 +123,8 @@ public class UserController extends BaseController<User> {
     @ApiOperation("保存用户数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存用户数据")
     public Result<String> save(@RequestBody @Validated User data) {
-        if (StrUtil.isNotBlank(data.getPassword())) {
-            data.setPassword(passwordEncoder.encode(data.getPassword()));
+        if (ObjUtil.isNull(data.getId())) {
+            data.setPassword(passwordEncoder.encode(RandomUtil.randomString(8)));
         }
         return super.save(data);
     }

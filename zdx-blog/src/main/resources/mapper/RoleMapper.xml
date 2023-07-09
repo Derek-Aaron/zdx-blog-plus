@@ -16,7 +16,7 @@
         description
     </sql>
     <insert id="addResources">
-        insert into us_user_roles(user_id,role_id) values
+        insert into us_role_user(user_id,role_id) values
         <foreach collection="resources" item="item" separator=",">
             (#{subject},#{item})
         </foreach>

@@ -8,7 +8,7 @@ import { page, batchDel, save, list } from '@/api/base'
 import { useDict } from "@/utils/dict";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { updateUserStatus, resetPassword } from "@/api/us/user"
-import { getRoleIds } from "@/api/us/role"
+import { getRoleIds, addOrDelResources } from "@/api/us/role"
 
 const { zdx_dict_gender } = useDict('zdx_dict_gender')
 
@@ -56,7 +56,7 @@ const columns = reactive([
 ])
 
 const equalToPassword = (rule, value, callback) => {
-   if (user.newPassword !== value) {
+   if (entityPwd.value.newPassword !== value) {
       callback(new Error("两次输入的密码不一致"));
    } else {
       callback();
@@ -75,8 +75,9 @@ const pwdRules = ref({
    confirmPassword: [{ required: true, message: "确认密码不能为空", trigger: "blur" }, { required: true, validator: equalToPassword, trigger: "blur" }]
 });
 
-const resetQuery = () => {
-   queryRef.value.resetFields()
+const resetQuery = (formEl) => {
+    if (!formEl) return
+  formEl.resetFields()
 }
 
 const handleSelectionChange = (selection) => {
@@ -155,6 +156,7 @@ const handleResetPwd = (id) => {
 }
 
 const handleAuthRole = (id) => {
+   entityId.value = id
    getRoleIds(id).then(res => {
       roleIds.value = res.data
       openRole.value = true
@@ -197,8 +199,20 @@ const resetPwd = (formEl) => {
 }
 
 const roleChange = (val, direction, move) => {
-
-}
+   let obj = {}
+   obj.subjects = [entityId.value]
+   if (direction === 'left') {
+    obj.type = 'del'
+    obj.resources = move
+  }
+  if (direction === 'right') {
+    obj.type = 'add'
+    obj.resources = val
+  }
+  addOrDelResources(obj).then(res => {
+   ElMessage.success(res.message)
+  })
+}  
 
 onMounted(() => {
    pageUser()
@@ -211,7 +225,7 @@ onMounted(() => {
 <template>
    <div class="app-container">
       <!--用户数据-->
-      <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
+      <el-form :model="queryParams.params" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
          <el-form-item label="用户名称" prop="username">
             <el-input v-model="queryParams.params.username" placeholder="请输入用户名称" clearable style="width: 240px"
                @keyup.enter="pageUser" @clear="pageUser" />
@@ -234,7 +248,7 @@ onMounted(() => {
          </el-form-item>
          <el-form-item>
             <el-button type="primary" icon="Search" @click="pageUser">搜索</el-button>
-            <el-button icon="Refresh" @click="resetQuery">重置</el-button>
+            <el-button icon="Refresh" @click="resetQuery(queryRef)">重置</el-button>
          </el-form-item>
       </el-form>
 
@@ -308,7 +322,7 @@ onMounted(() => {
       </el-table>
       <zdx-pagination v-show="total > 0" :total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit"
          @pagination="pageUser" />
-      <zdx-dialog :dialog="dialog" @close="dialog = false" :title="title" width="50%" @success="successHandle">
+      <zdx-dialog :dialog="dialog" @close="dialog = false" :title="title" width="50%">
          <template #content>
             <el-form :model="entity" :rules="rules" ref="userRef" label-width="80px">
                <el-row>
@@ -325,23 +339,18 @@ onMounted(() => {
                </el-row>
                <el-row>
                   <el-col :span="12">
-                     <el-form-item label="密码" prop="password">
-                        <el-input v-model="entity.password" placeholder="请输入密码" maxlength="11" clearable show-password/>
-                     </el-form-item>
-                  </el-col>
-                  <el-col :span="12">
                      <el-form-item label="手机号码" prop="mobile">
                         <el-input v-model="entity.mobile" placeholder="请输入手机号码" maxlength="11" clearable />
                      </el-form-item>
                   </el-col>
-               </el-row>
-               <el-row>
                   <el-col :span="12">
                      <el-form-item label="邮箱" prop="email">
                         <el-input v-model="entity.email" placeholder="请输入邮箱" maxlength="50" />
                      </el-form-item>
                   </el-col>
-                  <el-col :span="12">
+               </el-row>
+               <el-row>
+                  <el-col :span="24">
                      <el-form-item label="用户性别">
                         <el-select v-model="entity.gender" placeholder="请选择">
                            <el-option v-for="dict in zdx_dict_gender" :key="dict.key" :label="dict.value"
@@ -415,7 +424,7 @@ onMounted(() => {
             <el-row>
                <el-col :span="24">
                   <el-transfer :titles="['全部', '已有']" filterable filter-placeholder="请选择" v-model="roleIds"
-                     :data="roleData" :props="{ key: 'id', label: 'name' }" @change="dataChange" />
+                     :data="roleData" :props="{ key: 'id', label: 'name' }" @change="roleChange" />
                </el-col>
             </el-row>
          </template>
