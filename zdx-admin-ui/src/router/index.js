@@ -61,6 +61,14 @@ const router = createRouter({
             title: '登录管理',
           },
           component: () => import('@/views/us/auth/index.vue')
+        },
+        {
+          path:'/dict',
+          name:'dict',
+          meta:{
+            title: '字典管理',
+          },
+          component: () => import('@/views/tk/dict/index.vue')
         }
       ]
     }

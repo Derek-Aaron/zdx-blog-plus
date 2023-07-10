@@ -3,7 +3,7 @@ import zdxRightToolbar from "@/components/RightToolbar/index.vue";
 import zdxPagination from "@/components/Pagination/index.vue";
 import zdxDialog from "@/components/Dialog/index.vue"
 import { onMounted, reactive, ref } from "vue";
-import { page, batchDel } from '@/api/base'
+import { page, batchDel, save } from '@/api/base'
 import { ElMessage } from "element-plus";
 
 const module = ref('role')
@@ -84,7 +84,7 @@ const handleDelete = (id) => {
     })
 }
 
-const successHandle = () => {
+const successHandle = (formEl) => {
     if (!formEl) return
     formEl.validate((valid, fields) => {
         if (valid) {
