@@ -1,6 +1,8 @@
 package com.zdx.service.us.impl;
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.controller.dto.ResetPwd;
@@ -11,6 +13,9 @@ import com.zdx.security.UserSessionFactory;
 import com.zdx.service.us.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
 
 /**
 * @author zhaodengxuan
@@ -45,6 +50,22 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         }
         updateWrapper.eq(User::getId, userStatus.getUserId());
         return update(updateWrapper);
+    }
+
+    @Override
+    public List<Map<String, Object>> listUserAll(String words) {
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+        if (StrUtil.isNotBlank(words)) {
+            queryWrapper.like(User::getUsername, words);
+            queryWrapper.or();
+            queryWrapper.like(User::getNickname, words);
+            queryWrapper.or();
+            queryWrapper.like(User::getEmail, words);
+            queryWrapper.or();
+            queryWrapper.eq(User::getMobile, words);
+        }
+        queryWrapper.select(User::getId, User::getUsername);
+        return listMaps(queryWrapper);
     }
 }
 

@@ -1,11 +1,10 @@
 package com.zdx.service.tk;
 
 import cn.hutool.core.lang.tree.Tree;
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.controller.dto.MenuStatic;
 import com.zdx.controller.dto.RequestParams;
 import com.zdx.entity.tk.Menu;
-import com.baomidou.mybatisplus.extension.service.IService;
-import com.zdx.controller.vo.Router;
 
 import java.util.List;
 
@@ -15,8 +14,6 @@ import java.util.List;
 * @createDate 2023-07-05 17:32:37
 */
 public interface MenuService extends IService<Menu> {
-
-    List<Router> routers();
 
     List<Tree<Menu>> tree(RequestParams params);
 

@@ -1,5 +1,6 @@
 package com.zdx.service.us;
 
+import com.zdx.controller.dto.AclDto;
 import com.zdx.entity.us.Acl;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -13,4 +14,8 @@ import java.util.List;
 public interface AclService extends IService<Acl> {
 
     List<Acl> getAclsBySubject(List<String> ids);
+
+    List<Acl> getSubjectByResource(String resource);
+
+    Boolean saveAcl(AclDto aclDto);
 }

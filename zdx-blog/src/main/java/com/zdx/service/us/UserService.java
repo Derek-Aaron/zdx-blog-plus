@@ -5,6 +5,9 @@ import com.zdx.controller.dto.UserStatus;
 import com.zdx.entity.us.User;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
+import java.util.Map;
+
 /**
 * @author zhaodengxuan
 * @description 针对表【us_user】的数据库操作Service
@@ -21,4 +24,6 @@ public interface UserService extends IService<User> {
     Boolean resetPwd(ResetPwd resetPwd);
 
     Boolean updateUserStatus(UserStatus userStatus);
+
+    List<Map<String, Object>> listUserAll(String words);
 }

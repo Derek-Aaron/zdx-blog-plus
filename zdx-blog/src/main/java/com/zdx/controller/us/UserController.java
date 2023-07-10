@@ -32,6 +32,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RestController
@@ -72,6 +74,11 @@ public class UserController extends BaseController<User> {
         String roleNames = UserSessionFactory.getRoles().stream().map(Role::getDisplay).collect(Collectors.joining(","));
         profile.setRoleNames(roleNames);
         return Result.success(profile);
+    }
+
+    @GetMapping("/listUserAll")
+    public Result<List<Map<String, Object>>> listUserAll(String words) {
+        return Result.success(userService.listUserAll(words));
     }
 
     @PostMapping("/updateProfile")

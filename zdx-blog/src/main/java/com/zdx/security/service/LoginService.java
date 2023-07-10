@@ -1,15 +1,24 @@
 package com.zdx.security.service;
 
-import com.zdx.controller.vo.Router;
+import cn.hutool.core.bean.BeanUtil;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.zdx.Constants;
 import com.zdx.controller.dto.UserLogin;
+import com.zdx.controller.vo.Router;
+import com.zdx.entity.tk.Menu;
+import com.zdx.entity.us.Acl;
+import com.zdx.entity.us.Role;
+import com.zdx.enums.MenuTypeEnum;
 import com.zdx.event.EventObject;
+import com.zdx.security.UserSessionFactory;
 import com.zdx.security.vo.UserAgent;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.service.tk.MenuService;
+import com.zdx.service.us.AclService;
 import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.UserAgentUtils;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -19,26 +28,27 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 @Component
 @Slf4j
+@RequiredArgsConstructor
 public class LoginService {
 
-    @Autowired
-    private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private PermissionService permissionService;
+    private final AuthenticationManager authenticationManager;
 
-    @Autowired
-    private ApplicationContext applicationContext;
 
-    @Autowired
-    private MenuService menuService;
+    private final PermissionService permissionService;
+
+
+    private final ApplicationContext applicationContext;
+
+
+    private final MenuService menuService;
+
+
+    private final AclService aclService;
 
     /**
      * 登录
@@ -95,6 +105,26 @@ public class LoginService {
     }
 
     public List<Router> routers() {
-        return menuService.routers();
+        List<Menu> menus = new ArrayList<>();
+        if (UserSessionFactory.hasRole(Role.ADMIN_ROLE_ID)) {
+            LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.in(Menu::getType, Arrays.asList(MenuTypeEnum.MENU.name(), MenuTypeEnum.DIRECTORY.name()));
+            queryWrapper.eq(Menu::getIsDisabled, Boolean.FALSE);
+            menus = menuService.list(queryWrapper);
+        } else {
+            List<String> roleIds = UserSessionFactory.getRoleIds().stream().map(r -> Constants.ACL_ROLE_PREFIX + r).toList();
+            List<String> subjectIds = new ArrayList<>(roleIds);
+            subjectIds.add(Constants.ACL_USER_PREFIX + UserSessionFactory.getUserId());
+            List<Acl> acls = aclService.getAclsBySubject(subjectIds);
+            List<String> menuIds = acls.stream().map(acl -> acl.getResource().replaceAll(Constants.ACL_MENU_PREFIX, "")).toList();
+            if (!menuIds.isEmpty()) {
+                LambdaQueryWrapper<Menu> queryWrapper = new LambdaQueryWrapper<>();
+                queryWrapper.in(Menu::getId, menuIds);
+                queryWrapper.in(Menu::getType, Arrays.asList(MenuTypeEnum.MENU.name(), MenuTypeEnum.DIRECTORY.name()));
+                queryWrapper.eq(Menu::getIsDisabled, Boolean.FALSE);
+                menus = menuService.list(queryWrapper);
+            }
+        }
+        return menus.stream().map(menu -> BeanUtil.copyProperties(menu, Router.class)).toList();
     }
 }
