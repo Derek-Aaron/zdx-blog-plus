@@ -4,6 +4,7 @@ import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.Constants;
 import com.zdx.controller.dto.MenuStatic;
 import com.zdx.controller.dto.RequestParams;
 import com.zdx.entity.tk.Menu;
@@ -11,6 +12,7 @@ import com.zdx.mapper.tk.MenuMapper;
 import com.zdx.service.tk.MenuService;
 import com.zdx.utils.TreeUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,6 +37,7 @@ public class MenuServiceImpl extends ServiceImpl<MenuMapper, Menu>
     }
 
     @Override
+    @CacheEvict(cacheNames = Constants.ROUTER_KEY, key = "T(com.zdx.security.UserSessionFactory).personId")
     public Boolean updateMenuStatic(MenuStatic menuStatic) {
         LambdaUpdateWrapper<Menu> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Menu::getIsDisabled, menuStatic.getIsDisabled());

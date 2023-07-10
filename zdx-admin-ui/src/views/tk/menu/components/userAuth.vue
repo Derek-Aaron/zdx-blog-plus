@@ -25,6 +25,23 @@ const change = (val, direction, move) => {
     emits('change', obj)
     emits('update:modelValue', val)
 }
+
+const filterMethod = (val) => {
+    // if (val && val !== '') {
+    //     listUserAll({params: val}).then(res => {
+    //         let array = []
+    //         for (const item of res.data) {
+    //             let obj = {}
+    //             obj.id = 'us:user:' + item.id
+    //             obj.name = item.username
+    //             array.push(obj)
+    //         }
+    //         data.value = array
+    //     })
+    // }
+    return data.value
+}
+
 onMounted(() => {
     listUserAll().then(res => {
         let array = []
@@ -40,9 +57,8 @@ onMounted(() => {
 </script>
 
 <template>
-    <el-transfer :titles="['全部', '已有']" :props="{ key: 'id', label: 'name' }" v-model="$props.modelValue" :data="data" @change="change" />
+    <el-transfer :titles="['全部', '已有']" filterable :filter-method="filterMethod" filter-placeholder="请输入"
+        :props="{ key: 'id', label: 'name' }" v-model="$props.modelValue" :data="data" @change="change" />
 </template>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

@@ -1,8 +1,10 @@
 package com.zdx.controller.us;
 
 
+import com.zdx.annotation.Log;
 import com.zdx.controller.dto.AclDto;
 import com.zdx.entity.us.Acl;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.service.us.AclService;
 import io.swagger.annotations.Api;
@@ -33,6 +35,7 @@ public class AclController {
 
     @PostMapping("/save")
     @ApiOperation("保存权限")
+    @Log(type = LogEventEnum.SAVE, desc = "保存权限")
     public Result<String> save(@RequestBody @Validated AclDto aclDto) {
         return aclService.saveAcl(aclDto) ? Result.success() : Result.error();
     }

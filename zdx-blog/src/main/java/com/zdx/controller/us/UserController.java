@@ -77,6 +77,7 @@ public class UserController extends BaseController<User> {
     }
 
     @GetMapping("/listUserAll")
+    @ApiOperation("获取用户信息")
     public Result<List<Map<String, Object>>> listUserAll(String words) {
         return Result.success(userService.listUserAll(words));
     }

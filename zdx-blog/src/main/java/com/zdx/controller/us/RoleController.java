@@ -10,6 +10,7 @@ import com.zdx.entity.us.Role;
 import com.zdx.handle.Result;
 import com.zdx.service.us.RoleService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -40,12 +41,14 @@ public class RoleController extends BaseController<Role> {
     }
 
     @GetMapping("/roleIds/{userId}")
+    @ApiOperation("获取角色id")
     public Result<List<String>> roleIds(@PathVariable @NotBlank String userId) {
         List<Role> roles = roleService.getRolesByUserId(Long.valueOf(userId));
         return Result.success(roles.stream().map(role -> String.valueOf(role.getId())).toList());
     }
 
     @PostMapping("/addOrDelResources")
+    @ApiOperation("新增或移除角色")
     public Result<String> addOrDelResources(@RequestBody @Validated AclDto aclDto) {
         return roleService.addOrDelResources(aclDto) ? Result.success() : Result.error();
     }

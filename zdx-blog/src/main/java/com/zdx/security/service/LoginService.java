@@ -19,6 +19,7 @@ import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.UserAgentUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -104,6 +105,8 @@ public class LoginService {
         userPrincipal.setUserAgent(userAgent);
     }
 
+
+    @Cacheable(cacheNames = Constants.ROUTER_KEY, key = "T(com.zdx.security.UserSessionFactory).personId")
     public List<Router> routers() {
         List<Menu> menus = new ArrayList<>();
         if (UserSessionFactory.hasRole(Role.ADMIN_ROLE_ID)) {

@@ -65,6 +65,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             queryWrapper.eq(User::getMobile, words);
         }
         queryWrapper.select(User::getId, User::getUsername);
+        queryWrapper.last("limit 10");
         return listMaps(queryWrapper);
     }
 }

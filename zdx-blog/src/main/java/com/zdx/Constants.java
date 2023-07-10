@@ -18,6 +18,7 @@ public class Constants {
 
     public static final String LOGIN_TOKEN_KEY = "login_tokens:";
     public static final String ROUTER_KEY = "zdx:router:";
+    public static final String DICT_KEY = "zdx:dict:";
     public static final String AUTHORIZATION = "Authorization";
 
     public static final String TOKEN_PREFIX = "Bearer ";
@@ -29,13 +30,6 @@ public class Constants {
     public static final String TASK_PROPERTIES = "TASK_PROPERTIES";
 
     public static final String TASK_CLASS_NAME = "TASK_CLASS_NAME";
-    public static final String TAGSCHEKEY = "TASK_CLASS_NAME";
-    public static final String ARTICLECATEGORYCOUNT = "article:categoryCount";
-
-    public static final String ARTICLETAGSCOUNT = "article:tagsCount";
-
-    public static final String ZDX_CONTEXT_CACHE = "zdx:context:cache:";
-
 
     public static final List<String> IMAGETYPE = Arrays.asList(".jpg",".png",".gif",".bmp",".eps",".jpeg");
     public static final List<String> DOCUMENTTYPE = Arrays.asList(".xls",".xlsx",".doc",".md",".docx",".pdf");

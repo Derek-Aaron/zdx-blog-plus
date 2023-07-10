@@ -69,10 +69,10 @@ class ZdxBlogApplicationTests {
     @Test
     public void addDict() {
         Dict dict = new Dict();
-        dict.setName("菜单类型");
-        dict.setKey("zdx_dict_menu_type");
+        dict.setName("字典类型");
+        dict.setKey("zdx_dict_type");
         dict.setType(DictTypeEnum.ENUMS.name());
-        dict.setInvoke("class:com.zdx.enums.MenuTypeEnum");
+        dict.setInvoke("class:com.zdx.enums.DictTypeEnum");
         dictService.saveDict(dict);
     }
 

@@ -4,6 +4,7 @@ package com.zdx.controller.tk;
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.Constants;
 import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
 import com.zdx.controller.dto.MenuStatic;
@@ -15,6 +16,7 @@ import com.zdx.service.tk.MenuService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -54,4 +56,12 @@ public class MenuController extends BaseController<Menu> {
     }
 
 
+    @Override
+    @PostMapping("/save")
+    @Log(type = LogEventEnum.SAVE, desc = "保存菜单")
+    @ApiOperation("保存菜单")
+    @CacheEvict(cacheNames = Constants.ROUTER_KEY, key = "T(com.zdx.security.UserSessionFactory).personId")
+    public Result<String> save(@RequestBody Menu data) {
+        return super.save(data);
+    }
 }

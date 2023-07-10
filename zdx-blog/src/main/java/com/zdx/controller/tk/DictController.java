@@ -8,6 +8,7 @@ import com.zdx.entity.tk.Dict;
 import com.zdx.handle.Result;
 import com.zdx.service.tk.DictService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,7 +39,8 @@ public class DictController extends BaseController<Dict> {
 
 
     @GetMapping("/key/{key}")
-    public Result<Dict> dict(@PathVariable @NotBlank String key) {
+    @ApiOperation("获取数据字典")
+    public Result<Object> dict(@PathVariable @NotBlank String key) {
         return Result.success(dictService.getDictByKey(key));
     }
 }

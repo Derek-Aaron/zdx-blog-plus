@@ -10,7 +10,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface DictService extends IService<Dict> {
 
-    Dict getDictByKey(String key);
+    Object getDictByKey(String key);
 
 
     Boolean saveDict(Dict dict);
