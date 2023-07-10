@@ -31,3 +31,11 @@ export const updateUserStatus = (data) => {
         data: data
     })
 }
+
+export const listUserAll = (params) => {
+    return request({
+        url:'/zdx.user/listUserAll',
+        method:'get',
+        params: params
+    })
+}
