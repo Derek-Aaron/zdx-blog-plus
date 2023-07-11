@@ -17,6 +17,7 @@ import com.zdx.service.tk.FileService;
 import com.zdx.utils.MessageUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -55,13 +56,16 @@ public class FileController extends BaseController<File> {
     }
 
     @GetMapping("/getUrl/{fileId}")
+    @ApiOperation("通过文件id获取访问地址")
     public Result<Map<String, String>> getUrl(@PathVariable @NotBlank String fileId) {
         return Result.success(Map.of("fileUrl", fileService.getFileUrl(fileId)));
     }
 
 
     @PostMapping("/upload")
-    public Result<Object> upload(MultipartFile[] file, String type) throws IOException {
+    @Log(type = LogEventEnum.UPLOAD, desc = "上传文件")
+    @ApiOperation("上传文件")
+    public Result<Object> upload(@ApiParam("文件") MultipartFile[] file, @ApiParam("文件类型") String type) throws IOException {
         List<Map<String, String>> list = new ArrayList<>();
         for (MultipartFile multipartFile : file) {
             if (StrUtil.isBlank(type)) {
@@ -128,6 +132,8 @@ public class FileController extends BaseController<File> {
 
 
     @GetMapping("/{id}/download")
+    @Log(type = LogEventEnum.DOWNLOAD, desc = "下载文件")
+    @ApiOperation("文件下载")
     public void download(@PathVariable @NotBlank String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
        fileService.download(id, request, response);
     }
