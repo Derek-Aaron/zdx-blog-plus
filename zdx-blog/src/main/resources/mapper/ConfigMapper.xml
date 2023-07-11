@@ -7,13 +7,13 @@
     <resultMap id="BaseResultMap" type="com.zdx.entity.tk.Config">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="remark" column="remark" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="value" column="value" jdbcType="VARCHAR"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,remark,
+        id,name,description,
         type,value
     </sql>
 </mapper>
