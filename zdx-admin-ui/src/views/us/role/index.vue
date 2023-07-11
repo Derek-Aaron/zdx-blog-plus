@@ -4,7 +4,7 @@ import zdxPagination from "@/components/Pagination/index.vue";
 import zdxDialog from "@/components/Dialog/index.vue"
 import { onMounted, reactive, ref } from "vue";
 import { page, batchDel, save } from '@/api/base'
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 
 const module = ref('role')
 const roleRef = ref()
@@ -75,13 +75,23 @@ const handleUpdate = (row) => {
 }
 
 const handleDelete = (id) => {
-    if (id) {
-        ids.value = [id]
-    }
-    batchDel(module.value, ids.value).then(res => {
-        ElMessage.success(res.message)
-        pageRole()
-    })
+    ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning'
+   }).then(() => {
+      let array = []
+      if (id instanceof String && id) {
+         array.push(id)
+      }
+      if (ids.value.length !== 0) {
+         array = ids.value
+      }
+      batchDel(module.value, array).then((res) => {
+         ElMessage.success(res.message);
+         pageRole()
+      })
+   })
 }
 
 const successHandle = (formEl) => {
@@ -153,19 +163,28 @@ onMounted(() => {
         </el-table>
 
         <zdx-pagination v-show="total > 0" :total="total" v-model:page="queryParams.page" v-model:limit="queryParams.limit"
-            @pagination="pageUser" />
+            @pagination="pageRole" />
+
         <zdxDialog :dialog="dialog" :title="title" @close="dialog = false">
             <template #content>
                 <el-form :model="entity" :rules="rules" ref="roleRef" label-width="80px">
-                    <el-form-item label="角色" prop="name">
-                        <el-input v-model="entity.name" placeholder="请输入角色" maxlength="30" clearable />
-                    </el-form-item>
-                    <el-form-item label="角色名" prop="display">
-                        <el-input v-model="entity.display" placeholder="请输入角色名" maxlength="30" clearable />
-                    </el-form-item>
-                    <el-form-item label="备注">
-                        <el-input v-model="entity.description" type="textarea" placeholder="请输入内容"></el-input>
-                    </el-form-item>
+                    <el-row>
+                        <el-col :span="24">
+                            <el-form-item label="角色" prop="name">
+                                <el-input v-model="entity.name" placeholder="请输入角色" maxlength="30" clearable />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item label="角色名" prop="display">
+                                <el-input v-model="entity.display" placeholder="请输入角色名" maxlength="30" clearable />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="24">
+                            <el-form-item label="备注">
+                                <el-input v-model="entity.description" type="textarea" placeholder="请输入内容"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                 </el-form>
             </template>
             <template #footer>

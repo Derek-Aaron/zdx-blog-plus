@@ -71,3 +71,10 @@ export const batchDel = (module, data) => {
         data: data,
     })
 }
+
+export const baseById = (module, name, params) => {
+    return request({
+        url:`/zdx.${module}/${name}/${params}`,
+        method:'GET'
+    })
+}

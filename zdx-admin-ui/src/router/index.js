@@ -69,6 +69,30 @@ const router = createRouter({
             title: '字典管理',
           },
           component: () => import('@/views/tk/dict/index.vue')
+        },
+        {
+          path:'/config',
+          name:'config',
+          meta:{
+            title: '配置管理',
+          },
+          component: () => import('@/views/tk/config/index.vue')
+        },
+        {
+          path:'/online',
+          name:'online',
+          meta:{
+            title: '在线用户',
+          },
+          component: () => import('@/views/us/online/index.vue')
+        },
+        {
+          path:'/file',
+          name:'file',
+          meta:{
+            title: '文件管理',
+          },
+          component: () => import('@/views/tk/file/index.vue')
         }
       ]
     }

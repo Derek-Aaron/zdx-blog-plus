@@ -121,7 +121,7 @@ function beforeUpload(file) {
 function uploadImg() {
   proxy.$refs.cropper.getCropBlob(data => {
     let formData = new FormData();
-    formData.append("avatarfile", data);
+    formData.append("file", data);
     // uploadAvatar(formData).then(response => {
     //   open.value = false;
     //   options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl;

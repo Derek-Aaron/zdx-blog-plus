@@ -8,7 +8,7 @@ import zdxUserAuth from './components/userAuth.vue'
 import { onMounted, reactive, ref, nextTick } from "vue";
 import { useDict } from "@/utils/dict";
 import { tree, updateMenuStatic } from "@/api/tk/menu"
-import { ElMessage } from "element-plus";
+import { ElMessage, ElMessageBox } from "element-plus";
 import { save, batchDel } from "@/api/base"
 import { subject } from "@/api/us/acl"
 
@@ -116,12 +116,22 @@ const handleUpdate = (row) => {
 }
 
 const handleDelete = (id) => {
-    if (id) {
-        ids.value = [id]
-    }
-    batchDel(module.value, ids.value).then(res => {
-        ElMessage.success(res.message)
-        listMenu()
+    ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+    }).then(() => {
+        let array = []
+        if (id instanceof String && id) {
+            array.push(id)
+        }
+        if (ids.value.length !== 0) {
+            array = ids.value
+        }
+        batchDel(module.value, array).then((res) => {
+            ElMessage.success(res.message);
+            listMenu()
+        })
     })
 }
 
@@ -157,7 +167,7 @@ const userChange = (data) => {
 }
 
 const handleAuth = (id) => {
-    subject({ resource:  'tk:menu:' + id }).then(res => {
+    subject({ resource: 'tk:menu:' + id }).then(res => {
         let roleArray = []
         let userArray = []
         for (const item of res.data) {
