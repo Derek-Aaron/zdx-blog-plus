@@ -1,11 +1,11 @@
 import axios from 'axios'
-import { ElNotification , ElMessageBox, ElMessage, ElLoading } from 'element-plus'
+import { ElNotification, ElMessageBox, ElMessage, ElLoading } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import errorCode from '@/utils/errorCode'
 import { tansParams, blobValidate } from '@/utils/ruoyi'
 import cache from '@/plugins/cache'
 import { saveAs } from 'file-saver'
-import {useStore} from "@/stores";
+import { useStore } from "@/stores";
 import router from "@/router";
 
 let downloadLoadingInstance;
@@ -25,17 +25,25 @@ const service = axios.create({
 service.interceptors.request.use(config => {
   // 是否需要设置 token
   const isToken = (config.headers || {}).isToken === false
+  //是否需要加密
+  const isEncrypt = (config.headers || {}).isEncrypt === false
   // 是否需要防止数据重复提交
   const isRepeatSubmit = (config.headers || {}).repeatSubmit === false
   if (getToken() && !isToken) {
     config.headers['Authorization'] = 'Bearer ' + getToken() // 让每个请求携带自定义token 请根据实际情况自行修改
   }
   // get请求映射params参数
-  if (config.method === 'get' && config.params) {
+  if (config.method === 'get' || config.method === 'GET' && config.params) {
     let url = config.url + '?' + tansParams(config.params);
     url = url.slice(0, -1);
     config.params = {};
     config.url = url;
+  }
+  if (config.method === 'post' || config.method === 'POST' && config.data) {
+    if (isEncrypt) {
+      let str = encrypt(JSON.stringify(request.data))
+      request.data = { encrypt: str }
+    }
   }
   if (!isRepeatSubmit && (config.method === 'post' || config.method === 'put')) {
     const requestObj = {
@@ -62,44 +70,44 @@ service.interceptors.request.use(config => {
   }
   return config
 }, error => {
-    console.log(error)
-    Promise.reject(error)
+  console.log(error)
+  Promise.reject(error)
 })
 
 // 响应拦截器
 service.interceptors.response.use(res => {
-    // 未设置状态码则默认成功状态
-    const code = res.data.code || 200;
-    // 获取错误信息
-    const msg = errorCode[code] || res.data.msg || errorCode['default']
-    // 二进制数据则直接返回
-    if (res.request.responseType ===  'blob' || res.request.responseType ===  'arraybuffer') {
-      return res
-    }
-    if (code === 401) {
-      if (!isRelogin.show) {
-        isRelogin.show = true;
-        ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
-          isRelogin.show = false;
-          useStore.useUser.doLogout()
+  // 未设置状态码则默认成功状态
+  const code = res.data.code || 200;
+  // 获取错误信息
+  const msg = errorCode[code] || res.data.msg || errorCode['default']
+  // 二进制数据则直接返回
+  if (res.request.responseType === 'blob' || res.request.responseType === 'arraybuffer') {
+    return res
+  }
+  if (code === 401) {
+    if (!isRelogin.show) {
+      isRelogin.show = true;
+      ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
+        isRelogin.show = false;
+        useStore.useUser.doLogout()
       }).catch(() => {
         isRelogin.show = false;
       });
     }
-      return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
-    } else if (code === 500) {
-      ElMessage({ message: msg, type: 'error' })
-      return Promise.reject(new Error(msg))
-    } else if (code === 601) {
-      ElMessage({ message: msg, type: 'warning' })
-      return Promise.reject(new Error(msg))
-    } else if (code !== 200) {
-      ElNotification.error({ title: msg })
-      return Promise.reject('error')
-    } else {
-      return  Promise.resolve(res.data)
-    }
-  },
+    return Promise.reject('无效的会话，或者会话已过期，请重新登录。')
+  } else if (code === 500) {
+    ElMessage({ message: msg, type: 'error' })
+    return Promise.reject(new Error(msg))
+  } else if (code === 601) {
+    ElMessage({ message: msg, type: 'warning' })
+    return Promise.reject(new Error(msg))
+  } else if (code !== 200) {
+    ElNotification.error({ title: msg })
+    return Promise.reject('error')
+  } else {
+    return Promise.resolve(res.data)
+  }
+},
   error => {
     console.log('err' + error)
     let { message } = error;
@@ -114,7 +122,7 @@ service.interceptors.response.use(res => {
     console.log(error.status)
     if (error.response.status === 403 || error.response.status === 401) {
       console.log("aaa")
-      router.push("/").then(r => {})
+      router.push("/").then(r => { })
     }
     return Promise.reject(error)
   }
