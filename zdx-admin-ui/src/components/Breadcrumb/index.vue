@@ -33,7 +33,7 @@ function isDashboard(route) {
   if (!name) {
     return false
   }
-  return name.trim() === 'Index'
+  return name.trim() === 'index'
 }
 function handleLink(item) {
   const { redirect, path } = item

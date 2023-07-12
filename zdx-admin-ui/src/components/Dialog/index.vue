@@ -26,7 +26,7 @@ const props = defineProps({
     },
     width: {
         type: String,
-        default: '30%'
+        default: '40%'
     },
     center: {
         type: Boolean,

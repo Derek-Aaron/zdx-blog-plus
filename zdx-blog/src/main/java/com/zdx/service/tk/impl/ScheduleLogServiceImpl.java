@@ -1,5 +1,6 @@
 package com.zdx.service.tk.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.entity.tk.ScheduleLog;
 import com.zdx.service.tk.ScheduleLogService;
@@ -15,6 +16,12 @@ import org.springframework.stereotype.Service;
 public class ScheduleLogServiceImpl extends ServiceImpl<ScheduleLogMapper, ScheduleLog>
     implements ScheduleLogService{
 
+    @Override
+    public boolean clear(String scheduleId) {
+        LambdaQueryWrapper<ScheduleLog> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(ScheduleLog::getJobId, scheduleId);
+        return remove(queryWrapper);
+    }
 }
 
 

@@ -1,4 +1,4 @@
-package com.zdx.filter;
+package com.zdx.filter.xss;
 
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.io.IOUtils;

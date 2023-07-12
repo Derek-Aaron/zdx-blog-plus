@@ -93,6 +93,22 @@ const router = createRouter({
             title: '文件管理',
           },
           component: () => import('@/views/tk/file/index.vue')
+        },
+        {
+          path: '/schedule',
+          name:'schedule',
+          meta: {
+            title:'定时任务',
+          },
+          component: () => import('@/views/tk/schedule/index.vue')
+        },
+        {
+          path: '/schedule-log/:scheduleId(\\d+)',
+          name:'schedule-log',
+          meta: {
+            title:'定时任务日志',
+          },
+          component: () => import('@/views/tk/schedule/log.vue')
         }
       ]
     }

@@ -41,7 +41,19 @@ public interface FileService extends IService<File> {
      */
     Boolean batchFileDelete(List<String> ids);
 
+    /**
+     * 下载文件
+     * @param id 文件id
+     * @param request 请求
+     * @param response 相应
+     * @throws Exception 异常
+     */
     void download(String id, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
+    /**
+     * 获取文件访问地址
+     * @param fileId 文件id
+     * @return 返回文件访问地址
+     */
     String getFileUrl(String fileId);
 }

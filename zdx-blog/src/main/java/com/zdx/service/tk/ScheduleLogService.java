@@ -10,4 +10,10 @@ import com.baomidou.mybatisplus.extension.service.IService;
 */
 public interface ScheduleLogService extends IService<ScheduleLog> {
 
+    /**
+     * 清空任务日志
+     * @param scheduleId 任务id
+     * @return 成功
+     */
+    boolean clear(String scheduleId);
 }

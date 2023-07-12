@@ -1,4 +1,4 @@
-package com.zdx.filter;
+package com.zdx.filter.xss;
 
 import java.util.ArrayList;
 import java.util.Collections;

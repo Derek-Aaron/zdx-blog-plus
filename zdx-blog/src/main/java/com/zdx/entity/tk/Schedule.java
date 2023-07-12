@@ -24,6 +24,7 @@ public class Schedule extends BaseEntity {
 
     private String name;
 
+    @TableField("group_")
     private String group;
 
     private String invoke;

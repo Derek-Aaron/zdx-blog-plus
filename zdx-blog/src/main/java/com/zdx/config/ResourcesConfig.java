@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.zdx.cache.CacheTemplate;
 import com.zdx.cache.LocalCacheManager;
 import com.zdx.config.properties.CommonProperties;
-import com.zdx.filter.XssFilter;
+import com.zdx.filter.xss.XssFilter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
