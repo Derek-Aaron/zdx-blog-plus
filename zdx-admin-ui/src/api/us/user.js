@@ -20,6 +20,9 @@ export const resetPassword =  (data) => {
     return request({
         url:'/zdx.user/resetPwd',
         method:'post',
+        headers: {
+            isEncrypt: true
+        },
         data: data
     })
 }

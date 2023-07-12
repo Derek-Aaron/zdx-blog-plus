@@ -5,7 +5,8 @@ export const login = (data) => {
         url:'/login',
         method:'post',
         headers:{
-            isToken: false
+            isToken: false,
+            isEncrypt: true
         },
         data: data
     })

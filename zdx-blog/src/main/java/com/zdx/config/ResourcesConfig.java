@@ -87,7 +87,7 @@ public class ResourcesConfig implements WebMvcConfigurer {
         FilterRegistrationBean registration = new FilterRegistrationBean();
         registration.setDispatcherTypes(DispatcherType.REQUEST);
         registration.setFilter(new XssFilter());
-        registration.addUrlPatterns(commonProperties.getUrlPatterns().split(","));
+        registration.addUrlPatterns("/*");
         registration.setName("xssFilter");
         registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE);
         Map<String, String> initParameters = new HashMap<>(1);

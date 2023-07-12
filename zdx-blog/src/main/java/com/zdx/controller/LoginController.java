@@ -3,6 +3,7 @@ package com.zdx.controller;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.tree.Tree;
+import com.zdx.annotation.Encrypt;
 import com.zdx.controller.dto.UserLogin;
 import com.zdx.controller.vo.Router;
 import com.zdx.controller.vo.UserInfo;
@@ -35,7 +36,8 @@ public class LoginController {
 
     @PostMapping("/login")
     @ApiOperation(value = "登录", notes = "登录")
-    public Result<Map<String, String>> login(@RequestBody @Validated UserLogin userLogin, HttpServletRequest request) {
+    @Encrypt
+    public Result<Map<String, String>> login(@RequestBody @Validated @Encrypt UserLogin userLogin, HttpServletRequest request) {
         String token = loginService.login(request, userLogin);
         return Result.success(Map.of("token", token));
     }

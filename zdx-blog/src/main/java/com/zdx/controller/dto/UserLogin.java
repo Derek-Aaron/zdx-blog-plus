@@ -5,7 +5,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 @Data
@@ -13,11 +12,9 @@ import javax.validation.constraints.Size;
 public class UserLogin {
 
     @ApiModelProperty(value = "用户名", required = true)
-    @NotBlank
     private String username;
 
     @ApiModelProperty(value = "密码", required = true)
-    @NotBlank
     @Size(min = 6, message = "{zdx.password.min}")
     private String password;
 

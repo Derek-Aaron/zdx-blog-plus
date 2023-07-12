@@ -8,6 +8,7 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.annotation.Encrypt;
 import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
 import com.zdx.controller.dto.RequestParams;
@@ -100,7 +101,8 @@ public class UserController extends BaseController<User> {
     @PostMapping("/resetPwd")
     @ApiOperation("重置密码")
     @Log(type = LogEventEnum.PASSWORD, desc = "重置密码")
-    public Result<String> resetPwd(@RequestBody @Validated ResetPwd resetPwd) {
+    @Encrypt
+    public Result<String> resetPwd(@RequestBody @Encrypt ResetPwd resetPwd) {
         if (StrUtil.isNotBlank(resetPwd.getOldPassword())) {
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
             queryWrapper.select(User::getPassword);

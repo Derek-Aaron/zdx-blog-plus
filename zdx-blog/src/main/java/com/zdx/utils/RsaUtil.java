@@ -13,11 +13,21 @@ import java.util.List;
 
 public class RsaUtil {
 
+    /**
+     * 加密
+     * @param token  加密内容
+     * @return 返回密文
+     */
     public static String encrypt(String token) {
         RSA rsa = SecureUtil.rsa(getPrivateKey(), getPublicKey());
         return new String(rsa.encrypt(token, KeyType.PublicKey));
     }
 
+    /**
+     * 解密
+     * @param data 密文
+     * @return 返回
+     */
     public static String decrypt(String data) {
         RSA rsa = SecureUtil.rsa(getPrivateKey(), getPublicKey());
         byte[] decrypt = rsa.decrypt(data, KeyType.PrivateKey);
