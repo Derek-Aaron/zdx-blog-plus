@@ -81,7 +81,7 @@ const handleDelete = (id) => {
         type: 'warning'
     }).then(() => {
         let array = []
-        if (id instanceof String && id) {
+        if (typeof id === 'string' && id) {
             array.push(id)
         }
         if (ids.value.length !== 0) {
