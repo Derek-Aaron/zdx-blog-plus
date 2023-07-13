@@ -109,6 +109,14 @@ const router = createRouter({
             title:'定时任务日志',
           },
           component: () => import('@/views/tk/schedule/log.vue')
+        },
+        {
+          path: '/druid',
+          name:'druid',
+          meta: {
+            title:'sql监控',
+          },
+          component: () => import('@/views/tk/druid/index.vue')
         }
       ]
     }

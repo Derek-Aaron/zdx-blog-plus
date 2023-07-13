@@ -124,7 +124,10 @@ const handleView = (row) => {
 }
 
 const handleLog = (id) => {
-    router.push(`/schedule-log/${id}`)
+    if(typeof id == "string" && id) {
+        ids.value = [id]
+    }
+    router.push(`/schedule-log/${ids.value[0]}`)
 }
 
 const successHandle = (formEl) => {
@@ -173,6 +176,10 @@ onMounted(() => {
             <el-col :span="1.5">
                 <el-button type="danger" plain icon="Delete" :disabled="!ids.length > 0"
                     @click="handleDelete">删除</el-button>
+            </el-col>
+            <el-col :span="1.5">
+                <el-button type="info" plain icon="List" :disabled="!ids.length > 0"
+                    @click="handleLog">日志</el-button>
             </el-col>
             <zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="pageSchedule"
                 :columns="columns"></zdx-right-toolbar>
