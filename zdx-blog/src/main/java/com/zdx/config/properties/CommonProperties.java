@@ -24,11 +24,22 @@ public class CommonProperties {
 	/**
 	 * 是否开启xss
 	 */
-	private Boolean excludes = true;
+	private Boolean xssExcludes = true;
 	/**
 	 * xss要过滤的路径
 	 */
-	private String urlPatterns = "/captcha/**";
+	private String xssUrlPatterns = "/captcha/**";
+
+
+	/**
+	 * 是否开启敏感词过滤
+	 */
+	private Boolean sensitiveExcludes = true;
+
+	/**
+	 * 敏感词过滤要过滤的请求
+	 */
+	private String sensitiveUrlPatterns = "/captcha/**,/login";
 
 	private String[] openPath = {"/login", "/logout","/zdx.auth/all", "/captcha/**", "/desk/**", "/druid/**", "/oauth/**","/ws/**", "/register"};
 }

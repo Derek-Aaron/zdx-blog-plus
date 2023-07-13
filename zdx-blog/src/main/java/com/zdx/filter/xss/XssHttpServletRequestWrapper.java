@@ -1,5 +1,6 @@
 package com.zdx.filter.xss;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.io.IOUtils;
 import org.springframework.http.HttpHeaders;
@@ -23,26 +24,21 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 	public XssHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
-		body = request.getInputStream().readAllBytes();
+		//防止getParameter失效
+		getRequest().getParameterMap();
+		body = getRequest().getInputStream().readAllBytes();
 	}
 
 	@Override
 	public String[] getParameterValues(String name) {
 		String[] values = super.getParameterValues(name);
-		if (values != null) {
-			int length = values.length;
-			String[] escapseValues = new String[length];
-			for (int i = 0; i < length; i++) {
-				String val = values[i];
-				if (StrUtil.isNotBlank(val)) {
-					// 防xss攻击和过滤前后空格
-					escapseValues[i] = new HTMLFilter().filter(val).trim();
-//					escapseValues[i] = Objects.requireNonNull(SensitiveUtil.filter(val)).trim();
-				} else {
-					escapseValues[i] = val;
-				}
+		if (ObjUtil.isNotNull(values)) {
+			String[] str = new String[values.length];
+			for (int i = 0; i < values.length; i++) {
+				String val = new HTMLFilter().filter(values[i]).trim();
+				str[i]  = val;
 			}
-			return escapseValues;
+			return str;
 		}
 		return super.getParameterValues(name);
 	}
@@ -64,11 +60,8 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		if (StrUtil.isEmpty(json)) {
 			return getServletInputStream(body);
 		}
-
-		// xss过滤
+		//数据xss过滤
 		json = new HTMLFilter().filter(json).trim();
-		//敏感信息过滤
-//		json = SensitiveUtil.filter(json);
 		byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
 		return getServletInputStream(bytes);
 	}
@@ -87,12 +80,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 		return new ServletInputStream() {
 			@Override
 			public boolean isFinished() {
-				return false;
+				return bis.available() == 0;
 			}
 
 			@Override
 			public boolean isReady() {
-				return false;
+				return true;
 			}
 
 			@Override

@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import com.zdx.cache.CacheTemplate;
 import com.zdx.cache.LocalCacheManager;
 import com.zdx.config.properties.CommonProperties;
+import com.zdx.filter.sensitive.SensitiveFilter;
 import com.zdx.filter.xss.XssFilter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,7 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import javax.servlet.DispatcherType;
+import javax.servlet.Filter;
 import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Map;
@@ -82,17 +84,29 @@ public class ResourcesConfig implements WebMvcConfigurer {
     }
 
     @Bean
-    @SuppressWarnings("all")
-    public FilterRegistrationBean xssFilterRegistration() {
-        FilterRegistrationBean registration = new FilterRegistrationBean();
-        registration.setDispatcherTypes(DispatcherType.REQUEST);
+    public FilterRegistrationBean<Filter> xssFilterRegistration() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
         registration.setFilter(new XssFilter());
         registration.addUrlPatterns("/*");
         registration.setName("xssFilter");
         registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE);
         Map<String, String> initParameters = new HashMap<>(1);
-        initParameters.put("excludes", commonProperties.getExcludes().toString());
-        initParameters.put("urlPatterns", commonProperties.getUrlPatterns());
+        initParameters.put("excludes", commonProperties.getXssExcludes().toString());
+        initParameters.put("urlPatterns", commonProperties.getXssUrlPatterns());
+        registration.setInitParameters(initParameters);
+        return registration;
+    }
+    @Bean
+    public FilterRegistrationBean<Filter> sensitiveFilterRegistration() {
+        FilterRegistrationBean<Filter> registration = new FilterRegistrationBean<>();
+        registration.setDispatcherTypes(DispatcherType.REQUEST);
+        registration.setFilter(new SensitiveFilter());
+        registration.addUrlPatterns("/*");
+        registration.setName("sensitiveFilter");
+        registration.setOrder(FilterRegistrationBean.HIGHEST_PRECEDENCE + 1);
+        Map<String, String> initParameters = new HashMap<>(1);
+        initParameters.put("excludes", commonProperties.getSensitiveExcludes().toString());
+        initParameters.put("urlPatterns", commonProperties.getSensitiveUrlPatterns());
         registration.setInitParameters(initParameters);
         return registration;
     }

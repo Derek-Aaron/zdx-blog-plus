@@ -6,7 +6,6 @@ import org.springframework.util.AntPathMatcher;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -23,10 +22,13 @@ public class XssFilter implements Filter {
 	 */
 	public List<String> excludes = new ArrayList<>();
 
-	private final  static   AntPathMatcher  antPathMatcher = new AntPathMatcher();
+	private final static AntPathMatcher  antPathMatcher = new AntPathMatcher();
+
+	private Boolean open;
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {
+		open = Boolean.parseBoolean(filterConfig.getInitParameter("excludes"));
 		String tempExcludes = filterConfig.getInitParameter("urlPatterns");
 		if (StrUtil.isNotEmpty(tempExcludes)) {
 			String[] url = tempExcludes.split(",");
@@ -37,9 +39,12 @@ public class XssFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		if (!open) {
+			chain.doFilter(request, response);
+			return;
+		}
 		HttpServletRequest req = (HttpServletRequest) request;
-		HttpServletResponse resp = (HttpServletResponse) response;
-		if (handleExcludeURL(req, resp)) {
+		if (handleExcludeURL(req)) {
 			chain.doFilter(request, response);
 			return;
 		}
@@ -48,10 +53,12 @@ public class XssFilter implements Filter {
 	}
 
 
-	private boolean handleExcludeURL(HttpServletRequest request, HttpServletResponse response) {
+	private boolean handleExcludeURL(HttpServletRequest request) {
 		String url = request.getRequestURI();
 		for (String exclude : excludes) {
-			return null != url && null != exclude && antPathMatcher.match(exclude, url);
+			if (null != url && null != exclude && antPathMatcher.match(exclude, url)) {
+				return true;
+			}
 		}
 		return false;
 	}

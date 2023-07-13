@@ -2,6 +2,7 @@ package com.zdx.utils;
 
 import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.asymmetric.KeyType;
 import cn.hutool.crypto.asymmetric.RSA;
@@ -19,6 +20,9 @@ public class RsaUtil {
      * @return 返回密文
      */
     public static String encrypt(String token) {
+        if (StrUtil.isBlank(token)) {
+            return null;
+        }
         RSA rsa = SecureUtil.rsa(getPrivateKey(), getPublicKey());
         return new String(rsa.encrypt(token, KeyType.PublicKey));
     }
@@ -29,6 +33,9 @@ public class RsaUtil {
      * @return 返回
      */
     public static String decrypt(String data) {
+        if (StrUtil.isBlank(data)) {
+            return null;
+        }
         RSA rsa = SecureUtil.rsa(getPrivateKey(), getPublicKey());
         byte[] decrypt = rsa.decrypt(data, KeyType.PrivateKey);
         return new String(decrypt);
