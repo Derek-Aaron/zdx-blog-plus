@@ -78,3 +78,18 @@ export const baseById = (module, name, params) => {
         method:'GET'
     })
 }
+
+export const baseParams = (module, name, params) => {
+    return request({
+        url:`/zdx.${module}/${name}`,
+        method:'GET',
+        params: params
+    })
+}
+
+export const baseApi = (module, name) => {
+    return request({
+        url:`/zdx.${module}/${name}`,
+        method:'GET'
+    })
+}

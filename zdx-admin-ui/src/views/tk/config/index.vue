@@ -126,7 +126,7 @@ onMounted(() => {
             </el-form-item>
             <el-form-item label="配置类型" prop="type">
                 <el-select v-model="queryParams.params.type" class="m-2" placeholder="请选择" clearable>
-                    <el-option v-for="item in zdx_config_type" :key="item.value" :label="item.label" :value="item.value" />
+                    <el-option v-for="item in zdx_config_type" :key="item.value" :label="item.value" :value="item.key" />
                 </el-select>
             </el-form-item>
             <el-form-item>

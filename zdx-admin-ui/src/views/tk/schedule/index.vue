@@ -124,7 +124,7 @@ const handleView = (row) => {
 }
 
 const handleLog = (id) => {
-    if(typeof id == "string" && id) {
+    if (typeof id == "string" && id) {
         ids.value = [id]
     }
     router.push(`/schedule-log/${ids.value[0]}`)
@@ -156,9 +156,19 @@ onMounted(() => {
     <div class="app-container">
         <!--用户数据-->
         <el-form :model="queryParams.params" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-            <el-form-item label="角色名" prop="name">
-                <el-input v-model="queryParams.params.name" placeholder="请输入角色名" clearable style="width: 240px"
-                    @keyup.enter="pageRole" @clear="pageRole" />
+            <el-form-item label="任务名" prop="name">
+                <el-input v-model="queryParams.params.name" placeholder="请输入任务名" clearable style="width: 240px"
+                    @keyup.enter="pageSchedule" @clear="pageSchedule" />
+            </el-form-item>
+            <el-form-item label="分组" prop="group">
+                <el-input v-model="queryParams.params.group" placeholder="请输入分组" clearable style="width: 240px"
+                    @keyup.enter="pageSchedule" @clear="pageSchedule" />
+            </el-form-item>
+            <el-form-item label="状态" prop="status">
+                <el-radio-group v-model="queryParams.params.status" @keyup.enter="pageSchedule">
+                    <el-radio :label="true">开启</el-radio>
+                    <el-radio :label="false">暂停</el-radio>
+                </el-radio-group>
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="Search" @click="pageSchedule">搜索</el-button>
@@ -178,8 +188,7 @@ onMounted(() => {
                     @click="handleDelete">删除</el-button>
             </el-col>
             <el-col :span="1.5">
-                <el-button type="info" plain icon="List" :disabled="!ids.length > 0"
-                    @click="handleLog">日志</el-button>
+                <el-button type="info" plain icon="List" :disabled="!ids.length > 0" @click="handleLog">日志</el-button>
             </el-col>
             <zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="pageSchedule"
                 :columns="columns"></zdx-right-toolbar>
@@ -330,14 +339,15 @@ onMounted(() => {
                 <el-descriptions column="2">
                     <el-descriptions-item label="任务编号：">{{ entity.id }}</el-descriptions-item>
                     <el-descriptions-item label="任务名：">{{ entity.name }}</el-descriptions-item>
-                    <el-descriptions-item label="任务分组：">{{ entity.group}}</el-descriptions-item>
-                    <el-descriptions-item label="扩展类：">{{ entity.invoke}}</el-descriptions-item>
-                    <el-descriptions-item label="表达式：">{{ entity.cron}}</el-descriptions-item>
-                    <el-descriptions-item label="执行策略："> <zdx-dict-tag :options="zdx_schedule_misfire" :value="entity.misfire" /></el-descriptions-item>
-                    <el-descriptions-item label="状态：">{{ entity.status ? '开启':'暂停'}}</el-descriptions-item>
-                    <el-descriptions-item label="是否并发：">{{ entity.concurrent ? '是':'否'}}</el-descriptions-item>
-                    <el-descriptions-item label="创建时间：">{{ entity.createTime}}</el-descriptions-item>
-                    <el-descriptions-item label="描述：">{{ entity.description}}</el-descriptions-item>
+                    <el-descriptions-item label="任务分组：">{{ entity.group }}</el-descriptions-item>
+                    <el-descriptions-item label="扩展类：">{{ entity.invoke }}</el-descriptions-item>
+                    <el-descriptions-item label="表达式：">{{ entity.cron }}</el-descriptions-item>
+                    <el-descriptions-item label="执行策略："> <zdx-dict-tag :options="zdx_schedule_misfire"
+                            :value="entity.misfire" /></el-descriptions-item>
+                    <el-descriptions-item label="状态：">{{ entity.status ? '开启' : '暂停' }}</el-descriptions-item>
+                    <el-descriptions-item label="是否并发：">{{ entity.concurrent ? '是' : '否' }}</el-descriptions-item>
+                    <el-descriptions-item label="创建时间：">{{ entity.createTime }}</el-descriptions-item>
+                    <el-descriptions-item label="描述：">{{ entity.description }}</el-descriptions-item>
                 </el-descriptions>
             </template>
         </zdx-dialog>

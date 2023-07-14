@@ -276,7 +276,7 @@ onMounted(() => {
             </el-table-column>
         </el-table>
 
-        <zdxDialog :dialog="dialog" :title="title" @close="close" width="40%">
+        <zdxDialog :dialog="dialog" :title="title" @close="close" width="50%">
             <template #content>
                 <el-form :model="entity" :rules="rules" ref="menuRef" label-width="80px">
                     <el-row>

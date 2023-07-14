@@ -114,9 +114,47 @@ const router = createRouter({
           path: '/druid',
           name:'druid',
           meta: {
-            title:'sql监控',
+            title:'数据监控',
           },
-          component: () => import('@/views/tk/druid/index.vue')
+          component: () => import('@/views/system/druid/index.vue')
+        },
+        {
+          path: '/server',
+          name:'server',
+          meta: {
+            title:'服务监控',
+          },
+          component: () => import('@/views/system/server/index.vue')
+        },
+        {
+          path: '/cache',
+          name:'cache',
+          meta: {
+            title:'缓存监控',
+          },
+          component: () => import('@/views/system/cache/index.vue')
+        },
+        {
+          path: '/log-login',
+          name:'log-login',
+          meta: {
+            title:'登录日志',
+            params:{
+              event: 'LOGIN',
+            }
+          },
+          component: () => import('@/views/us/log/index.vue')
+        },
+        {
+          path: '/log-operate',
+          name:'log-operate',
+          meta: {
+            title:'操作日志',
+            params:{
+              event: '',
+            }
+          },
+          component: () => import('@/views/us/log/index.vue')
         }
       ]
     }

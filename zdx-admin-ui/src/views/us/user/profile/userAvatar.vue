@@ -63,6 +63,10 @@ import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
 import {getCurrentInstance, reactive, ref} from "vue";
 import {useStore} from "@/stores";
+import { uploadFile } from "@/api/tk/file"
+import { updateProfile } from "@/api/us/user"
+import { transToFile } from "@/utils/index"
+import { ElMessage } from "element-plus";
 
 const userStore = useStore().useUser
 const { proxy } = getCurrentInstance();
@@ -70,6 +74,7 @@ const { proxy } = getCurrentInstance();
 const open = ref(false);
 const visible = ref(false);
 const title = ref("修改头像");
+const filename = ref('');
 
 //图片裁剪数据
 const options = reactive({
@@ -110,6 +115,7 @@ function beforeUpload(file) {
   if (file.type.indexOf("image/") === -1) {
     proxy.$modal.msgError("文件格式错误，请上传图片类型,如：JPG，PNG后缀的文件。");
   } else {
+    filename.value = file.name
     const reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = () => {
@@ -120,15 +126,16 @@ function beforeUpload(file) {
 /** 上传图片 */
 function uploadImg() {
   proxy.$refs.cropper.getCropBlob(data => {
-    let formData = new FormData();
-    formData.append("file", data);
-    // uploadAvatar(formData).then(response => {
-    //   open.value = false;
-    //   options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl;
-    //   userStore.avatar = options.img;
-    //   proxy.$modal.msgSuccess("修改成功");
-    //   visible.value = false;
-    // });
+    let file = transToFile(data, filename.value, data.type)
+    uploadFile(file).then(res => {
+      open.value = false;
+      options.img = res.data.fileUrl
+      userStore.avatar = res.data.fileUrl
+      visible.value = false;
+      updateProfile({avatar: res.data.fileId}).then(res => {
+        ElMessage.success(res.message)
+      })
+    })
   });
 }
 /** 实时预览 */

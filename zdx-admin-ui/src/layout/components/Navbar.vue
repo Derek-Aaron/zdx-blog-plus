@@ -18,7 +18,7 @@
         <!--        </el-tooltip>-->
 
         <screenfull id="screenfull" class="right-menu-item hover-effect"/>
-
+        
         <el-tooltip content="布局大小" effect="dark" placement="bottom">
           <size-select id="size-select" class="right-menu-item hover-effect"/>
         </el-tooltip>
@@ -56,6 +56,7 @@ import Breadcrumb from '@/components/Breadcrumb/index.vue'
 import TopNav from '@/components/TopNav/index.vue'
 import Hamburger from '@/components/Hamburger/index.vue'
 import Screenfull from '@/components/Screenfull/index.vue'
+import Dark from '@/components/Dark/index.vue'
 import SizeSelect from '@/components/SizeSelect/index.vue'
 import HeaderSearch from '@/components/HeaderSearch/index.vue'
 import {useStore} from "@/stores";

@@ -107,6 +107,7 @@ const handleDelete = (id) => {
         type: 'warning'
     }).then(() => {
         let array = []
+        console.log(id);
         if (typeof id === 'string' && id) {
             array.push(id)
         }
@@ -172,7 +173,7 @@ onMounted(() => {
                         <el-button link type="primary" icon="Download" @click="handleDownload(scope.row)" />
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" />
+                        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row.id)" />
                     </el-tooltip>
                 </template>
             </el-table-column>

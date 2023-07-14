@@ -379,6 +379,10 @@ export function titleCase(str) {
   return str.replace(/( |^)[a-z]/g, L => L.toUpperCase())
 }
 
+export function transToFile(blob, fileName, fileType) {
+  return new File([blob], fileName, {type: fileType})
+}
+
 // 下划转驼峰
 export function camelCase(str) {
   return str.replace(/_[a-z]/g, str1 => str1.substr(-1).toUpperCase())

@@ -11,6 +11,7 @@ import elementIcons from '@/components/SvgIcon/svgicon'
 import ElementPlus from 'element-plus'
 import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import 'element-plus/dist/index.css'
+import 'element-plus/theme-chalk/dark/css-vars.css'
 import plugins from '@/plugins'
 import '@/permission'
 import App from './App.vue'
