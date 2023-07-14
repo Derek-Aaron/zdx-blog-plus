@@ -1,18 +1,22 @@
 package com.zdx.entity.zdx;
 
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
-import java.io.Serializable;
-import java.util.Date;
+import java.io.Serial;
 
 /**
  * @TableName zdx_album
  */
 @TableName(value ="zdx_album")
 @Data
-public class Album implements Serializable {
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class Album extends BaseTimeEntity {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String albumName;
 
@@ -22,9 +26,4 @@ public class Album implements Serializable {
 
     private Boolean status;
 
-    private Date createTime;
-
-    private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 }

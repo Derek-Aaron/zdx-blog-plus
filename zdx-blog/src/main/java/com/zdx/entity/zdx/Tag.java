@@ -1,26 +1,25 @@
 package com.zdx.entity.zdx;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import java.io.Serializable;
-import java.util.Date;
+import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.io.Serial;
 
 /**
  * @TableName zdx_tag
  */
 @TableName(value ="zdx_tag")
 @Data
-public class Tag implements Serializable {
-    private Long id;
+@EqualsAndHashCode(callSuper = true)
+public class Tag extends BaseTimeEntity {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     private String name;
 
-    private Date createTime;
 
-    private Date updateTime;
 
-    private static final long serialVersionUID = 1L;
 }
