@@ -155,6 +155,30 @@ const router = createRouter({
             }
           },
           component: () => import('@/views/us/log/index.vue')
+        },
+        {
+          path: '/add-article',
+          name:'add-article',
+          meta: {
+            title:'编写文章',
+          },
+          component: () => import('@/views/zdx/article/addArticle.vue')
+        },
+        {
+          path: '/article',
+          name:'article',
+          meta: {
+            title:'文章列表',
+          },
+          component: () => import('@/views/zdx/article/index.vue')
+        },
+        {
+          path: '/category',
+          name:'category',
+          meta: {
+            title:'分类管理',
+          },
+          component: () => import('@/views/zdx/category/index.vue')
         }
       ]
     }

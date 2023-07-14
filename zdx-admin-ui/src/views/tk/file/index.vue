@@ -196,7 +196,7 @@ onMounted(() => {
         </zdx-dialog>
         <zdx-dialog :dialog="openView" title="在线预览文件" @close="openView = false">
             <template #content>
-                <el-image v-if="entity.IMAGE" :src="entity.url" />
+                <el-image v-if="entity.bucketName === 'IMAGE'" :src="entity.url" />
             </template>
         </zdx-dialog>
     </div>

@@ -86,7 +86,6 @@ const options = reactive({
   outputType: "png", // 默认生成截图为PNG格式
   previews: {} //预览数据
 });
-
 /** 编辑头像 */
 function editCropper() {
   open.value = true;
