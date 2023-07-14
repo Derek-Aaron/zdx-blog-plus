@@ -7,7 +7,6 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
 import java.util.Date;
 
 @Data
@@ -21,15 +20,12 @@ public class UserProfile {
     private String username;
 
     @ApiModelProperty("昵称")
-    @NotBlank
     private String nickname;
 
     @ApiModelProperty("邮箱")
-    @NotBlank
     private String email;
 
     @ApiModelProperty("手机号")
-    @NotBlank
     private String mobile;
 
     @ApiModelProperty("头像")

@@ -2,6 +2,7 @@ package com.zdx.event.handle;
 
 
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.core.util.StrUtil;
 import com.zdx.Constants;
 import com.zdx.cache.CacheTemplate;
 import com.zdx.controller.vo.UserProfile;
@@ -28,10 +29,21 @@ public class RefreshLoginTokenCacheEvent implements EventHandle {
         UserProfile userProfile = event.getSource(UserProfile.class);
         UserPrincipal userSession = event.getAttribute(EventObject.Attribute.USER_SESSION, UserPrincipal.class);
         if (ObjUtil.isNotNull(userProfile) && ObjUtil.isNotNull(userSession)) {
-            userSession.getUser().setNickname(userProfile.getNickname());
-            userSession.getUser().setMobile(userProfile.getMobile());
-            userSession.getUser().setEmail(userProfile.getEmail());
-            userSession.getUser().setGender(userProfile.getGender());
+            if (StrUtil.isNotBlank(userProfile.getNickname())) {
+                userSession.getUser().setNickname(userProfile.getNickname());
+            }
+            if (StrUtil.isNotBlank(userProfile.getMobile())) {
+                userSession.getUser().setMobile(userProfile.getMobile());
+            }
+            if (StrUtil.isNotBlank(userProfile.getEmail())) {
+                userSession.getUser().setEmail(userProfile.getEmail());
+            }
+            if (StrUtil.isNotBlank(userProfile.getGender())) {
+                userSession.getUser().setGender(userProfile.getGender());
+            }
+            if (StrUtil.isNotBlank(userProfile.getAvatar())) {
+                userSession.getUser().setAvatar(userProfile.getAvatar());
+            }
             cacheTemplate.put(Constants.LOGIN_TOKEN_KEY + userSession.getPersonId(), userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
         }
     }
