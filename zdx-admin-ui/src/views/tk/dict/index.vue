@@ -76,8 +76,10 @@ const handleChange = (row) => {
 }
 
 const handleUpdate = (row) => {
-    if (row) {
-        entity.value = row
+    if (!(row instanceof PointerEvent)) {
+        if (row) {
+            entity.value = row
+        }
     }
     title.value = '更新字典【' + entity.value.name + '】'
     dialog.value = true

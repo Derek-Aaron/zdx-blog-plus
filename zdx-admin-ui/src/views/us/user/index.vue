@@ -115,9 +115,11 @@ const handleAdd = () => {
 }
 
 const handleUpdate = (row) => {
-   if (row.id) {
-      entity.value = row
-   }
+   if (!(row instanceof PointerEvent)) {
+        if (row) {
+            entity.value = row
+        }
+    }
    if (Object.keys(entity.value).length === 0) {
       ElMessage.error('请选择实例')
       return

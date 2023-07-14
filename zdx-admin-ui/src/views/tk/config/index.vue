@@ -61,8 +61,10 @@ const handleSelectionChange = (selection) => {
 }
 
 const handleUpdate = (row) => {
-    if (row) {
-        entity.value = row
+    if (!(row instanceof PointerEvent)) {
+        if (row) {
+            entity.value = row
+        }
     }
     dialog.value = true
     title.value = '更改配置【' + entity.value.name + '】'

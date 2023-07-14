@@ -179,6 +179,54 @@ const router = createRouter({
             title:'分类管理',
           },
           component: () => import('@/views/zdx/category/index.vue')
+        },
+        {
+          path: '/tag',
+          name:'tag',
+          meta: {
+            title:'标签管理',
+          },
+          component: () => import('@/views/zdx/tag/index.vue')
+        },
+        {
+          path: '/comment',
+          name:'comment',
+          meta: {
+            title:'评论管理',
+          },
+          component: () => import('@/views/zdx/comment/index.vue')
+        },
+        {
+          path: '/friend',
+          name:'friend',
+          meta: {
+            title:'友链管理',
+          },
+          component: () => import('@/views/zdx/friend/index.vue')
+        },
+        {
+          path: '/talk',
+          name:'talk',
+          meta: {
+            title:'说说管理',
+          },
+          component: () => import('@/views/zdx/talk/index.vue')
+        },
+        {
+          path: '/album',
+          name:'album',
+          meta: {
+            title:'相册管理',
+          },
+          component: () => import('@/views/zdx/album/index.vue')
+        },
+        {
+          path: '/message',
+          name:'message',
+          meta: {
+            title:'留言管理',
+          },
+          component: () => import('@/views/zdx/message/index.vue')
         }
       ]
     }

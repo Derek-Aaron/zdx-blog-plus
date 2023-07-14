@@ -72,6 +72,14 @@ export const batchDel = (module, data) => {
     })
 }
 
+export const batchHandle = (module, name, data) => {
+    return request({
+        url:`/zdx.${module}/${name}`,
+        method:'POST',
+        data: data,
+    })
+}
+
 export const baseById = (module, name, params) => {
     return request({
         url:`/zdx.${module}/${name}/${params}`,

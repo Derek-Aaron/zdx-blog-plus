@@ -110,8 +110,13 @@ const handleAdd = (row) => {
 }
 
 const handleUpdate = (row) => {
+    if (!(row instanceof PointerEvent)) {
+        if (row) {
+            entity.value = row
+        }
+    }
     dialog.value = true
-    title.value = '更改菜单【' + row.name + '】'
+    title.value = '更改菜单【' + entity.value.name + '】'
     entity.value = row
 }
 
