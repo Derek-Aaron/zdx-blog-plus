@@ -2,7 +2,7 @@
 import zdxRightToolbar from "@/components/RightToolbar/index.vue";
 import zdxPagination from "@/components/Pagination/index.vue";
 import { onMounted, reactive, ref } from "vue";
-import { page, batchDel, save } from '@/api/base'
+import {page, batchDel, save, batchHandle} from '@/api/base'
 import { ElMessage, ElMessageBox } from "element-plus";
 
 
@@ -47,7 +47,7 @@ const resetQuery = (formEl) => {
 const handleThrough = () => {
     batchHandle(module.value, 'through', ids.value).then(res => {
         ElMessage.success(res.message)
-        pageComment()
+        pageMessage()
     })
 }
 
@@ -123,9 +123,11 @@ onMounted(() => {
             <el-table-column label="地址" align="center" key="ip" prop="ip" show-overflow-tooltip/>
             <el-table-column label="来源" align="center" key="source" prop="source" show-overflow-tooltip/>
             <el-table-column label="审核" align="center" key="isCheck" prop="isCheck" show-overflow-tooltip >
-                <el-switch v-model="scope.row.isCheck" class="ml-2" :active-value="false" :inactive-value="true"
-                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                  @change="handleChange(scope.row)"></el-switch>
+								<template #default="scope">
+										<el-switch v-model="scope.row.isCheck" class="ml-2" :active-value="false" :inactive-value="true"
+															 style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+															 @change="handleChange(scope.row)"></el-switch>
+								</template>
             </el-table-column>
             <el-table-column label="留言时间" align="center" key="createTime" prop="createTime" />
             <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">

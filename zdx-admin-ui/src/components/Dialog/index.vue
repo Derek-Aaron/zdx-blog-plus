@@ -5,8 +5,7 @@
         <template #footer>
             <span class="dialog-footer">
                 <slot name="footer" />
-                <el-button @click="$emit('close')">关闭</el-button>
-               
+                <el-button v-if="$props.isOpenClose" @click="$emit('close')">关闭</el-button>
             </span>
         </template>
     </el-dialog>
@@ -36,6 +35,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+	isOpenClose:{
+		type: Boolean,
+		default: true
+	}
 })
 
 const emits = defineEmits(['close'])

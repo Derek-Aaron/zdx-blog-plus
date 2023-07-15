@@ -1,10 +1,14 @@
 package com.zdx.service.zdx.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.entity.zdx.Article;
 import com.zdx.service.zdx.ArticleService;
 import com.zdx.mapper.zdx.ArticleMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
 * @author zhaodengxuan
@@ -15,6 +19,19 @@ import org.springframework.stereotype.Service;
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     implements ArticleService{
 
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean batchTrash(List<String> ids) {
+        for (String id : ids) {
+            LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
+            updateWrapper.set(Article::getTrash, Boolean.TRUE);
+            updateWrapper.eq(Article::getId, id);
+            if (!update(updateWrapper)) {
+                return  false;
+            }
+        }
+        return true;
+    }
 }
 
 

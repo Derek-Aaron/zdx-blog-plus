@@ -7,6 +7,8 @@
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Article">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
+            <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
             <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
             <result property="articleCover" column="article_cover" jdbcType="VARCHAR"/>
             <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
@@ -20,7 +22,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,category_id,
+        id,user_id,category_id,view_count,likes_count
         article_cover,article_title,article_type,
         is_top,trash,is_recommend,
         status,create_time,update_time

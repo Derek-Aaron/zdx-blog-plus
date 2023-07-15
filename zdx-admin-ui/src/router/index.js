@@ -103,7 +103,7 @@ const router = createRouter({
           component: () => import('@/views/tk/schedule/index.vue')
         },
         {
-          path: '/schedule-log/:scheduleId(\\d+)',
+          path: '/schedule-log/:scheduleId',
           name:'schedule-log',
           meta: {
             title:'定时任务日志',
@@ -157,7 +157,7 @@ const router = createRouter({
           component: () => import('@/views/us/log/index.vue')
         },
         {
-          path: '/add-article',
+          path: '/add-article/:articleId*',
           name:'add-article',
           meta: {
             title:'编写文章',
@@ -219,6 +219,14 @@ const router = createRouter({
             title:'相册管理',
           },
           component: () => import('@/views/zdx/album/index.vue')
+        },
+        {
+          path: '/photo/:albumId',
+          name:'photo',
+          meta: {
+            title:'图片管理',
+          },
+          component: () => import('@/views/zdx/photo/index.vue')
         },
         {
           path: '/message',

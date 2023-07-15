@@ -2,6 +2,7 @@ package com.zdx.oss;
 
 
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.util.StrUtil;
 import io.minio.*;
 import io.minio.http.Method;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +18,10 @@ import java.util.Locale;
 
 
 @Slf4j
-public class MinioTemplateImpl implements FileTemplate{
+public class MinioTemplateImpl implements FileTemplate {
     @Autowired
     private MinioClient minioClient;
+
     @Override
     public String uploadFile(MultipartFile file, String bucketName) {
         try {
@@ -32,13 +34,17 @@ public class MinioTemplateImpl implements FileTemplate{
                     .bucket(bucketName.toLowerCase(Locale.ROOT))
                     .contentType(file.getContentType())
                     .stream(new ByteArrayInputStream(bytes), bytes.length, -1).build());
-            return minioClient.getPresignedObjectUrl(
+            String url = minioClient.getPresignedObjectUrl(
                     GetPresignedObjectUrlArgs.builder()
                             .method(Method.GET)
                             .bucket(bucketName.toLowerCase(Locale.ROOT))
                             .object(file.getOriginalFilename())
                             .build()
             );
+            if (isPublic(bucketName) && url.contains("?")) {
+                url = url.substring(0, url.indexOf("?"));
+            }
+            return url;
         } catch (Exception e) {
             log.error("上传文件出现异常：{}", e.getMessage(), e);
             return null;
@@ -61,13 +67,17 @@ public class MinioTemplateImpl implements FileTemplate{
     public String getFileUrl(String bucketName, String fileName) {
         if (checkFileIsExist(bucketName, fileName)) {
             try {
-                return minioClient.getPresignedObjectUrl(
+                String url = minioClient.getPresignedObjectUrl(
                         GetPresignedObjectUrlArgs.builder()
                                 .method(Method.GET)
                                 .bucket(bucketName.toLowerCase(Locale.ROOT))
                                 .object(fileName)
                                 .build()
                 );
+                if (isPublic(bucketName) && url.contains("?")) {
+                    url = url.substring(0, url.indexOf("?"));
+                }
+                return url;
             } catch (Exception e) {
                 log.error("获取文件访问连接异常：{}", e.getMessage(), e);
                 return null;
@@ -90,8 +100,26 @@ public class MinioTemplateImpl implements FileTemplate{
         }
     }
 
+    /**
+     * 判断桶是否开放
+     *
+     * @param bucketName 桶
+     * @return 成功
+     */
+    private boolean isPublic(String bucketName) {
+        try {
+            String config = minioClient.getBucketPolicy(GetBucketPolicyArgs.builder()
+                    .bucket(bucketName.toLowerCase(Locale.ROOT))
+                    .build());
+            return StrUtil.isNotBlank(config);
+        } catch (Exception e) {
+            log.error("获取桶策略异常：{}", e.getMessage(), e);
+            return false;
+        }
+    }
+
     @Override
-    public void downloadFile(String bucketName, String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception{
+    public void downloadFile(String bucketName, String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
 //设置编码
         response.setCharacterEncoding("UTF-8");
         //设置Content-Type头

@@ -2,6 +2,9 @@ package com.zdx.mapper.zdx;
 
 import com.zdx.entity.zdx.Tag;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author zhaodengxuan
@@ -11,6 +14,12 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface TagMapper extends BaseMapper<Tag> {
 
+    /**
+     * 通过标签id获取文章id
+     * @param tagId 标签id
+     * @return 返回
+     */
+    List<String> getArticleIdByTagId(@Param("tagId") String tagId);
 }
 
 

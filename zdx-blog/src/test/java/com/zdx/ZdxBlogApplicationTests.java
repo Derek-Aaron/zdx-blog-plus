@@ -12,6 +12,8 @@ import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
 import com.zdx.utils.RsaUtil;
+import io.minio.GetBucketPolicyArgs;
+import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -80,6 +82,16 @@ class ZdxBlogApplicationTests {
     @Test
     public void test1() {
         System.out.println(RsaUtil.decrypt("H4yU/Ci0dqKMzpAwnBQyjJTrPaksWXOFsFm92psAPzNsDemJhiGBQEHcPxNFCKG9Bxx21Do2cX8SzY***Z8pI6YbBDmdqegma4gFbl2T/Ei95DnqEiPX20VB5M5tCCTrPpEJpcZE/2sdnfI/uFu56D9BA6aIcTdCBjlL***TD98EAp8x9GsGBgkeMmq4qvkHEN5tlI5Y2n+WNSjXDjyHHlKb8Ii8ykdk9qHlJ3ZAqqvkq***yjdhO+KnVR5TIK+HGqHfsY9F2HnzdwLNWFCoX3RMm1iUfIxJkw/yIq976rtKboAXE0uIIiMO2KQUX3Yh9OzpXq4H2R/K7iCtkYMPMFXIg=="));
+    }
+
+    @Autowired
+    private MinioClient minioClient;
+
+    @Test
+    public void minioClientTest() throws Exception{
+        String config =
+                minioClient.getBucketPolicy(GetBucketPolicyArgs.builder().bucket("document").build());
+        System.out.println(config);
     }
 
 }

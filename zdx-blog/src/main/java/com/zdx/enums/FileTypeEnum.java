@@ -6,6 +6,10 @@ public enum FileTypeEnum {
      */
     IMAGE,
     /**
+     * 博客图片
+     */
+    ARTICLE,
+    /**
      * 文档
      */
     DOCUMENT,

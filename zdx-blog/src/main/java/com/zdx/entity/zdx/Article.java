@@ -1,11 +1,13 @@
 package com.zdx.entity.zdx;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
 import java.io.Serial;
+import java.util.List;
 
 /**
  * @TableName zdx_article
@@ -28,6 +30,10 @@ public class Article extends BaseTimeEntity {
 
     private String articleType;
 
+    private Long viewCount;
+
+    private Long likesCount;
+
     private Boolean isTop;
 
     private Boolean trash;
@@ -35,6 +41,15 @@ public class Article extends BaseTimeEntity {
     private Boolean isRecommend;
 
     private String status;
+
+    @TableField(exist = false)
+    private String categoryName;
+
+    @TableField(exist = false)
+    private List<String> tagNames;
+
+    @TableField(exist = false)
+    private String content;
 
 
 }

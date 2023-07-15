@@ -1,5 +1,6 @@
 package com.zdx.entity.zdx;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
@@ -25,5 +26,8 @@ public class Album extends BaseTimeEntity {
     private String description;
 
     private Boolean status;
+
+    @TableField(exist = false)
+    private Long photoCount;
 
 }

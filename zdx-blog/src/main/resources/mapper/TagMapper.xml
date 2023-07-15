@@ -15,4 +15,7 @@
         id,name,create_time,
         update_time
     </sql>
+    <select id="getArticleIdByTagId" resultType="java.lang.String">
+        select article_id where zdx_article_tag where tag_id = #{tagId}
+    </select>
 </mapper>
