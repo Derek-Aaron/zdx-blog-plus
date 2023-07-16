@@ -37,4 +37,18 @@ public class Constants {
     public static final List<String> VIDEOTTYPE = Arrays.asList(".mp4",".avi",".wmv",".mpg",".mpeg",".mov", ".ram", ".rm");
 
     public static final Long DOWNSIZE = 1024 * 1024 * 30L;
+
+
+    public static final String UNIQUE_VISITOR = "unique_visitor";
+
+    public static final String BLOG_VIEW_COUNT = "blog_view_count";
+
+    public static final String USER_ARTICLE_LIKE = "user_article_like:";
+
+
+    public static final String USER_COMMENT_LIKE = "user_comment_like:";
+
+    public static final String USER_TALK_LIKE = "user_talk_like:";
+
+
 }

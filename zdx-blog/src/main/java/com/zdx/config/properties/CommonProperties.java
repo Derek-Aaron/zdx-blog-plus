@@ -34,7 +34,7 @@ public class CommonProperties {
 	/**
 	 * 是否开启敏感词过滤
 	 */
-	private Boolean sensitiveExcludes = true;
+	private Boolean sensitiveExcludes = false;
 
 	/**
 	 * 敏感词过滤要过滤的请求

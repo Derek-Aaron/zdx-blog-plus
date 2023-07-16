@@ -15,7 +15,16 @@
         id,name,create_time,
         update_time
     </sql>
+    <insert id="insertArticleTag">
+        insert into zdx_article_tag(article_id, tag_id) values (#{articleId}, #{tagId})
+    </insert>
     <select id="getArticleIdByTagId" resultType="java.lang.String">
         select article_id where zdx_article_tag where tag_id = #{tagId}
+    </select>
+    <select id="getCountByArticleIdAndTagId" resultType="java.lang.Integer">
+        select count(*) from zdx_article_tag where article_id = #{articleId} and tag_id = #{tagId}
+    </select>
+    <select id="getTagByArticleId" resultType="com.zdx.entity.zdx.Tag">
+        select t.* from zdx_tag t left join zdx_article_tag zat on t.id = zat.tag_id where zat.article_id = #{articleId}
     </select>
 </mapper>

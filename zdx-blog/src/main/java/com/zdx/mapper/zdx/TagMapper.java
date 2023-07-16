@@ -20,6 +20,12 @@ public interface TagMapper extends BaseMapper<Tag> {
      * @return 返回
      */
     List<String> getArticleIdByTagId(@Param("tagId") String tagId);
+
+    int getCountByArticleIdAndTagId(@Param("articleId") Long articleId,@Param("tagId") Long tagId);
+
+    void insertArticleTag(@Param("articleId") Long articleId,@Param("tagId") Long tagId);
+
+    List<Tag> getTagByArticleId(@Param("articleId") Long articleId);
 }
 
 

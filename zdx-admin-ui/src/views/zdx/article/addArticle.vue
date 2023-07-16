@@ -159,10 +159,11 @@ const successHandle = (formEl) => {
 	formEl.validate((valid, fields) => {
 		if (valid) {
 			if (Object.keys(entity.value.length !== 0)) {
-				// save(module.value, entity.value).then(res => {
-				// 	ElMessage.success(res.message)
-				// 	dialog.value = false
-				// })
+				console.log(entity.value)
+				save(module.value, entity.value).then(res => {
+					ElMessage.success(res.message)
+					dialog.value = false
+				})
 			}
 		} else {
 			console.log('error submit!', fields)

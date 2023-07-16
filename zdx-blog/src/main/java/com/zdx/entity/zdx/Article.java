@@ -51,5 +51,11 @@ public class Article extends BaseTimeEntity {
     @TableField(exist = false)
     private String content;
 
+    @TableField(exist = false)
+    private Category category;
+
+    @TableField(exist = false)
+    private List<Tag> tagVOList;
+
 
 }

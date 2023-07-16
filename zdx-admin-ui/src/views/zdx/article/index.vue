@@ -1,7 +1,7 @@
 <script setup>
 import zdxRightToolbar from "@/components/RightToolbar/index.vue";
 import zdxPagination from "@/components/Pagination/index.vue";
-import {computed, reactive, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import {batchDel, list, page, save} from "@/api/base";
 import {useDict} from "@/utils/dict";
 import {ElMessage, ElMessageBox} from "element-plus";
@@ -68,8 +68,11 @@ const resetQuery = (formEl) => {
 	formEl.resetFields()
 }
 const pageArticle = () => {
+	loading.value = true
   page(module.value, queryParams).then(res => {
-
+	  articleList.value = res.data.records
+	  loading.value = false
+	  total.value = parseInt(res.data.total)
   })
 }
 
@@ -100,8 +103,8 @@ const handleAdd = () => {
   router.push({path:'/add-article'})
 }
 
-const handleUpdate = (id) => {
-	router.push(`/add-article/${id}`)
+const handleUpdate = (row) => {
+	router.push(`/add-article/${row.id}`)
 }
 
 const handleDelete = (id) => {
@@ -143,6 +146,9 @@ const handleTrash = () => {
 		})
 	})
 }
+onMounted(() => {
+	pageArticle()
+})
 </script>
 
 <template>
@@ -231,20 +237,20 @@ const handleTrash = () => {
 		<el-table v-loading="loading" :data="articleList" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="50" align="center"/>
 			<el-table-column label="编号" align="center" key="id" prop="id" show-overflow-tooltip/>
-			<el-table-column label="标题" align="center" key="title" prop="title" show-overflow-tooltip/>
+			<el-table-column label="标题" align="center" key="articleTitle" prop="articleTitle" show-overflow-tooltip/>
 			<el-table-column label="分类" align="center" key="categoryName" prop="categoryName" show-overflow-tooltip />
 			<el-table-column label="浏览量" align="center" key="viewCount" prop="viewCount" show-overflow-tooltip />
 			<el-table-column label="点赞量" align="center" key="likesCount" prop="likesCount" show-overflow-tooltip />
 			<el-table-column label="置顶" align="center" key="isTop" prop="isTop" >
 				<template #default="scope">
-					<el-switch v-model="scope.row.isTop" class="ml-2" :active-value="false" :inactive-value="true"
+					<el-switch v-model="scope.row.isTop" class="ml-2" :active-value="true" :inactive-value="false"
 							   style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
 							   @change="handleChange(scope.row)"></el-switch>
 				</template>
 			</el-table-column>
 			<el-table-column label="推荐" align="center" key="isRecommend" prop="isRecommend" >
 				<template #default="scope">
-					<el-switch v-model="scope.row.isRecommend" class="ml-2" :active-value="false" :inactive-value="true"
+					<el-switch v-model="scope.row.isRecommend" class="ml-2" :active-value="true" :inactive-value="false"
 							   style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
 							   @change="handleChange(scope.row)"></el-switch>
 				</template>
