@@ -132,8 +132,7 @@ import { Share } from 'vue3-social-share';
 import 'vue3-social-share/lib/index.css';
 import {useRoute} from "vue-router";
 import {computed, onMounted, reactive, ref, toRefs} from "vue";
-import {getById} from "@/api/base";
-import {addView} from "@/api/article";
+import {getHomeById} from "@/api/article";
 const { app, blog, user } = useStore();
 const articleRef = ref();
 const route = useRoute();
@@ -193,15 +192,12 @@ const like = () => {
   // });
 };
 onMounted(() => {
-	getById('article', route.params.id).then((res) => {
+	getHomeById(route.params.id).then((res) => {
 		article.value = res.data
 		document.title = article.value.articleTitle
 		wordNum.value = deleteHTMLTag(article.value.content).length
 		readTime.value = Math.round(wordNum.value / 400)
 		articleLoaded.value = true
-	})
-	addView(route.params.id).then(res => {
-
 	})
 })
 </script>

@@ -6,7 +6,6 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.zdx.Constants;
 import com.zdx.annotation.Log;
-import com.zdx.cache.CacheTemplate;
 import com.zdx.controller.dto.RequestParams;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
@@ -16,6 +15,7 @@ import com.zdx.security.vo.UserSession;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,10 +23,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotBlank;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @RestController
 @Validated
@@ -35,13 +32,19 @@ import java.util.Map;
 @Api(tags = "在线用户管理")
 public class OnlineController {
 
-    private final CacheTemplate<String, Object> cacheTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
 
 
     @GetMapping("/page")
     @ApiOperation("查询在线登录用户")
     public Result<Map<String, Object>> page(RequestParams params) {
-        List<Object> objects = cacheTemplate.getInclude(Constants.LOGIN_TOKEN_KEY + "**");
+        List<Object> objects = new ArrayList<>();
+        Set<String> keys = redisTemplate.keys(Constants.LOGIN_TOKEN_KEY + "**");
+        if (ObjUtil.isNotNull(keys) && !keys.isEmpty()) {
+            for (String key : keys) {
+                objects.add(redisTemplate.opsForValue().get(key));
+            }
+        }
         List<UserSession> userSessions = new ArrayList<>();
         List<UserAgent> userAgents = new ArrayList<>();
         if (ObjUtil.isNotNull(objects) && !objects.isEmpty()) {
@@ -82,8 +85,7 @@ public class OnlineController {
     @Log(type = LogEventEnum.DELETE, desc = "退出用户登录")
     @ApiOperation("退出用户登录状态")
     public Result<String> out(@PathVariable @NotBlank String id) {
-        cacheTemplate.remove(Constants.LOGIN_TOKEN_KEY + id);
-        return Result.success();
+        return Boolean.TRUE.equals(redisTemplate.delete(Constants.LOGIN_TOKEN_KEY + id)) ? Result.success() : Result.error();
     }
 
 }

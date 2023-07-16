@@ -131,7 +131,7 @@ function uploadImg() {
       options.img = res.data.fileUrl
       userStore.avatar = res.data.fileUrl
       visible.value = false;
-      updateProfile({avatar: res.data.fileId}).then(res => {
+      updateProfile({avatar: res.data.fileUrl}).then(res => {
         ElMessage.success(res.message)
       })
     })

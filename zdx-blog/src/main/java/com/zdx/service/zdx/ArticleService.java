@@ -2,9 +2,11 @@ package com.zdx.service.zdx;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zdx.controller.dto.RequestParams;
-import com.zdx.entity.zdx.Article;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.controller.dto.RequestParams;
+import com.zdx.controller.vo.ArticleInfoVo;
+import com.zdx.controller.vo.ArticlePageVo;
+import com.zdx.entity.zdx.Article;
 
 import java.util.List;
 
@@ -35,7 +37,7 @@ public interface ArticleService extends IService<Article> {
      * @param queryWrapper 查询条件
      * @return 返回
      */
-    IPage<Article> pageArticle(RequestParams params, Wrapper<Article> queryWrapper);
+    IPage<ArticlePageVo> pageArticlePageVo(RequestParams params, Wrapper<Article> queryWrapper);
 
     /**
      * 通过id获取文章
@@ -50,4 +52,19 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     boolean addView(String id);
+
+    /**
+     * 后台分页查询
+     * @param params 参数
+     * @param queryWrapper 请求条件
+     * @return 返回
+     */
+    IPage<Article> pageArticle(RequestParams params, Wrapper<Article> queryWrapper);
+
+    /**
+     * 前台博客通过id查询
+     * @param id id
+     * @return 返回
+     */
+    ArticleInfoVo getHomeArticleById(String id);
 }

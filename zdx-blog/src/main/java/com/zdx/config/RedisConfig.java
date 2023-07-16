@@ -2,8 +2,6 @@ package com.zdx.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.zdx.Constants;
-import com.zdx.cache.CacheTemplate;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.cache.CacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,7 +22,6 @@ import java.util.TimeZone;
  * @author zhaodengxuan
  */
 @Configuration
-@ConditionalOnExpression("'${zdx.common.cache}' == 'redis'")
 public class RedisConfig {
 
 	/**
@@ -72,10 +69,5 @@ public class RedisConfig {
 		// 使用自定义的缓存配置初始化一个cacheManager
 		RedisCacheWriter redisCacheWriter = RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory);
 		return new RedisCacheManager(redisCacheWriter, config);
-	}
-
-	@Bean
-	public CacheTemplate cacheTemplate(RedisTemplate redisTemplate) {
-		return new com.zdx.cache.RedisCacheManager(redisTemplate);
 	}
 }

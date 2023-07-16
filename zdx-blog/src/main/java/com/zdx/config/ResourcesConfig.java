@@ -2,20 +2,15 @@ package com.zdx.config;
 
 
 import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
-import com.zdx.cache.CacheTemplate;
-import com.zdx.cache.LocalCacheManager;
 import com.zdx.config.properties.CommonProperties;
 import com.zdx.filter.sensitive.SensitiveFilter;
 import com.zdx.filter.xss.XssFilter;
 import org.springframework.beans.factory.BeanFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.condition.ConditionalOnExpression;
 import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
-import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.EnableCaching;
-import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.SimpleApplicationEventMulticaster;
@@ -133,15 +128,4 @@ public class ResourcesConfig implements WebMvcConfigurer {
         return new RestTemplate();
     }
 
-    @Bean
-    @ConditionalOnExpression("'${zdx.common.cache}' == 'local'")
-    public CacheTemplate cacheTemplate() {
-        return new LocalCacheManager<>();
-    }
-
-    @Bean
-    @ConditionalOnExpression("'${zdx.common.cache}' == 'local'")
-    public CacheManager cacheManager() {
-        return new ConcurrentMapCacheManager();
-    }
 }

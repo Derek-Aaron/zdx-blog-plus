@@ -1,7 +1,6 @@
 package com.zdx.service.blog;
 
 import com.zdx.controller.vo.BlogInfoVO;
-import com.zdx.controller.vo.HomeUserInfo;
 
 public interface BlogInfoService {
 
@@ -16,9 +15,4 @@ public interface BlogInfoService {
      */
     void report();
 
-    /**
-     * 获取博客登录用户信息
-     * @return 返回
-     */
-    HomeUserInfo getHomeUserInfo();
 }

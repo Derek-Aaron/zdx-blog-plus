@@ -1,5 +1,6 @@
 package com.zdx.service.zdx.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
@@ -7,11 +8,16 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.Constants;
 import com.zdx.controller.dto.RequestParams;
+import com.zdx.controller.vo.ArticleInfoVo;
+import com.zdx.controller.vo.ArticlePageVo;
+import com.zdx.controller.vo.ArticlePaginationVO;
 import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
 import com.zdx.entity.zdx.Category;
 import com.zdx.entity.zdx.Tag;
+import com.zdx.enums.ArticleStatusEnum;
 import com.zdx.mapper.zdx.ArticleContentMapper;
 import com.zdx.mapper.zdx.ArticleMapper;
 import com.zdx.mapper.zdx.CategoryMapper;
@@ -19,11 +25,13 @@ import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
 * @author zhaodengxuan
@@ -41,17 +49,25 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     private final ArticleContentMapper articleContentMapper;
 
+    private final RedisTemplate<String, Object> redisTemplate;
+
     @Override
-    public IPage<Article> pageArticle(RequestParams params, Wrapper<Article> queryWrapper) {
+    public IPage<ArticlePageVo> pageArticlePageVo(RequestParams params, Wrapper<Article> queryWrapper) {
+        LambdaUpdateWrapper<Article> lambdaUpdateWrapper = (LambdaUpdateWrapper<Article>) queryWrapper;
+        lambdaUpdateWrapper.eq(Article::getTrash, false);
+        lambdaUpdateWrapper.eq(Article::getStatus, ArticleStatusEnum.PUBLICITY.name());
         IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
-        IPage<Article> page = page(iPage, queryWrapper);
-        List<Article> articles = new ArrayList<>();
+        IPage<Article> page = page(iPage, lambdaUpdateWrapper);
+        List<ArticlePageVo> articlePageVos = new ArrayList<>();
         for (Article article : page.getRecords()) {
             setArticleVoInfo(article, false);
-            articles.add(article);
+            ArticlePageVo articlePageVo = BeanUtil.copyProperties(article, ArticlePageVo.class);
+            articlePageVos.add(articlePageVo);
         }
-        page.setRecords(articles);
-        return page;
+        IPage<ArticlePageVo> articlePageVoIPage = new Page<>(params.getPage(), params.getLimit());
+        articlePageVoIPage.setTotal(page.getTotal());
+        articlePageVoIPage.setRecords(articlePageVos);
+        return articlePageVoIPage;
     }
 
     private void setArticleVoInfo(Article article, Boolean isContent) {
@@ -100,6 +116,39 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             }
         }
         return false;
+    }
+
+    @Override
+    public IPage<Article> pageArticle(RequestParams params, Wrapper<Article> queryWrapper) {
+        IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
+        IPage<Article> page = page(iPage, queryWrapper);
+        List<Article> articles = new ArrayList<>();
+        for (Article article : page.getRecords()) {
+            setArticleVoInfo(article, false);
+            articles.add(article);
+        }
+        page.setRecords(articles);
+        return page;
+    }
+
+    @Override
+    public ArticleInfoVo getHomeArticleById(String id) {
+        Article article = getArticleById(id);
+        ArticleInfoVo articleInfoVo = BeanUtil.copyProperties(article, ArticleInfoVo.class);
+        ArticlePaginationVO last = baseMapper.selectLastArticle(id);
+        ArticlePaginationVO next = baseMapper.selectNextArticle(id);
+        articleInfoVo.setLastArticle(last);
+        articleInfoVo.setNextArticle(next);
+        redisTemplate.opsForZSet().incrementScore(Constants.ARTICLE_VIEW_COUNT, id, 1D);
+        Double score = redisTemplate.opsForZSet().score(Constants.ARTICLE_VIEW_COUNT, id);
+        Double viewCount = Optional.ofNullable(score)
+                .orElse((double) 0);
+        articleInfoVo.setViewCount(viewCount.longValue());
+        Object o = redisTemplate.opsForHash().get(Constants.ARTICLE_LIKE_COUNT, id);
+        if (ObjUtil.isNotNull(o)) {
+            articleInfoVo.setLikeCount((Long) Optional.of(o).orElse(0));
+        }
+        return articleInfoVo;
     }
 
 

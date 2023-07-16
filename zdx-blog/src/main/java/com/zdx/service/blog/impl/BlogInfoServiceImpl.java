@@ -1,18 +1,13 @@
 package com.zdx.service.blog.impl;
 
-import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
 import com.zdx.controller.vo.BlogInfoVO;
-import com.zdx.controller.vo.HomeUserInfo;
 import com.zdx.entity.zdx.Article;
 import com.zdx.enums.ArticleStatusEnum;
 import com.zdx.mapper.zdx.ArticleMapper;
 import com.zdx.mapper.zdx.CategoryMapper;
 import com.zdx.mapper.zdx.TagMapper;
-import com.zdx.security.UserSessionFactory;
-import com.zdx.security.vo.UserPrincipal;
-import com.zdx.security.vo.UserSession;
 import com.zdx.service.blog.BlogInfoService;
 import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.ServletUtils;
@@ -25,7 +20,6 @@ import org.springframework.util.DigestUtils;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 
 
 @Service
@@ -71,18 +65,5 @@ public class BlogInfoServiceImpl implements BlogInfoService {
             // 保存唯一标识
             redisTemplate.opsForSet().add(Constants.UNIQUE_VISITOR, md5);
         }
-    }
-
-    @Override
-    public HomeUserInfo getHomeUserInfo() {
-        UserSession userSession = UserSessionFactory.userDetails();
-        HomeUserInfo homeUserInfo = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), HomeUserInfo.class);
-        Set<Object> articleLikeSet = redisTemplate.opsForSet().members(Constants.USER_ARTICLE_LIKE + userSession.getUserId());
-        Set<Object> commentLikeSet = redisTemplate.opsForSet().members(Constants.USER_COMMENT_LIKE + userSession.getUserId());
-        Set<Object> talkLikeSet = redisTemplate.opsForSet().members(Constants.USER_TALK_LIKE + userSession.getUserId());
-        homeUserInfo.setArticleLikeSet(articleLikeSet);
-        homeUserInfo.setCommentLikeSet(commentLikeSet);
-        homeUserInfo.setTalkLikeSet(talkLikeSet);
-        return homeUserInfo;
     }
 }

@@ -16,10 +16,6 @@ public class CommonProperties {
 	 */
 	private Integer cacheTime = 5;
 
-	/**
-	 * 缓存类型
-	 */
-	private String cache;
 
 	/**
 	 * 是否开启xss

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.controller.BaseController;
 import com.zdx.controller.dto.RequestParams;
+import com.zdx.controller.vo.ArticleInfoVo;
 import com.zdx.entity.zdx.Article;
 import com.zdx.handle.Result;
 import com.zdx.service.zdx.ArticleService;
@@ -45,10 +46,10 @@ public class BlogArticleController extends BaseController<Article> {
     }
 
 
-    @Override
-    @GetMapping("/getById/{id}")
-    public Result<Article> getById(@PathVariable @NotBlank String id) {
-        return Result.success(articleService.getArticleById(id));
+
+    @GetMapping("/getHomeById/{id}")
+    public Result<ArticleInfoVo> getHomeById(@PathVariable @NotBlank String id) {
+        return Result.success(articleService.getHomeArticleById(id));
     }
 
     @GetMapping("/addView/{id}")

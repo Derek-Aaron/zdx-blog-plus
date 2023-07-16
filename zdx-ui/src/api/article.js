@@ -1,9 +1,9 @@
 import request from "@/utils/request";
 
 
-export const addView = (id) => {
+export const getHomeById = (id) => {
 	return request({
-		url:`/desk/zdx.article/addView/${id}`,
+		url:`/desk/zdx.article/getHomeById/${id}`,
 		method:'GET'
 	})
 }

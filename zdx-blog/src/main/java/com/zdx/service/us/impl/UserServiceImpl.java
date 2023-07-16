@@ -1,21 +1,28 @@
 package com.zdx.service.us.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.Constants;
 import com.zdx.controller.dto.ResetPwd;
 import com.zdx.controller.dto.UserStatus;
+import com.zdx.controller.vo.HomeUserInfo;
 import com.zdx.entity.us.User;
 import com.zdx.mapper.us.UserMapper;
 import com.zdx.security.UserSessionFactory;
+import com.zdx.security.vo.UserPrincipal;
+import com.zdx.security.vo.UserSession;
 import com.zdx.service.us.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
 * @author zhaodengxuan
@@ -26,6 +33,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
+
+    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public Boolean resetPwd(ResetPwd resetPwd) {
@@ -67,6 +76,19 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.select(User::getId, User::getUsername);
         queryWrapper.last("limit 10");
         return listMaps(queryWrapper);
+    }
+
+    @Override
+    public HomeUserInfo  getHomeInfo() {
+        UserSession userSession = UserSessionFactory.userDetails();
+        HomeUserInfo homeUserInfo = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), HomeUserInfo.class);
+        Set<Object> articleLikeSet = redisTemplate.opsForSet().members(Constants.USER_ARTICLE_LIKE + userSession.getUserId());
+        Set<Object> commentLikeSet = redisTemplate.opsForSet().members(Constants.USER_COMMENT_LIKE + userSession.getUserId());
+        Set<Object> talkLikeSet = redisTemplate.opsForSet().members(Constants.USER_TALK_LIKE + userSession.getUserId());
+        homeUserInfo.setArticleLikeSet(articleLikeSet);
+        homeUserInfo.setCommentLikeSet(commentLikeSet);
+        homeUserInfo.setTalkLikeSet(talkLikeSet);
+        return homeUserInfo;
     }
 }
 

@@ -1,6 +1,7 @@
 import {ref} from 'vue'
 import {defineStore} from 'pinia'
-import {homeInfo} from "@/api/blog";
+import {homeInfo, login} from "@/api/login";
+import {setToken} from "@/utils/token";
 
 
 export const useUserStore = defineStore('useUserStore', () => {
@@ -30,6 +31,18 @@ export const useUserStore = defineStore('useUserStore', () => {
 			articleLikeSet.value = res.data.articleLikeSet
 			commentLikeSet.value = res.data.commentLikeSet
 			talkLikeSet.value = res.data.talkLikeSet
+		})
+	}
+
+	const doLogin = (data) => {
+		return new Promise((resolve, reject) => {
+			login(data).then(res => {
+				setToken(res.data.token)
+				doUserInfo()
+				resolve(res)
+			}).catch(err => {
+				reject(err)
+			})
 		})
 	}
 	const doLogout = () => {
@@ -86,6 +99,7 @@ export const useUserStore = defineStore('useUserStore', () => {
 		articleLikeSet,
 		commentLikeSet,
 		talkLikeSet,
+		doLogin,
 		doUserInfo,
 		doLogout,
 		forceLogOut,

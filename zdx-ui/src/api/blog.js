@@ -13,11 +13,3 @@ export const blogInfo = () => {
 		method:'GET'
 	})
 }
-
-
-export const homeInfo = () => {
-	return request({
-		url:'/desk/info',
-		method:'GET'
-	})
-}

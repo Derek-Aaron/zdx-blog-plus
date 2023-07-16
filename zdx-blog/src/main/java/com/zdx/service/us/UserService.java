@@ -1,9 +1,10 @@
 package com.zdx.service.us;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.controller.dto.ResetPwd;
 import com.zdx.controller.dto.UserStatus;
+import com.zdx.controller.vo.HomeUserInfo;
 import com.zdx.entity.us.User;
-import com.baomidou.mybatisplus.extension.service.IService;
 
 import java.util.List;
 import java.util.Map;
@@ -23,7 +24,23 @@ public interface UserService extends IService<User> {
      */
     Boolean resetPwd(ResetPwd resetPwd);
 
+    /**
+     * 更改用户章台
+     * @param userStatus 状态实体
+     * @return 返回
+     */
     Boolean updateUserStatus(UserStatus userStatus);
 
+    /**
+     * 获取所有的用户
+     * @param words 关键词
+     * @return 返回
+     */
     List<Map<String, Object>> listUserAll(String words);
+
+    /**
+     * 获取前台用户信息
+     * @return 返回
+     */
+    HomeUserInfo getHomeInfo();
 }

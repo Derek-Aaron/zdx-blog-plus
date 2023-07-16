@@ -7,7 +7,6 @@ import cn.hutool.core.util.StrUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.zdx.Constants;
-import com.zdx.cache.CacheTemplate;
 import com.zdx.entity.us.Acl;
 import com.zdx.entity.us.Role;
 import com.zdx.security.vo.UserPrincipal;
@@ -18,6 +17,7 @@ import com.zdx.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class PermissionService {
 
     @Autowired
-    private CacheTemplate<String, Object> cacheTemplate;
+    private RedisTemplate<String, Object> redisTemplate;
 
     @Autowired
     private RoleService roleService;
@@ -73,7 +73,7 @@ public class PermissionService {
             try {
                 String uuid = JWTUtil.parseToken(token);
                 String userKey = getTokenKey(uuid);
-                Object user = cacheTemplate.get(userKey);
+                Object user = redisTemplate.opsForValue().get(userKey);
                 if (user instanceof UserPrincipal userSession) {
                     return userSession;
                 }
@@ -111,10 +111,11 @@ public class PermissionService {
     public void refreshToken(UserSession userSession) {
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(userSession.getPersonId());
-        if (cacheTemplate.checkExpiry(userKey)) {
-            cacheTemplate.refreshTime(userKey, Constants.EXPIRETIME, TimeUnit.MINUTES);
+        Object val = redisTemplate.opsForValue().get(userKey);
+        if (ObjUtil.isNotNull(val)) {
+            redisTemplate.expire(userKey, Constants.EXPIRETIME, TimeUnit.MINUTES);
         } else {
-            cacheTemplate.put(userKey, userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(userKey, userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
         }
     }
 
@@ -136,7 +137,7 @@ public class PermissionService {
      */
     @CacheEvict(cacheNames = Constants.ROUTER_KEY, key = "#personId")
     public void logout(String personId) {
-        cacheTemplate.remove(Constants.LOGIN_TOKEN_KEY + personId);
+        redisTemplate.delete(Constants.LOGIN_TOKEN_KEY + personId);
     }
 
 }

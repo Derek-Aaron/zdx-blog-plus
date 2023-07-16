@@ -2,7 +2,6 @@ package com.zdx.controller.desk;
 
 
 import com.zdx.controller.vo.BlogInfoVO;
-import com.zdx.controller.vo.HomeUserInfo;
 import com.zdx.handle.Result;
 import com.zdx.service.blog.BlogInfoService;
 import io.swagger.annotations.Api;
@@ -34,10 +33,5 @@ public class BlogInfoController {
     @GetMapping("/")
     public Result<BlogInfoVO> getBlogInfo() {
         return Result.success(blogInfoService.getBlogInfo());
-    }
-
-    @GetMapping("/info")
-    public Result<HomeUserInfo> getHomeUserInfo() {
-        return Result.success( blogInfoService.getHomeUserInfo());
     }
 }

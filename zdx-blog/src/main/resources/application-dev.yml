@@ -36,7 +36,6 @@ mybatis-plus:
     banner: false
 zdx:
   common:
-    cache: redis
     sensitive-excludes: false
   oss:
     oss-type: minio

@@ -4,12 +4,12 @@ package com.zdx.event.handle;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zdx.Constants;
-import com.zdx.cache.CacheTemplate;
 import com.zdx.controller.vo.UserProfile;
 import com.zdx.event.EventHandle;
 import com.zdx.event.EventObject;
 import com.zdx.security.vo.UserPrincipal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.TimeUnit;
@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RefreshLoginTokenCacheEvent implements EventHandle {
 
-    private final CacheTemplate<String, Object> cacheTemplate;
+    private final RedisTemplate<String, Object> redisTemplate;
     @Override
     public String getKey() {
         return EventObject.Attribute.REFRESH_LOGIN_TOKEN_CACHE;
@@ -44,7 +44,7 @@ public class RefreshLoginTokenCacheEvent implements EventHandle {
             if (StrUtil.isNotBlank(userProfile.getAvatar())) {
                 userSession.getUser().setAvatar(userProfile.getAvatar());
             }
-            cacheTemplate.put(Constants.LOGIN_TOKEN_KEY + userSession.getPersonId(), userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(Constants.LOGIN_TOKEN_KEY + userSession.getPersonId(), userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
         }
     }
 }

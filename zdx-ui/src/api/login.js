@@ -12,3 +12,11 @@ export const login = (data) => {
 		data: data
 	})
 }
+
+
+export const homeInfo = () => {
+	return request({
+		url:'/homeInfo',
+		method:'GET'
+	})
+}
