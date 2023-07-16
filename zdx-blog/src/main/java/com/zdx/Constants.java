@@ -48,6 +48,12 @@ public class Constants {
 
     public static final String USER_COMMENT_LIKE = "user_comment_like:";
 
+    public static final String ARTICLE_VIEW_COUNT = "article_view_count";
+
+    public static final String ARTICLE_LIKE_COUNT = "article_like_count";
+
+
+
     public static final String USER_TALK_LIKE = "user_talk_like:";
 
 

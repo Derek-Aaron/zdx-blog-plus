@@ -61,9 +61,9 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 			return getServletInputStream(body);
 		}
 		//数据xss过滤
-		json = new HTMLFilter().filter(json).trim();
-		byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-		return getServletInputStream(bytes);
+//		json = new HTMLFilter().filter(json).trim();
+//		byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
+		return getServletInputStream(body);
 	}
 	/**
 	 * 是否是Json请求

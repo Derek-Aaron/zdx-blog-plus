@@ -27,4 +27,20 @@
         is_top,trash,is_recommend,
         status,create_time,update_time
     </sql>
+    <select id="selectLastArticle" resultType="com.zdx.controller.vo.ArticlePaginationVO">
+        SELECT id, article_cover, article_title
+        FROM zdx_article
+        WHERE trash = 0
+          AND `status` = 'PUBLICITY'
+          AND id &lt; #{articleId}
+        ORDER BY id DESC LIMIT 1
+    </select>
+    <select id="selectNextArticle" resultType="com.zdx.controller.vo.ArticlePaginationVO">
+        SELECT id, article_cover, article_title
+        FROM zdx_article
+        WHERE trash = 0
+          AND `status` = 'PUBLICITY'
+          AND id > #{articleId}
+        ORDER BY id DESC LIMIT 1
+    </select>
 </mapper>
