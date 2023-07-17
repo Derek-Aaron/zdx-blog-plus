@@ -24,4 +24,54 @@
         from_uid,to_uid,is_check,
         create_time,update_time
     </sql>
+    <select id="selectParentComment" resultType="com.zdx.controller.vo.CommentHomeVo">
+        select c.id, c.from_uid, u.nickname as fromNickname,u.avatar,c.content,c.create_time
+        from zdx_comment c
+                 inner join us_user u on c.from_uid = u.id
+        <where>
+            <if test="params.params.typeId != null and params.params.typeId != ''">
+                c.type_id = #{params.params.typeId}
+            </if>
+            AND comment_type=#{params.params.commentType}
+            AND c.is_check= 1
+            AND parent_id IS NULL
+        </where>
+        ORDER BY c.id DESC
+        LIMIT #{offset}, ${params.limit}
+    </select>
+    <select id="selectReplyByParentIdList" resultType="com.zdx.controller.vo.ReplyVO">
+        SELECT *
+        FROM (
+        SELECT c.from_uid,
+        u.nickname AS from_nickname,
+        u.avatar,
+        c.to_uid,
+        r.nickname AS to_nickname,
+        c.id,
+        c.parent_id,
+        c.comment_content,
+        c.create_time,
+        ROW_NUMBER() over (PARTITION BY parent_id ORDER BY create_time ASC ) row_num
+        FROM zdx_comment c
+        JOIN us_user u ON c.from_uid = u.id
+        JOIN us_user r ON c.to_uid = r.id
+        WHERE c.is_check = 1
+        AND parent_id IN
+        <foreach collection="commentIds" open="(" close=")" item="commentId" separator=",">
+            #{commentId}
+        </foreach>
+        ) t
+        WHERE 4 > row_num
+    </select>
+    <select id="selectReplyCountByParentId" resultType="com.zdx.controller.vo.ReplyCountVO">
+        SELECT parent_id as comment_id,
+        count(1) AS reply_count
+        FROM zdx_comment
+        WHERE is_check = 1
+        AND parent_id IN
+        <foreach collection="parentCommentIdList" open="(" close=")" item="commentId" separator=",">
+            #{commentId}
+        </foreach>
+        GROUP BY parent_id
+    </select>
 </mapper>

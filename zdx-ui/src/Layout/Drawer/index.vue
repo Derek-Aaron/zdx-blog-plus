@@ -135,7 +135,7 @@ const logout = () => {
   if (route.path === "/user") {
     router.go(-1);
   }
-  user.LogOut();
+  user.doLogout();
   window.$message?.success("退出成功");
 };
 </script>

@@ -130,9 +130,9 @@ import useStore from "@/stores";
 import { formatDate } from "@/utils/date";
 import { Share } from 'vue3-social-share';
 import 'vue3-social-share/lib/index.css';
-import {useRoute} from "vue-router";
-import {computed, onMounted, reactive, ref, toRefs} from "vue";
-import {getHomeById} from "@/api/article";
+import { useRoute } from "vue-router";
+import { computed, onMounted, reactive, ref, toRefs } from "vue";
+import { getHomeById, likeArticle } from "@/api/article";
 const { app, blog, user } = useStore();
 const articleRef = ref();
 const route = useRoute();
@@ -141,7 +141,7 @@ const data = reactive({
   articleLoaded: false,
   wordNum: 0,
   readTime: 0,
-  commentType: 1,
+  commentType: 'ARTICLE',
   article: {
     id: 0,
     articleCover: "",
@@ -179,26 +179,26 @@ const like = () => {
     return;
   }
   let id = article.value.id;
-  // likeArticle(id).then(({ data }) => {
-  //   if (data.flag) {
-  //     //判断是否点赞
-  //     if (user.articleLikeSet.indexOf(id) !== -1) {
-  //       article.value.likeCount -= 1;
-  //     } else {
-  //       article.value.likeCount += 1;
-  //     }
-  //     user.articleLike(id);
-  //   }
-  // });
+  likeArticle(id).then((res) => {
+    if (res) {
+      //判断是否点赞
+      if (user.articleLikeSet.indexOf(id) !== -1) {
+        article.value.likeCount -= 1;
+      } else {
+        article.value.likeCount += 1;
+      }
+      user.articleLike(id);
+    }
+  });
 };
 onMounted(() => {
-	getHomeById(route.params.id).then((res) => {
-		article.value = res.data
-		document.title = article.value.articleTitle
-		wordNum.value = deleteHTMLTag(article.value.content).length
-		readTime.value = Math.round(wordNum.value / 400)
-		articleLoaded.value = true
-	})
+  getHomeById(route.params.id).then((res) => {
+    article.value = res.data
+    document.title = article.value.articleTitle
+    wordNum.value = deleteHTMLTag(article.value.content).length
+    readTime.value = Math.round(wordNum.value / 400)
+    articleLoaded.value = true
+  })
 })
 </script>
 

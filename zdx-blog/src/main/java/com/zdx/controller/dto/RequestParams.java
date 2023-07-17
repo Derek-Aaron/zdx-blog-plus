@@ -29,6 +29,11 @@ public class RequestParams {
     @Max(value = 50, message = "{zdx.params.size}")
     private Integer limit;
 
+    public Long getOffset() {
+        long current = this.page;
+        return current <= 1L ? 0L : Math.max((current - 1L) * this.getLimit(), 0L);
+    }
+
     public Object getParam(String key) {
         return params.get(key);
     }

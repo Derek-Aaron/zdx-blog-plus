@@ -1,7 +1,7 @@
-import {ref} from 'vue'
-import {defineStore} from 'pinia'
-import {homeInfo, login} from "@/api/login";
-import {setToken} from "@/utils/token";
+import { ref } from 'vue'
+import { defineStore } from 'pinia'
+import { homeInfo, login, logout } from "@/api/login";
+import { setToken, removeToken } from "@/utils/token";
 
 
 export const useUserStore = defineStore('useUserStore', () => {
@@ -46,10 +46,23 @@ export const useUserStore = defineStore('useUserStore', () => {
 		})
 	}
 	const doLogout = () => {
-
+		logout().then(() => {
+			removeToken()
+			forceLogOut()
+		})
 	}
 	const forceLogOut = () => {
-
+		id.value = ''
+		avatar.value = ''
+		nickname.value = ''
+		email.value = ''
+		username.value = ''
+		webSite.value = ''
+		intro.value = ''
+		loginType.value = ''
+		articleLikeSet.value = []
+		commentLikeSet.value = []
+		talkLikeSet.value = []
 	}
 	const savePath = (val) => {
 		path.value = val

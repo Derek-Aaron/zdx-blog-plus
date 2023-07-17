@@ -71,6 +71,7 @@
 
 <script setup>
 // import { getCommentList, getReplyList, likeComment } from '@/api/comment';
+import { pageHomeComment } from '@/api/comment'
 import ReplyBox from "@/components/Comment/ReplyBox.vue";
 import Paging from "@/components/Pagination/Paging.vue";
 import useStore from "@/stores";
@@ -94,8 +95,12 @@ const data = reactive({
   reFresh: true,
   queryParams: {
     current: 1,
-    typeId: typeId.value,
-    commentType: props.commentType,
+    page: 1,
+    limit: 10,
+    params: {
+      typeId: typeId.value,
+      commentType: props.commentType
+    }
   },
   commentList: [],
 });
@@ -159,16 +164,16 @@ const handleReply = (index, target) => {
   currentReply.setReply(true);
 };
 const getList = () => {
-  // getCommentList(queryParams.value).then(({ data }) => {
-  //   if (queryParams.value.current === 1) {
-  //     commentList.value = data.data.recordList;
-  //   } else {
-  //     commentList.value.push(...data.data.recordList);
-  //   }
-  //   queryParams.value.current++;
-  //   count.value = data.data.count;
-  //   emit("getCommentCount", count.value);
-  // });
+  pageHomeComment(queryParams).then(res => {
+    if (queryParams.value.page === 1) {
+      commentList.value = res.data.records
+    } else {
+      commentList.value.push(...res.data.records)
+    }
+    queryParams.value.page++;
+    count.value = parseInt(res.data.total)
+    emit('getCommentCount', count.value)
+  })
 };
 // 重新加载评论列表
 const reloadComments = () => {

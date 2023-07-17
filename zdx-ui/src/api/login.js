@@ -20,3 +20,10 @@ export const homeInfo = () => {
 		method:'GET'
 	})
 }
+
+export const logout = () => {
+	return request({
+		url:'/logout',
+		method:'GET'
+	})
+}

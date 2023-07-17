@@ -2,9 +2,10 @@ package com.zdx.service.zdx;
 
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zdx.controller.dto.RequestParams;
-import com.zdx.entity.zdx.Comment;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.controller.dto.RequestParams;
+import com.zdx.controller.vo.CommentHomeVo;
+import com.zdx.entity.zdx.Comment;
 
 import java.util.List;
 
@@ -29,4 +30,6 @@ public interface CommentService extends IService<Comment> {
      * @return 成功
      */
     boolean through(List<String> ids);
+
+    IPage<CommentHomeVo> pageHomeCommentVo(RequestParams params);
 }
