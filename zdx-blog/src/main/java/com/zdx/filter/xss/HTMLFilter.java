@@ -217,7 +217,7 @@ public class HTMLFilter {
 
 	private String escapeComments(final String s) {
 		final Matcher m = P_COMMENTS.matcher(s);
-		final StringBuffer buf = new StringBuffer();
+		final StringBuilder buf = new StringBuilder();
 		if (m.find()) {
 			final String match = m.group(1); // (.*?)
 			m.appendReplacement(buf, Matcher.quoteReplacement("<!--" + htmlSpecialChars(match) + "-->"));

@@ -85,4 +85,9 @@ public class ArticleController extends BaseController<Article> {
     public Result<String> save(@RequestBody @Validated Article data) {
         return articleService.saveArticle(data) ? Result.success() : Result.error();
     }
+
+    @GetMapping("/likeArticle/{id}")
+    public Result<String> likeArticle(@PathVariable @NotBlank String id) {
+        return articleService.likeArticle(id) ? Result.success() : Result.error();
+    }
 }

@@ -67,4 +67,12 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     ArticleInfoVo getHomeArticleById(String id);
+
+    /**
+     * 用户点赞文章
+     * @param id 文章id
+     * @return 成功
+     */
+    boolean likeArticle(String id);
+
 }

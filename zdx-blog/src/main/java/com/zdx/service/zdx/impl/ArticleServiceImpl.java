@@ -17,6 +17,7 @@ import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
 import com.zdx.entity.zdx.Category;
 import com.zdx.entity.zdx.Tag;
+import com.zdx.enums.ArticleLikeTypeEnum;
 import com.zdx.enums.ArticleStatusEnum;
 import com.zdx.mapper.zdx.ArticleContentMapper;
 import com.zdx.mapper.zdx.ArticleMapper;
@@ -24,6 +25,7 @@ import com.zdx.mapper.zdx.CategoryMapper;
 import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.zdx.ArticleService;
+import com.zdx.strategy.context.LikeStrategyContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
@@ -50,6 +52,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     private final ArticleContentMapper articleContentMapper;
 
     private final RedisTemplate<String, Object> redisTemplate;
+
+    private final LikeStrategyContext strategyContext;
 
     @Override
     public IPage<ArticlePageVo> pageArticlePageVo(RequestParams params, Wrapper<Article> queryWrapper) {
@@ -146,9 +150,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         articleInfoVo.setViewCount(viewCount.longValue());
         Object o = redisTemplate.opsForHash().get(Constants.ARTICLE_LIKE_COUNT, id);
         if (ObjUtil.isNotNull(o)) {
-            articleInfoVo.setLikeCount((Long) Optional.of(o).orElse(0));
+            articleInfoVo.setLikeCount(Long.valueOf((Integer) Optional.of(o).orElse(0)));
         }
         return articleInfoVo;
+    }
+
+    @Override
+    public boolean likeArticle(String id) {
+        strategyContext.executeLikeStrategy(ArticleLikeTypeEnum.ARTICLE, id);
+        return true;
     }
 
 
