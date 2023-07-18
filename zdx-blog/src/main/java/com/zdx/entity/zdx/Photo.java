@@ -5,8 +5,6 @@ import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-
 /**
  * @TableName zdx_photo
  */
@@ -14,9 +12,6 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Photo extends BaseTimeEntity {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private Long albumId;
 
@@ -27,5 +22,5 @@ public class Photo extends BaseTimeEntity {
     private String url;
 
 
-
+    private static final long serialVersionUID = 1L;
 }

@@ -27,7 +27,8 @@ const tagList = ref([])
 const tagName = ref()
 
 const rules = reactive({
-	articleTitle: [{required: true, message: "标题不能为空", trigger: "blur"}],
+	title: [{required: true, message: "标题不能为空", trigger: "blur"}],
+	description: [{required: true, message: "简介不能为空", trigger: "blur"}],
 	content: [{required: true, message: "内容不能为空", trigger: "blur"}],
 	categoryName: [{required: true, message: "分类不能为空", trigger: "blur"}],
 	tagNames: [{required: true, message: "标签不能为空", trigger: "blur"}]
@@ -151,7 +152,7 @@ const saveTag = () => {
 
 
 const handleSuccess = (response) => {
-	entity.value.articleCover = response.data.fileUrl;
+	entity.value.cover = response.data.fileUrl;
 }
 
 const successHandle = (formEl) => {
@@ -195,8 +196,8 @@ onMounted(() => {
 			<el-row>
 				<el-col :span="24">
 					<div class="operation-container">
-						<el-form-item label="文章标题" prop="articleTitle" style="width: 100%">
-							<el-input type="textarea" v-model="entity.articleTitle" placeholder="请输入文章标题"
+						<el-form-item label="文章标题" prop="title" style="width: 100%">
+							<el-input type="textarea" v-model="entity.title" placeholder="请输入文章标题"
 									  clearable/>
 						</el-form-item>
 						<el-button type="danger" style="margin-left: 10px" @click="openDialog">发布文章</el-button>
@@ -219,6 +220,12 @@ onMounted(() => {
 			<zdx-dialog :title="title" :dialog="dialog" @close="dialog = false" width="45%">
 				<template #content>
 					<el-row>
+						<el-col :span="24">
+							<el-form-item label="文章简介" prop="description" style="width: 100%">
+								<el-input type="textarea" v-model="entity.description" placeholder="请输入文章简介"
+										  clearable/>
+							</el-form-item>
+						</el-col>
 						<el-col :span="12">
 							<el-form-item label="文章分类" prop="categoryName">
 								<el-tag type="success" v-show="entity.categoryName" :disable-transitions="true"
@@ -287,8 +294,8 @@ onMounted(() => {
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">
-							<el-form-item label="文章类型" prop="articleType">
-								<el-select v-model="entity.articleType" placeholder="请选择" clearable
+							<el-form-item label="文章类型" prop="type">
+								<el-select v-model="entity.type" placeholder="请选择" clearable
 										   style="width: 70%">
 									<el-option v-for="item in zdx_article_type" :key="item.value" :label="item.value"
 											   :value="item.key"/>
@@ -296,17 +303,17 @@ onMounted(() => {
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">
-							<el-form-item label="缩略图" prop="articleCover">
+							<el-form-item label="缩略图" prop="cover">
 								<el-upload style="width: 70%" drag :show-file-list="false" :headers="authorization"
 										   action="/api/zdx.file/upload"
 										   accept="image/*" :on-success="handleSuccess">
-									<el-icon class="el-icon--upload" v-if="!entity.articleCover">
+									<el-icon class="el-icon--upload" v-if="!entity.cover">
 										<upload-filled/>
 									</el-icon>
-									<div class="el-upload__text" v-if="!entity.articleCover">
+									<div class="el-upload__text" v-if="!entity.cover">
 										将文件拖到此处，或<em>点击上传</em>
 									</div>
-									<img v-else :src="entity.articleCover" width="360" alt=""/>
+									<img v-else :src="entity.cover" width="360" alt=""/>
 								</el-upload>
 							</el-form-item>
 						</el-col>

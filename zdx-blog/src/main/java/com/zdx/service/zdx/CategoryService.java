@@ -1,13 +1,21 @@
 package com.zdx.service.zdx;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Category;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.model.dto.RequestParams;
 
 /**
 * @author zhaodengxuan
 * @description 针对表【zdx_category】的数据库操作Service
-* @createDate 2023-07-14 17:23:34
+* @createDate 2023-07-17 16:51:40
 */
 public interface CategoryService extends IService<Category> {
 
+    /**
+     * 分页查询分类
+     * @param params 参数
+     * @return 返回
+     */
+    IPage<Category> adminPage(RequestParams params);
 }

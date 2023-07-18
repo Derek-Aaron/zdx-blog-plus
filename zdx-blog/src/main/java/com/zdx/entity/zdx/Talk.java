@@ -1,13 +1,9 @@
 package com.zdx.entity.zdx;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serial;
-import java.util.List;
 
 /**
  * @TableName zdx_talk
@@ -16,6 +12,7 @@ import java.util.List;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Talk extends BaseTimeEntity {
+
     private Long userId;
 
     private String content;
@@ -26,16 +23,5 @@ public class Talk extends BaseTimeEntity {
 
     private Boolean status;
 
-    @TableField(exist = false)
-    private List<String> imgList;
-
-    @TableField(exist = false)
-    private String nickname;
-
-    @TableField(exist = false)
-    private String avatar;
-
-
-    @Serial
     private static final long serialVersionUID = 1L;
 }

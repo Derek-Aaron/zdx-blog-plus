@@ -5,26 +5,38 @@
 <mapper namespace="com.zdx.mapper.zdx.TagMapper">
 
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Tag">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="name" column="name" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,name,create_time,
+        id
+        ,name,create_time,
         update_time
     </sql>
-    <insert id="insertArticleTag">
-        insert into zdx_article_tag(article_id, tag_id) values (#{articleId}, #{tagId})
+    <insert id="insertTagAndArticleId">
+        insert into zdx_article_tag(article_id, tag_id) values
+        <foreach collection="tagIds" item="item" separator=",">
+            (#{articleId},#{item})
+        </foreach>
     </insert>
     <select id="getArticleIdByTagId" resultType="java.lang.String">
-        select article_id where zdx_article_tag where tag_id = #{tagId}
-    </select>
-    <select id="getCountByArticleIdAndTagId" resultType="java.lang.Integer">
-        select count(*) from zdx_article_tag where article_id = #{articleId} and tag_id = #{tagId}
+        select article_id
+        from zdx_article_tag
+        where tag_id = #{tagId}
     </select>
     <select id="getTagByArticleId" resultType="com.zdx.entity.zdx.Tag">
-        select t.* from zdx_tag t left join zdx_article_tag zat on t.id = zat.tag_id where zat.article_id = #{articleId}
+        select t.*
+        from zdx_tag t
+                 left join zdx_article_tag zat on zat.tag_id = t.id
+        where zat.article_id = #{articleId}
+    </select>
+    <select id="selectCountTagIdAndArticleId" resultType="java.lang.Long">
+        select count(*)
+        from zdx_article_tag
+        where tag_id = #{tagId}
+          and article_id = #{articleId}
     </select>
 </mapper>

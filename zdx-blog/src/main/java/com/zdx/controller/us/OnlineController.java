@@ -6,7 +6,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.zdx.Constants;
 import com.zdx.annotation.Log;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.security.vo.UserAgent;

@@ -6,8 +6,8 @@
 
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Album">
             <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="albumName" column="album_name" jdbcType="VARCHAR"/>
-            <result property="albumCover" column="album_cover" jdbcType="VARCHAR"/>
+            <result property="name" column="name" jdbcType="VARCHAR"/>
+            <result property="cover" column="cover" jdbcType="VARCHAR"/>
             <result property="description" column="description" jdbcType="VARCHAR"/>
             <result property="status" column="status" jdbcType="BIT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -15,7 +15,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,album_name,album_cover,
+        id,name,cover,
         description,status,create_time,
         update_time
     </sql>

@@ -9,3 +9,11 @@ export const batchTrash = (ids) => {
 		data: ids
 	})
 }
+
+export const batchRecover = (ids) => {
+	return request({
+		url:"/zdx.article/batchRecover",
+		method:'POST',
+		data: ids
+	})
+}

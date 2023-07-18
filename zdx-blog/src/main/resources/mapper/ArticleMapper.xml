@@ -7,13 +7,14 @@
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Article">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
-            <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
             <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
-            <result property="articleCover" column="article_cover" jdbcType="VARCHAR"/>
-            <result property="articleTitle" column="article_title" jdbcType="VARCHAR"/>
-            <result property="articleType" column="article_type" jdbcType="VARCHAR"/>
+            <result property="cover" column="cover" jdbcType="VARCHAR"/>
+            <result property="title" column="title" jdbcType="VARCHAR"/>
+            <result property="description" column="description" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="isTop" column="is_top" jdbcType="BIT"/>
+            <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
+            <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
             <result property="trash" column="trash" jdbcType="BIT"/>
             <result property="isRecommend" column="is_recommend" jdbcType="BIT"/>
             <result property="status" column="status" jdbcType="VARCHAR"/>
@@ -22,25 +23,10 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,category_id,view_count,likes_count
-        article_cover,article_title,article_type,
-        is_top,trash,is_recommend,
+        id,user_id,category_id,
+        cover,title,description,
+        type,is_top,likes_count,
+        view_count,trash,is_recommend,
         status,create_time,update_time
     </sql>
-    <select id="selectLastArticle" resultType="com.zdx.controller.vo.ArticlePaginationVO">
-        SELECT id, article_cover, article_title
-        FROM zdx_article
-        WHERE trash = 0
-          AND `status` = 'PUBLICITY'
-          AND id &lt; #{articleId}
-        ORDER BY id DESC LIMIT 1
-    </select>
-    <select id="selectNextArticle" resultType="com.zdx.controller.vo.ArticlePaginationVO">
-        SELECT id, article_cover, article_title
-        FROM zdx_article
-        WHERE trash = 0
-          AND `status` = 'PUBLICITY'
-          AND id > #{articleId}
-        ORDER BY id DESC LIMIT 1
-    </select>
 </mapper>

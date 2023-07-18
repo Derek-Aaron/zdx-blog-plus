@@ -1,9 +1,8 @@
 package com.zdx.service.us;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zdx.controller.dto.ResetPwd;
-import com.zdx.controller.dto.UserStatus;
-import com.zdx.controller.vo.HomeUserInfo;
+import com.zdx.model.dto.ResetPwd;
+import com.zdx.model.dto.UserStatus;
 import com.zdx.entity.us.User;
 
 import java.util.List;
@@ -38,9 +37,4 @@ public interface UserService extends IService<User> {
      */
     List<Map<String, Object>> listUserAll(String words);
 
-    /**
-     * 获取前台用户信息
-     * @return 返回
-     */
-    HomeUserInfo getHomeInfo();
 }

@@ -5,8 +5,6 @@ import com.zdx.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-
 /**
  * @TableName zdx_article_content
  */
@@ -20,6 +18,5 @@ public class ArticleContent extends BaseEntity {
 
     private Long articleId;
 
-    @Serial
     private static final long serialVersionUID = 1L;
 }

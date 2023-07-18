@@ -5,8 +5,6 @@ import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-
 /**
  * @TableName zdx_message
  */
@@ -14,9 +12,6 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Message extends BaseTimeEntity {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private String nickname;
 
@@ -30,6 +25,5 @@ public class Message extends BaseTimeEntity {
 
     private Boolean isCheck;
 
-
-
+    private static final long serialVersionUID = 1L;
 }

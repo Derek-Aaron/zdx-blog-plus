@@ -25,8 +25,8 @@ const authorization = computed(() => {
 
 
 const rules = reactive({
-	albumName: [{required: true, message: "相册名不能为空", trigger: "blur"}],
-	albumCover: [{required: true, message: "相册封面不能为空", trigger: "blur"}],
+	name: [{required: true, message: "相册名不能为空", trigger: "blur"}],
+	cover: [{required: true, message: "相册封面不能为空", trigger: "blur"}],
 })
 
 const showSearch = ref(true)
@@ -55,7 +55,7 @@ const checkPhoto = (id) => {
 
 const handleUpdate = (row) => {
 	dialog.value = true
-	title.value = '更改相册【' + row.albumName + '】'
+	title.value = '更改相册【' + row.name + '】'
 	entity.value = row
 }
 const handleAdd = () => {
@@ -76,7 +76,7 @@ const handleDelete = (id) => {
 	})
 }
 const handleSuccess = (response) => {
-	entity.value.albumCover = response.data.fileUrl;
+	entity.value.cover = response.data.fileUrl;
 }
 
 const successHandle = (formEl) => {
@@ -107,7 +107,7 @@ onMounted(() => {
 		<!-- 搜索栏 -->
 		<el-form @submit.native.prevent :inline="true" v-show="showSearch">
 			<el-form-item label="相册名称">
-				<el-input v-model="queryParams.keyword" style="width: 200px" placeholder="请输入相册名称" clearable
+				<el-input v-model="queryParams.params.name" style="width: 200px" placeholder="请输入相册名称" clearable
 						  @keyup.enter="pageAlbum" />
 			</el-form-item>
 			<el-form-item>
@@ -140,15 +140,15 @@ onMounted(() => {
 							</template>
 						</el-dropdown>
 					</div>
-					<el-image class="album-cover" fit="cover" :src="album.albumCover">
+					<el-image class="album-cover" fit="cover" :src="album.cover">
 					</el-image>
 					<div class="photo-count">
 						<div>{{ album.photoCount }}</div>
-						<el-icon v-if="album.status">
+						<el-icon v-if="!album.status">
 							<Hide />
 						</el-icon>
 					</div>
-					<div class="album-name">{{ album.albumName }}</div>
+					<div class="album-name">{{ album.name }}</div>
 				</div>
 			</el-col>
 		</el-row>
@@ -160,19 +160,19 @@ onMounted(() => {
 			<template #content>
 				<el-form :model="entity" :rules="rules" ref="formRef" label-width="80px">
 					<el-form-item label="相册名" prop="albumName">
-						<el-input v-model="entity.albumName" placeholder="请输入相册名" clearable />
+						<el-input v-model="entity.name" placeholder="请输入相册名" clearable />
 					</el-form-item>
 					<el-form-item label="相册封面" prop="albumCover">
 						<el-upload style="width: 70%" drag :show-file-list="false" :headers="authorization"
 								   action="/api/zdx.file/upload"
 								   accept="image/*" :on-success="handleSuccess">
-							<el-icon class="el-icon--upload" v-if="entity.articleCover === undefined">
+							<el-icon class="el-icon--upload" v-if="entity.cover === undefined">
 								<upload-filled/>
 							</el-icon>
-							<div class="el-upload__text" v-if="entity.articleCover === undefined">
+							<div class="el-upload__text" v-if="entity.cover === undefined">
 								将文件拖到此处，或<em>点击上传</em>
 							</div>
-							<img v-else :src="entity.articleCover" width="360" alt=""/>
+							<img v-else :src="entity.cover" width="360" alt=""/>
 						</el-upload>
 					</el-form-item>
 					<el-form-item label="状态" prop="status">

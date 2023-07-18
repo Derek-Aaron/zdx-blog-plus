@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.annotation.Log;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import io.swagger.annotations.ApiOperation;

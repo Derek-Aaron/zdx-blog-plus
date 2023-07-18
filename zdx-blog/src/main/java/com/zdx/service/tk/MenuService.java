@@ -2,8 +2,8 @@ package com.zdx.service.tk;
 
 import cn.hutool.core.lang.tree.Tree;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.zdx.controller.dto.MenuStatic;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.MenuStatic;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.tk.Menu;
 
 import java.util.List;

@@ -137,12 +137,12 @@ onMounted(() => {
 		<!-- 相册信息 -->
 		<el-row :gutter="12" class="mb15" v-if="albumInfo">
 			<el-col :span="1.5">
-				<el-image fit="cover" class="album-cover" :src="albumInfo.albumCover">
+				<el-image fit="cover" class="album-cover" :src="albumInfo.cover">
 				</el-image>
 			</el-col>
 			<el-col :span="12">
 				<el-row align="bottom">
-					<span class="album-name">{{ albumInfo.albumName }}</span>
+					<span class="album-name">{{ albumInfo.name }}</span>
 					<span class="photo-count">{{ albumInfo.photoCount }}张</span>
 				</el-row>
 				<el-row class="album-desc">{{ albumInfo.description }}</el-row>

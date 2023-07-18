@@ -1,28 +1,29 @@
 package com.zdx.service.zdx;
 
-import com.zdx.controller.dto.PhotoAddDpt;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Photo;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.model.dto.PhotoAddDto;
+import com.zdx.model.dto.RequestParams;
 
 /**
 * @author zhaodengxuan
 * @description 针对表【zdx_photo】的数据库操作Service
-* @createDate 2023-07-14 17:23:35
+* @createDate 2023-07-17 16:51:40
 */
 public interface PhotoService extends IService<Photo> {
 
     /**
-     * 通过相册id获取照片个数
-     * @param albumId 相册id
+     * 分页查询相册图片
+     * @param params 请求参数
      * @return 返回
      */
-    Long getPhotoCountByAlumId(Long albumId);
+    IPage<Photo> adminPage(RequestParams params);
 
     /**
      * 新增相册图片
-     * @param photoAddDpt 增加相册图片
+     * @param photoAddDto 实体
      * @return 返回
      */
-    boolean addPhoto(PhotoAddDpt photoAddDpt);
-
+    boolean addPhoto(PhotoAddDto photoAddDto);
 }

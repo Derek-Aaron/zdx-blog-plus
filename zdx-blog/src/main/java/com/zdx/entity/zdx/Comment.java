@@ -1,13 +1,9 @@
 package com.zdx.entity.zdx;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serial;
 
 /**
  * @TableName zdx_comment
@@ -16,9 +12,6 @@ import java.io.Serial;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class Comment extends BaseTimeEntity {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private String commentType;
 
@@ -36,14 +29,6 @@ public class Comment extends BaseTimeEntity {
 
     private Boolean isCheck;
 
-    @ApiModelProperty("评论人名称")
-    @TableField(exist = false)
-    private String fromName;
 
-    @ApiModelProperty("回复人名称")
-    @TableField(exist = false)
-    private String toName;
-
-
-
+    private static final long serialVersionUID = 1L;
 }

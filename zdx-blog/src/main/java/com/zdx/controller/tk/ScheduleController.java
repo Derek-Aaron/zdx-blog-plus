@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.tk.Schedule;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;

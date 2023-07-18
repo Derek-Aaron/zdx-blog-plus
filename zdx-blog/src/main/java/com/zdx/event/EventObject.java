@@ -77,6 +77,8 @@ public class EventObject extends ApplicationEvent {
 		public static final String THROWABLE = "throwable";
 		public static final String STOP_WATCH = "stop_Watch";
 
+		public static final String ARTICLE_ID = "article_id";
+
 		public static final String LOGOUT = "logout";
 		public static final String DELCONTENTCACHE = "delContent";
 		public static final String SAVEORUPDATETAGS = "saveOrUpdateTags";

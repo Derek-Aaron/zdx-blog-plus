@@ -4,7 +4,7 @@ package com.zdx.event.handle;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zdx.Constants;
-import com.zdx.controller.vo.UserProfile;
+import com.zdx.model.vo.UserProfile;
 import com.zdx.event.EventHandle;
 import com.zdx.event.EventObject;
 import com.zdx.security.vo.UserPrincipal;

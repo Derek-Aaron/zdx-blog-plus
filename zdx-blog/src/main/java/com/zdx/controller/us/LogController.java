@@ -4,7 +4,7 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.controller.BaseController;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.us.Log;
 import com.zdx.handle.Result;
 import com.zdx.service.us.LogService;

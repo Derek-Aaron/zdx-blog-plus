@@ -6,7 +6,7 @@ import {batchDel, list, page, save} from "@/api/base";
 import {useDict} from "@/utils/dict";
 import {ElMessage, ElMessageBox} from "element-plus";
 import router from "@/router";
-import {batchTrash} from "@/api/zdx/article";
+import {batchTrash, batchRecover } from "@/api/zdx/article";
 
 const { zdx_article_type } = useDict('zdx_article_type')
 
@@ -24,7 +24,7 @@ const total = ref(0)
 
 const queryParams = reactive({
 	params:{
-
+		trash: false
 	},
 	page: 1,
 	limit: 10
@@ -127,7 +127,7 @@ const handleDelete = (id) => {
 	})
 }
 
-const handleTrash = () => {
+const handleTrash = (id) => {
 	ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
@@ -141,6 +141,22 @@ const handleTrash = () => {
 			array = ids.value
 		}
 		batchTrash(array).then((res) => {
+			ElMessage.success(res.message);
+			pageArticle()
+		})
+	})
+}
+const handleRecover = () => {
+	ElMessageBox.confirm('确定批量恢复数据吗？', '删除', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
+	}).then(() => {
+		let array = []
+		if (ids.value.length !== 0) {
+			array = ids.value
+		}
+		batchRecover(array).then((res) => {
 			ElMessage.success(res.message);
 			pageArticle()
 		})
@@ -217,7 +233,7 @@ onMounted(() => {
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status === 'delete'">
-				<el-button type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleUpdate">批量恢复
+				<el-button type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleRecover">批量恢复
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status !== 'delete'">
@@ -237,7 +253,7 @@ onMounted(() => {
 		<el-table v-loading="loading" :data="articleList" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="50" align="center"/>
 			<el-table-column label="编号" align="center" key="id" prop="id" show-overflow-tooltip/>
-			<el-table-column label="标题" align="center" key="articleTitle" prop="articleTitle" show-overflow-tooltip/>
+			<el-table-column label="标题" align="center" key="title" prop="title" show-overflow-tooltip/>
 			<el-table-column label="分类" align="center" key="categoryName" prop="categoryName" show-overflow-tooltip />
 			<el-table-column label="浏览量" align="center" key="viewCount" prop="viewCount" show-overflow-tooltip />
 			<el-table-column label="点赞量" align="center" key="likesCount" prop="likesCount" show-overflow-tooltip />
@@ -255,7 +271,7 @@ onMounted(() => {
 							   @change="handleChange(scope.row)"></el-switch>
 				</template>
 			</el-table-column>
-			<el-table-column label="创建时间" align="center" key="createTime" prop="createTime"/>
+			<el-table-column label="创建时间" align="center" key="createTime" prop="createTime" show-overflow-tooltip/>
 			<el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
 				<template #default="scope">
 					<el-tooltip content="修改" placement="top">

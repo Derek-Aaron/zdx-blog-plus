@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 /**
 * @author zhaodengxuan
 * @description 针对表【zdx_chat_record】的数据库操作Service实现
-* @createDate 2023-07-14 17:23:34
+* @createDate 2023-07-17 16:51:40
 */
 @Service
 public class ChatRecordServiceImpl extends ServiceImpl<ChatRecordMapper, ChatRecord>

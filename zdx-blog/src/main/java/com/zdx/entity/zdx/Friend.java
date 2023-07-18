@@ -5,8 +5,6 @@ import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
-
 /**
  * @TableName zdx_friend
  */
@@ -25,7 +23,5 @@ public class Friend extends BaseTimeEntity {
 
     private String introduction;
 
-
-    @Serial
     private static final long serialVersionUID = 1L;
 }

@@ -1,13 +1,9 @@
 package com.zdx.entity.zdx;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-
-import java.io.Serial;
-import java.util.List;
 
 /**
  * @TableName zdx_article
@@ -17,24 +13,23 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class Article extends BaseTimeEntity {
 
-    @Serial
-    private static final long serialVersionUID = 1L;
-
     private Long userId;
 
     private Long categoryId;
 
-    private String articleCover;
+    private String cover;
 
-    private String articleTitle;
+    private String title;
 
-    private String articleType;
+    private String description;
 
-    private Long viewCount;
+    private String type;
+
+    private Boolean isTop;
 
     private Long likesCount;
 
-    private Boolean isTop;
+    private Long viewCount;
 
     private Boolean trash;
 
@@ -42,20 +37,5 @@ public class Article extends BaseTimeEntity {
 
     private String status;
 
-    @TableField(exist = false)
-    private String categoryName;
-
-    @TableField(exist = false)
-    private List<String> tagNames;
-
-    @TableField(exist = false)
-    private String content;
-
-    @TableField(exist = false)
-    private Category category;
-
-    @TableField(exist = false)
-    private List<Tag> tagVOList;
-
-
+    private static final long serialVersionUID = 1L;
 }

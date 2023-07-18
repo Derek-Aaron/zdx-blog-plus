@@ -8,7 +8,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.Constants;
 import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
-import com.zdx.controller.dto.RequestParams;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.tk.File;
 import com.zdx.enums.FileTypeEnum;
 import com.zdx.enums.LogEventEnum;

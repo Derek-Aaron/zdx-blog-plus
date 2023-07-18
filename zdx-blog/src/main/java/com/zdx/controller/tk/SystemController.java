@@ -2,7 +2,7 @@ package com.zdx.controller.tk;
 
 
 import cn.hutool.core.util.ObjUtil;
-import com.zdx.controller.vo.server.Server;
+import com.zdx.model.vo.server.Server;
 import com.zdx.handle.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

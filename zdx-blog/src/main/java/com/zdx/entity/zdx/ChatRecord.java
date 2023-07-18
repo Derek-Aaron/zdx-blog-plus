@@ -9,7 +9,6 @@ import com.zdx.entity.BaseEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -19,9 +18,6 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = true)
 public class ChatRecord extends BaseEntity {
-
-    @Serial
-    private static final long serialVersionUID = 1L;
 
     private Long userId;
 
@@ -39,5 +35,5 @@ public class ChatRecord extends BaseEntity {
     @TableField(fill = FieldFill.INSERT)
     private Date createTime;
 
-
+    private static final long serialVersionUID = 1L;
 }
