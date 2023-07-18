@@ -6,16 +6,16 @@ import cn.hutool.core.util.ObjUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.zdx.Constants;
 import com.zdx.annotation.Log;
-import com.zdx.model.dto.RequestParams;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.security.vo.UserAgent;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
+import com.zdx.service.tk.RedisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,17 +32,17 @@ import java.util.*;
 @Api(tags = "在线用户管理")
 public class OnlineController {
 
-    private final RedisTemplate<String, Object> redisTemplate;
+    private final RedisService redisService;
 
 
     @GetMapping("/page")
     @ApiOperation("查询在线登录用户")
     public Result<Map<String, Object>> page(RequestParams params) {
         List<Object> objects = new ArrayList<>();
-        Set<String> keys = redisTemplate.keys(Constants.LOGIN_TOKEN_KEY + "**");
+        Collection<String> keys = redisService.getKeys(Constants.LOGIN_TOKEN_KEY + "**");
         if (ObjUtil.isNotNull(keys) && !keys.isEmpty()) {
             for (String key : keys) {
-                objects.add(redisTemplate.opsForValue().get(key));
+                objects.add(redisService.getObject(key));
             }
         }
         List<UserSession> userSessions = new ArrayList<>();
@@ -85,7 +85,7 @@ public class OnlineController {
     @Log(type = LogEventEnum.DELETE, desc = "退出用户登录")
     @ApiOperation("退出用户登录状态")
     public Result<String> out(@PathVariable @NotBlank String id) {
-        return Boolean.TRUE.equals(redisTemplate.delete(Constants.LOGIN_TOKEN_KEY + id)) ? Result.success() : Result.error();
+        return Boolean.TRUE.equals(redisService.deleteObject(Constants.LOGIN_TOKEN_KEY + id)) ? Result.success() : Result.error();
     }
 
 }

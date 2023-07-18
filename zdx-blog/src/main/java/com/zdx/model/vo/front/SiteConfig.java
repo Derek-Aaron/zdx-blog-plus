@@ -89,17 +89,17 @@ public class SiteConfig {
     /**
      * 是否评论审核 (0否 1是)
      */
-    private Integer commentCheck;
+    private Boolean commentCheck;
 
     /**
      * 是否留言审核 (0否 1是)
      */
-    private Integer messageCheck;
+    private Boolean messageCheck;
 
     /**
      * 是否开启打赏 (0否 1是)
      */
-    private Integer isReward;
+    private Boolean isReward;
 
     /**
      * 微信二维码
@@ -114,7 +114,7 @@ public class SiteConfig {
     /**
      * 是否邮箱通知 (0否 1是)
      */
-    private Integer emailNotice;
+    private Boolean emailNotice;
 
     /**
      * 社交列表
@@ -129,7 +129,7 @@ public class SiteConfig {
     /**
      * 是否开启音乐播放器 (0否 1是)
      */
-    private Integer isMusic;
+    private Boolean isMusic;
 
     /**
      * 网易云歌单id
@@ -139,7 +139,7 @@ public class SiteConfig {
     /**
      * 是否开启聊天室 (0否 1是)
      */
-    private Integer isChat;
+    private Boolean isChat;
 
     /**
      * websocket链接

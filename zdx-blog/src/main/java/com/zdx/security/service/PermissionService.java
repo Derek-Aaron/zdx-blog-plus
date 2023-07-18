@@ -11,13 +11,13 @@ import com.zdx.entity.us.Acl;
 import com.zdx.entity.us.Role;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
+import com.zdx.service.tk.RedisService;
 import com.zdx.service.us.AclService;
 import com.zdx.service.us.RoleService;
 import com.zdx.utils.JWTUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,7 +31,7 @@ import java.util.concurrent.TimeUnit;
 public class PermissionService {
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisService redisService;
 
     @Autowired
     private RoleService roleService;
@@ -73,7 +73,7 @@ public class PermissionService {
             try {
                 String uuid = JWTUtil.parseToken(token);
                 String userKey = getTokenKey(uuid);
-                Object user = redisTemplate.opsForValue().get(userKey);
+                Object user = redisService.getObject(userKey);
                 if (user instanceof UserPrincipal userSession) {
                     return userSession;
                 }
@@ -111,11 +111,11 @@ public class PermissionService {
     public void refreshToken(UserSession userSession) {
         // 根据uuid将loginUser缓存
         String userKey = getTokenKey(userSession.getPersonId());
-        Object val = redisTemplate.opsForValue().get(userKey);
+        Object val = redisService.getObject(userKey);
         if (ObjUtil.isNotNull(val)) {
-            redisTemplate.expire(userKey, Constants.EXPIRETIME, TimeUnit.MINUTES);
+            redisService.setExpire(userKey, Constants.EXPIRETIME, TimeUnit.MINUTES);
         } else {
-            redisTemplate.opsForValue().set(userKey, userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
+            redisService.setObject(userKey, userSession, Constants.EXPIRETIME, TimeUnit.MINUTES);
         }
     }
 
@@ -137,7 +137,7 @@ public class PermissionService {
      */
     @CacheEvict(cacheNames = Constants.ROUTER_KEY, key = "#personId")
     public void logout(String personId) {
-        redisTemplate.delete(Constants.LOGIN_TOKEN_KEY + personId);
+        redisService.deleteObject(Constants.LOGIN_TOKEN_KEY + personId);
     }
 
 }

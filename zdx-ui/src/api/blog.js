@@ -2,14 +2,14 @@ import request from "@/utils/request";
 
 export const report = () => {
 	return request({
-		url:'/desk/report',
-		method:'POST',
+		url:'/home/report',
+		method:'GET',
 	})
 }
 
 export const blogInfo = () => {
 	return request({
-		url:'/desk/',
+		url:'/home/',
 		method:'GET'
 	})
 }

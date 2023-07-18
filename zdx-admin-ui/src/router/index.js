@@ -235,6 +235,14 @@ const router = createRouter({
             title:'留言管理',
           },
           component: () => import('@/views/zdx/message/index.vue')
+        },
+        {
+          path: '/site',
+          name:'site',
+          meta: {
+            title:'配置管理',
+          },
+          component: () => import('@/views/zdx/site/index.vue')
         }
       ]
     }

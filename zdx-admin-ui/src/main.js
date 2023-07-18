@@ -2,6 +2,11 @@ import Cookies from 'js-cookie'
 
 import '@/assets/styles/index.scss' // global css
 
+import VMdEditor from '@kangc/v-md-editor';
+import '@kangc/v-md-editor/lib/style/base-editor.css';
+import githubTheme from '@kangc/v-md-editor/lib/theme/github.js';
+import '@kangc/v-md-editor/lib/theme/style/github.css';
+import hljs from 'highlight.js';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
@@ -19,8 +24,13 @@ import router from './router'
 
 const app = createApp(App)
 
+VMdEditor.use(githubTheme, {
+    Hljs: hljs,
+});
+
 app.use(createPinia())
 app.use(router)
+app.use(VMdEditor);
 app.use(plugins)
 app.use(ElementPlus,{
     locale: locale,

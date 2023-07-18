@@ -39,6 +39,7 @@ public class Constants {
     public static final Long DOWNSIZE = 1024 * 1024 * 30L;
 
 
+    public static final String BLOG_SITE_CONFIG = "blog_site_config";
     public static final String UNIQUE_VISITOR = "unique_visitor";
 
     public static final String BLOG_VIEW_COUNT = "blog_view_count";

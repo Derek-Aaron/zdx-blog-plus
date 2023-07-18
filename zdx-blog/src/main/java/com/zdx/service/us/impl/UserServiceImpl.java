@@ -12,7 +12,6 @@ import com.zdx.model.dto.UserStatus;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.us.UserService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,8 +26,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
-
-    private final RedisTemplate<String, Object> redisTemplate;
 
     @Override
     public Boolean resetPwd(ResetPwd resetPwd) {
