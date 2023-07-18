@@ -4,9 +4,9 @@ import zdxDialog from "@/components/Dialog/index.vue"
 import zdxEditor from "@/components/Editor/index.vue"
 import emojiList from "@/utils/emoji";
 import {computed, onMounted, reactive, ref} from "vue";
-import {page, save} from "@/api/base";
+import {batchDel, page, save} from "@/api/base";
 import {getToken} from "@/utils/auth";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 
 const queryParams = reactive({
 	params: {
@@ -38,8 +38,8 @@ const isActive = computed(() => {
 const statusTitle = computed(() => {
 	let label = "公开";
 	statusList.value.forEach(item => {
-		if (item.value === entity.value.status) {
-			label = item.label;
+		if (item.key === entity.value.status) {
+			label = item.value;
 		}
 	})
 	return label;
@@ -56,6 +56,7 @@ const changeStatus = (value) => {
 	queryParams.page = 1;
 	previewList.value = [];
 	queryParams.params.status = value;
+	pageTalk()
 }
 
 const pageTalk = () => {
@@ -123,6 +124,20 @@ const submitForm = () => {
 	}
 }
 
+const handleDelete = (id) => {
+	ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
+		confirmButtonText: '确定',
+		cancelButtonText: '取消',
+		type: 'warning'
+	}).then(() => {
+		console.log(id)
+		batchDel(module.value, [id]).then(res => {
+			ElMessage.success(res.message)
+			pageTalk()
+		})
+	})
+}
+
 onMounted(() => {
 	pageTalk()
 })
@@ -181,7 +196,7 @@ onMounted(() => {
 					<span class="talk-time">{{ talk.createTime }}</span>
 					<span class="top" v-if="talk.isTop"><svg-icon icon-class="top"
 																  size="0.85rem"></svg-icon>置顶</span>
-					<span class="secret" v-if="talk.status">
+					<span class="secret" v-if="!talk.status">
                         <el-icon>
                             <Hide/>
                         </el-icon>
@@ -201,7 +216,7 @@ onMounted(() => {
 						v-model:limit="queryParams.limit"
 						@pagination="pageTalk"/>
 
-		<zdx-dialog :title="title" :dialog="dialog" @close="dialog = false" :is-open-close="false">
+		<zdx-dialog :title="title" :dialog="dialog" width="50%" @close="dialog = false" :is-open-close="false">
 			<template #content>
 				<el-form :model="entity">
 					<el-form-item prop="content">
