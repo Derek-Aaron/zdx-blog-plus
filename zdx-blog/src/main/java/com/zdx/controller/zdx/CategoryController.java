@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Category;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.front.CategoryTagArticleVo;
+import com.zdx.model.vo.front.CategoryCountVo;
 import com.zdx.service.zdx.CategoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,15 @@ public class CategoryController {
     private final CategoryService categoryService;
 
 
+    @GetMapping("/home/zdx.category/list")
+    public Result<List<CategoryCountVo>> homeList() {
+        return Result.success(categoryService.homeList());
+    }
+
+    @GetMapping("/home/zdx.category/articlePage")
+    public Result<IPage<CategoryTagArticleVo>> homeArticlePage(RequestParams params) {
+        return Result.success(categoryService.homeArticlePage(params));
+    }
     @GetMapping("/zdx.category/page")
     @ApiOperation("分页查询分类数据")
     public Result<IPage<Category>> adminPage(RequestParams params) {

@@ -6,6 +6,9 @@ import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
+import com.zdx.model.vo.front.ArticleArchivesVo;
+import com.zdx.model.vo.front.ArticleHomeInfoVo;
+import com.zdx.model.vo.front.ArticleHomeVo;
 import com.zdx.service.zdx.ArticleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +33,23 @@ public class ArticleController {
     @ApiOperation("后台文章分页")
     public Result<IPage<ArticleAdminVo>> adminPage(RequestParams params) {
         return Result.success(articleService.adminPage(params));
+    }
+
+    @GetMapping("/home/zdx.article/page")
+    @ApiOperation("前台查询文章列表")
+    public Result<IPage<ArticleHomeVo>> homePage(RequestParams params) {
+        return Result.success(articleService.homePage(params));
+    }
+
+    @GetMapping("/home/zdx.article/getHomeById/{id}")
+    @ApiOperation("前台查询文章")
+    public Result<ArticleHomeInfoVo> getHomeById(@PathVariable @NotBlank String id) {
+        return Result.success(articleService.getHomeById(id));
+    }
+
+    @GetMapping("/home/zdx.article/archives")
+    public Result<IPage<ArticleArchivesVo>> archivesPage(RequestParams params) {
+        return  Result.success(articleService.archivesPage(params));
     }
 
     @GetMapping("/zdx.article/getById/{id}")

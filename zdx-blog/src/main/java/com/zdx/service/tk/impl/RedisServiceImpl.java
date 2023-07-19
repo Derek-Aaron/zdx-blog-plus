@@ -204,6 +204,11 @@ public class RedisServiceImpl implements RedisService {
     }
 
     @Override
+    public <T> Boolean setZet(String key, T value, Double score) {
+        return redisTemplate.opsForZSet().add(key, value, score);
+    }
+
+    @Override
     public <T> Double incrZet(String key, T value, Double score) {
         return redisTemplate.opsForZSet().incrementScore(key, value, score);
     }

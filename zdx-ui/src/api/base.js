@@ -4,7 +4,7 @@ import request from "@/utils/request";
 
 export const page = (module, params) => {
 	return request({
-		url:`/desk/zdx.${module}/page`,
+		url:`/home/zdx.${module}/page`,
 		method:'GET',
 		params: params
 	})
@@ -13,6 +13,6 @@ export const page = (module, params) => {
 
 export const getById = (module, id) => {
 	return request({
-		url:`/desk/zdx.${module}/getById/${id}`
+		url:`/home/zdx.${module}/getById/${id}`
 	})
 }

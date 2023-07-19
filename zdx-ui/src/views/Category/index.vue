@@ -11,7 +11,7 @@
       <Echarts :options="categoryOption"></Echarts>
       <ul class="category-list">
         <li class="category-item" v-for="category in categoryList" :key="category.id">
-          <router-link :to="`/category/${category.id}`">{{ category.categoryName }}</router-link>
+          <router-link :to="`/category/${category.id}`">{{ category.name }}</router-link>
           <span class="category-count">({{ category.articleCount }})</span>
         </li>
       </ul>
@@ -21,9 +21,9 @@
 
 <script setup>
 import { getCategoryList } from "@/api/category";
-import { Category } from "@/api/category/types";
 import Echarts from "@/components/Echarts/index.vue";
-import {onMounted, ref} from "vue";
+import Waves from "@/components/Waves/index.vue"
+import {onMounted, reactive, ref} from "vue";
 let categoryOption = reactive({
   tooltip: {
     trigger: 'item',
@@ -53,13 +53,13 @@ let categoryOption = reactive({
 });
 const categoryList = ref([]);
 onMounted(() => {
-  getCategoryList().then(({ data }) => {
-    categoryList.value = data.data;
-    if (data.data != null) {
-      data.data.forEach((item) => {
+  getCategoryList().then((res) => {
+    categoryList.value = res.data;
+    if (res.data != null) {
+		res.data.forEach((item) => {
         categoryOption.series[0].data.push({
           value: item.articleCount,
-          name: item.categoryName,
+          name: item.name,
         });
       });
     }

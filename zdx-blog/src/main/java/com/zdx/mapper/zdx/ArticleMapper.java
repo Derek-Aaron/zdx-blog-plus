@@ -2,6 +2,8 @@ package com.zdx.mapper.zdx;
 
 import com.zdx.entity.zdx.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zdx.model.vo.front.ArticlePaginationVO;
+import org.apache.ibatis.annotations.Param;
 
 /**
 * @author zhaodengxuan
@@ -11,6 +13,19 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface ArticleMapper extends BaseMapper<Article> {
 
+    /**
+     * 查询博客的上一篇文章
+     * @param articleId 博客id
+     * @return 返回
+     */
+    ArticlePaginationVO selectLastArticle(@Param("articleId") Long articleId);
+
+    /**
+     * 获取博客的下一篇文章
+     * @param articleId 博客id
+     * @return 返回
+     */
+    ArticlePaginationVO selectNextArticle(@Param("articleId") Long articleId);
 }
 
 

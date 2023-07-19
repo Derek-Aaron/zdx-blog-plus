@@ -1,7 +1,7 @@
 <template>
   <div class="page-header" v-if="article">
     <div class="page-title">
-      <h1 class="article-title">{{ article.articleTitle }}</h1>
+      <h1 class="article-title">{{ article.title }}</h1>
       <div class="article-meta">
         <div class="first-meta">
           <span><svg-icon icon-class="calendar" style="margin-right:0.15rem;"></svg-icon>
@@ -29,7 +29,7 @@
         </div>
       </div>
     </div>
-    <img class="page-cover" :src="article.articleCover" alt="">
+    <img class="page-cover" :src="article.cover" alt="">
     <!-- 波浪 -->
     <Waves></Waves>
   </div>
@@ -44,7 +44,7 @@
                 <svg-icon icon-class="tag" size="0.8rem"></svg-icon>
                 {{ tag.name }}
               </router-link>
-              <Share class="share-info" :url="articleHref" :title="article.articleTitle"></Share>
+              <Share class="share-info" :url="articleHref" :title="article.title"></Share>
             </div>
             <div class="reward">
               <button class="btn" :class="isLike(article.id)" @click="like">
@@ -95,16 +95,16 @@
             <div class="post-nav">
               <div class="item" v-if="article.lastArticle">
                 <router-link :to="`/article/${article.lastArticle?.id}`" class="post-cover"
-                  :style="articleCover(article.lastArticle.articleCover)">
+                  :style="articleCover(article.lastArticle.cover)">
                   <span class="post-last-next">上一篇</span>
-                  <h3 class="post-title">{{ article.lastArticle.articleTitle }}</h3>
+                  <h3 class="post-title">{{ article.lastArticle.title }}</h3>
                 </router-link>
               </div>
               <div class="item" v-if="article.nextArticle">
                 <router-link :to="`/article/${article.nextArticle?.id}`" class="post-cover"
-                  :style="articleCover(article.nextArticle.articleCover)">
+                  :style="articleCover(article.nextArticle.cover)">
                   <span class="post-last-next">下一篇</span>
-                  <h3 class="post-title">{{ article.nextArticle.articleTitle }}</h3>
+                  <h3 class="post-title">{{ article.nextArticle.title }}</h3>
                 </router-link>
               </div>
             </div>

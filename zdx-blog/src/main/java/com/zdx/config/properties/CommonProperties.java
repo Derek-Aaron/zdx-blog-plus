@@ -37,5 +37,5 @@ public class CommonProperties {
 	 */
 	private String sensitiveUrlPatterns = "/captcha/**,/login";
 
-	private String[] openPath = {"/login", "/logout","/zdx.auth/all", "/captcha/**", "/desk/**", "/druid/**", "/oauth/**","/ws/**", "/register"};
+	private String[] openPath = {"/login", "/logout","/zdx.auth/all", "/captcha/**", "/home/**", "/druid/**", "/oauth/**","/ws/**", "/register"};
 }

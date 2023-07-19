@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Tag;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.front.CategoryTagArticleVo;
+import com.zdx.model.vo.front.TagCountVo;
 import com.zdx.service.zdx.TagService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,6 +30,16 @@ public class TagController {
 
 
     private final TagService tagService;
+
+    @GetMapping("/home/zdx.tag/list")
+    public Result<List<TagCountVo>> homeList() {
+        return Result.success(tagService.homeList());
+    }
+
+    @GetMapping("/home/zdx.tag/articlePage")
+    public Result<IPage<CategoryTagArticleVo>> homeArticlePage(RequestParams params) {
+        return Result.success(tagService.homeArticlePage(params));
+    }
 
     @GetMapping("/zdx.tag/page")
     @ApiOperation("分页查询标签")

@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.Constants;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
@@ -20,7 +21,12 @@ import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
+import com.zdx.model.vo.front.ArticleArchivesVo;
+import com.zdx.model.vo.front.ArticleHomeInfoVo;
+import com.zdx.model.vo.front.ArticleHomeVo;
+import com.zdx.model.vo.front.ArticlePaginationVO;
 import com.zdx.security.UserSessionFactory;
+import com.zdx.service.tk.RedisService;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
@@ -29,16 +35,17 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
-* @author zhaodengxuan
-* @description 针对表【zdx_article】的数据库操作Service实现
-* @createDate 2023-07-17 16:51:40
-*/
+ * @author zhaodengxuan
+ * @description 针对表【zdx_article】的数据库操作Service实现
+ * @createDate 2023-07-17 16:51:40
+ */
 @Service
 @RequiredArgsConstructor
 public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
-    implements ArticleService{
+        implements ArticleService {
 
     private final TagMapper tagMapper;
 
@@ -47,6 +54,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     private final ArticleContentMapper articleContentMapper;
 
     private final ApplicationContext applicationContext;
+
+    private final RedisService redisService;
 
     @Override
     public IPage<ArticleAdminVo> adminPage(RequestParams params) {
@@ -109,7 +118,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
                 EventObject event = new EventObject(articleSave.getTagNames(), EventObject.Attribute.SAVEORUPDATETAGS);
                 event.setAttribute(EventObject.Attribute.ARTICLE_ID, article.getId());
                 applicationContext.publishEvent(event);
-                return  true;
+                return true;
             }
         }
         return false;
@@ -151,6 +160,73 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         updateWrapper.set(Article::getTrash, Boolean.FALSE);
         updateWrapper.in(Article::getId, ids);
         return update(updateWrapper);
+    }
+
+    @Override
+    public IPage<ArticleHomeVo> homePage(RequestParams params) {
+        IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
+        IPage<Article> page = page(iPage);
+        IPage<ArticleHomeVo> articleHomeVoIPage = new Page<>(params.getPage(), params.getLimit());
+        List<ArticleHomeVo> articleHomeVos = new ArrayList<>();
+        for (Article article : page.getRecords()) {
+            ArticleHomeVo articleHomeVo = BeanUtil.copyProperties(article, ArticleHomeVo.class);
+            articleHomeVo.setTagVOList(tagMapper.getTagByArticleId(article.getId()));
+            articleHomeVo.setCategory(categoryMapper.selectById(article.getCategoryId()));
+            articleHomeVos.add(articleHomeVo);
+        }
+        articleHomeVoIPage.setPages(page.getPages());
+        articleHomeVoIPage.setCurrent(page.getCurrent());
+        articleHomeVoIPage.setSize(page.getSize());
+        articleHomeVoIPage.setTotal(page.getTotal());
+        articleHomeVoIPage.setRecords(articleHomeVos);
+        return articleHomeVoIPage;
+    }
+
+    @Override
+    public ArticleHomeInfoVo getHomeById(String id) {
+        Article article = getById(id);
+        if (ObjUtil.isNull(article)) {
+            return null;
+        }
+
+        EventObject event = new EventObject(article.getId(), EventObject.Attribute.INSERT_VIEW_COUNT);
+        event.setAttribute(EventObject.Attribute.VIEW_COUNT, Optional.ofNullable(article.getViewCount()).orElse(0L));
+        applicationContext.publishEvent(event);
+        ArticleHomeInfoVo articleHomeInfoVo = BeanUtil.copyProperties(article, ArticleHomeInfoVo.class);
+        ArticleContent articleContent = articleContentMapper.selectOne(new LambdaQueryWrapper<ArticleContent>().eq(ArticleContent::getArticleId, id));
+        if (ObjUtil.isNotNull(articleContent)) {
+            articleHomeInfoVo.setContent(articleContent.getContent());
+        }
+        Category category = categoryMapper.selectById(article.getCategoryId());
+        articleHomeInfoVo.setCategory(category);
+        articleHomeInfoVo.setTagVOList(tagMapper.getTagByArticleId(article.getId()));
+        ArticlePaginationVO lastArticle = baseMapper.selectLastArticle(article.getId());
+        articleHomeInfoVo.setLastArticle(lastArticle);
+        ArticlePaginationVO nextArticle = baseMapper.selectNextArticle(article.getId());
+        articleHomeInfoVo.setNextArticle(nextArticle);
+        Integer likeCount = redisService.getHash(Constants.ARTICLE_LIKE_COUNT, id);
+        articleHomeInfoVo.setLikeCount(Optional.ofNullable(likeCount).orElse(0).longValue());
+        return articleHomeInfoVo;
+    }
+
+    @Override
+    public IPage<ArticleArchivesVo> archivesPage(RequestParams params) {
+        IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Article::getId, Article::getTitle, Article::getCreateTime, Article::getCover);
+        IPage<Article> page = page(iPage, queryWrapper);
+        List<ArticleArchivesVo> articleArchivesVos = new ArrayList<>();
+        for (Article article : page.getRecords()) {
+            ArticleArchivesVo articleArchivesVo = BeanUtil.copyProperties(article, ArticleArchivesVo.class);
+            articleArchivesVos.add(articleArchivesVo);
+        }
+        IPage<ArticleArchivesVo> articleArchivesVoIPage = new Page<>(params.getPage(), params.getLimit());
+        articleArchivesVoIPage.setPages(page.getPages());
+        articleArchivesVoIPage.setTotal(page.getTotal());
+        articleArchivesVoIPage.setSize(page.getSize());
+        articleArchivesVoIPage.setCurrent(page.getCurrent());
+        articleArchivesVoIPage.setRecords(articleArchivesVos);
+        return articleArchivesVoIPage;
     }
 }
 

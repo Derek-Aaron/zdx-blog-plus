@@ -5,28 +5,45 @@
 <mapper namespace="com.zdx.mapper.zdx.ArticleMapper">
 
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Article">
-            <id property="id" column="id" jdbcType="BIGINT"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
-            <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
-            <result property="cover" column="cover" jdbcType="VARCHAR"/>
-            <result property="title" column="title" jdbcType="VARCHAR"/>
-            <result property="description" column="description" jdbcType="VARCHAR"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
-            <result property="isTop" column="is_top" jdbcType="BIT"/>
-            <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
-            <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
-            <result property="trash" column="trash" jdbcType="BIT"/>
-            <result property="isRecommend" column="is_recommend" jdbcType="BIT"/>
-            <result property="status" column="status" jdbcType="VARCHAR"/>
-            <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
-            <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
+        <id property="id" column="id" jdbcType="BIGINT"/>
+        <result property="userId" column="user_id" jdbcType="BIGINT"/>
+        <result property="categoryId" column="category_id" jdbcType="BIGINT"/>
+        <result property="cover" column="cover" jdbcType="VARCHAR"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+        <result property="type" column="type" jdbcType="VARCHAR"/>
+        <result property="isTop" column="is_top" jdbcType="BIT"/>
+        <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
+        <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
+        <result property="trash" column="trash" jdbcType="BIT"/>
+        <result property="isRecommend" column="is_recommend" jdbcType="BIT"/>
+        <result property="status" column="status" jdbcType="VARCHAR"/>
+        <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,category_id,
+        id
+        ,user_id,category_id,
         cover,title,description,
         type,is_top,likes_count,
         view_count,trash,is_recommend,
         status,create_time,update_time
     </sql>
+    <select id="selectLastArticle" resultType="com.zdx.model.vo.front.ArticlePaginationVO">
+        select id, title, cover
+        from zdx_article
+        where trash = 0
+          and `status` = 'PUBLICITY'
+          and id &lt; #{articleId}
+        order by id desc limit 1
+    </select>
+    <select id="selectNextArticle" resultType="com.zdx.model.vo.front.ArticlePaginationVO">
+        select id, title, cover
+        from zdx_article
+        where trash = 0
+          and `status` = 'PUBLICITY'
+          and id &gt; #{articleId}
+        order by id desc limit 1
+    </select>
 </mapper>

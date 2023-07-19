@@ -43,6 +43,13 @@ public interface TagMapper extends BaseMapper<Tag> {
      * @return 返回
      */
     Long selectCountTagIdAndArticleId(@Param("articleId") Long articleId,@Param("tagId") Long tagId);
+
+    /**
+     * 通过标签id查询文章
+     * @param tagId 标签id
+     * @return 返回
+     */
+    Long selectArticleCountByTagId(@Param("tagId") Long tagId);
 }
 
 

@@ -94,7 +94,6 @@ const data = reactive({
   count: 0,
   reFresh: true,
   queryParams: {
-    current: 1,
     page: 1,
     limit: 10,
     params: {
@@ -164,16 +163,16 @@ const handleReply = (index, target) => {
   currentReply.setReply(true);
 };
 const getList = () => {
-  pageHomeComment(queryParams).then(res => {
-    if (queryParams.value.page === 1) {
-      commentList.value = res.data.records
-    } else {
-      commentList.value.push(...res.data.records)
-    }
-    queryParams.value.page++;
-    count.value = parseInt(res.data.total)
-    emit('getCommentCount', count.value)
-  })
+  // pageHomeComment(queryParams).then(res => {
+  //   if (queryParams.value.page === 1) {
+  //     commentList.value = res.data.records
+  //   } else {
+  //     commentList.value.push(...res.data.records)
+  //   }
+  //   queryParams.value.page++;
+  //   count.value = parseInt(res.data.total)
+  //   emit('getCommentCount', count.value)
+  // })
 };
 // 重新加载评论列表
 const reloadComments = () => {

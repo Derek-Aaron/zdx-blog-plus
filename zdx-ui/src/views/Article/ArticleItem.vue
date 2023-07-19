@@ -3,7 +3,7 @@
 		<!-- 文章缩略图 -->
 		<div class="article-cover">
 			<router-link :to="`/article/${article.id}`" href="">
-				<img class="cover" v-lazy="article.articleCover" alt=""/>
+				<img class="cover" v-lazy="article.cover" alt=""/>
 			</router-link>
 		</div>
 		<!-- 文章信息 -->
@@ -15,7 +15,7 @@
 				<!-- 发表时间 -->
 				<span class="meta-item ml">
           <svg-icon icon-class="calendar" size="0.9rem" style="margin-right: 0.15rem"></svg-icon>{{
-						formatDate(article.createTime)
+						article.createTime
 					}}
         </span>
 				<!-- 文章标签 -->
@@ -27,11 +27,11 @@
 			<!-- 文章标题 -->
 			<h3 class="article-title">
 				<router-link :to="`/article/${article.id}`">
-					{{ article.articleTitle }}
+					{{ article.title }}
 				</router-link>
 			</h3>
-			<!-- 文章内容 -->
-			<div class="article-content">{{ article.articleTitle }}</div>
+			<!-- 文章简介 -->
+			<div class="article-content">{{ article.description }}</div>
 			<!-- 文章分类 -->
 			<div class="article-category">
 				<svg-icon icon-class="qizhi" size="0.85rem" style="margin-right: 0.15rem"></svg-icon>
@@ -49,7 +49,6 @@
 
 <script setup>
 import Pagination from "@/components/Pagination/index.vue"
-import {formatDate} from "@/utils/date";
 import {onMounted, reactive, toRefs, watch} from "vue";
 import {page} from "@/api/base";
 

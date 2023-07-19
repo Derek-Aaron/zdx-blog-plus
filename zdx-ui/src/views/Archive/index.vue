@@ -12,37 +12,36 @@
       <div class="archive-list">
         <div class="archive-item" v-for="archive in archivesList" :key="archive.id">
           <router-link class="article-cover" :to="`/article/${archive.id}`">
-            <img class="cover" v-lazy="archive.articleCover">
+            <img class="cover" v-lazy="archive.cover">
           </router-link>
           <div class="article-info">
             <div class="article-time">
               <svg-icon icon-class="calendar" style="margin-right:0.4rem;"></svg-icon>
-              <time>{{ formatDate(archive.createTime) }}</time>
+              <time>{{ archive.createTime }}</time>
             </div>
             <router-link class="article-title" :to="`/article/${archive.id}`">
-              {{ archive.articleTitle }}
+              {{ archive.title }}
             </router-link>
           </div>
         </div>
       </div>
-      <Pagination v-if="count > 0" v-model:current="queryParams.current" :total="Math.ceil(count / 5)">
+      <Pagination v-if="count > 0" v-model:current="queryParams.page" :total="Math.ceil(count / 5)">
       </Pagination>
     </div>
   </div>
 </template>
 
 <script setup>
-import { getArchivesList } from '@/api/archives';
-import { Archives } from '@/api/archives/types';
+import { getArchivesList } from '@/api/article';
+import Waves from "@/components/Waves/index.vue"
 import Pagination from '@/components/Pagination/index.vue';
-import { formatDate } from '@/utils/date';
 import {onMounted, reactive, toRefs, watch} from "vue";
 
 const data = reactive({
   count: 0,
   queryParams: {
-    current: 1,
-    size: 5,
+    page: 1,
+    limit: 5,
   },
   archivesList: [],
 });
@@ -52,18 +51,18 @@ const {
   archivesList,
 } = toRefs(data);
 watch(
-  () => queryParams.value.current,
+  () => queryParams.value.page,
   () => {
-    getArchivesList(queryParams.value).then(({ data }) => {
-      archivesList.value = data.data.recordList;
-      count.value = data.data.count;
+    getArchivesList(queryParams.value).then((res) => {
+      archivesList.value = res.data.records;
+      count.value = parseInt(res.data.total);
     });
   }
 );
 onMounted(() => {
-  getArchivesList(queryParams.value).then(({ data }) => {
-    archivesList.value = data.data.recordList;
-    count.value = data.data.count;
+  getArchivesList(queryParams.value).then((res) => {
+    archivesList.value = res.data.records;
+    count.value = parseInt(res.data.total);
   });
 })
 </script>

@@ -330,6 +330,17 @@ public interface RedisService {
      */
     Long getSetSize(String key);
 
+
+
+    /**
+     * zset 设置值
+     * @param key 键
+     * @param value 值
+     * @param score 分数
+     * @return {@link Boolean}
+     */
+    <T> Boolean setZet(String key, T value,  Double score);
+
     /**
      * Zset添加分数
      *

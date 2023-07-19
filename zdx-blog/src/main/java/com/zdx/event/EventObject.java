@@ -79,6 +79,9 @@ public class EventObject extends ApplicationEvent {
 
 		public static final String ARTICLE_ID = "article_id";
 
+		public static final String INSERT_VIEW_COUNT = "insert_view_count";
+		public static final String VIEW_COUNT = "view_count";
+
 		public static final String LOGOUT = "logout";
 		public static final String DELCONTENTCACHE = "delContent";
 		public static final String SAVEORUPDATETAGS = "saveOrUpdateTags";

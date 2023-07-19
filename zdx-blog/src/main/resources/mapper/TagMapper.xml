@@ -39,4 +39,10 @@
         where tag_id = #{tagId}
           and article_id = #{articleId}
     </select>
+    <select id="selectArticleCountByTagId" resultType="java.lang.Long">
+        select count(*) from zdx_article a inner join zdx_article_tag zat on a.id = zat.article_id where
+                 zat.tag_id = #{tagId}
+          and  a.trash = 0
+          and `status` = 'PUBLICITY'
+    </select>
 </mapper>

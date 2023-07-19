@@ -1,5 +1,6 @@
 package com.zdx;
 
+import com.alibaba.fastjson.JSON;
 import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
@@ -7,13 +8,13 @@ import com.zdx.entity.us.User;
 import com.zdx.enums.DictTypeEnum;
 import com.zdx.enums.GenderEnum;
 import com.zdx.enums.MenuTypeEnum;
+import com.zdx.model.vo.front.SiteConfig;
+import com.zdx.service.tk.ConfigService;
 import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
 import com.zdx.utils.RsaUtil;
-import io.minio.GetBucketPolicyArgs;
-import io.minio.MinioClient;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -85,13 +86,36 @@ class ZdxBlogApplicationTests {
     }
 
     @Autowired
-    private MinioClient minioClient;
+    private ConfigService  configService;
 
     @Test
     public void minioClientTest() throws Exception{
-        String config =
-                minioClient.getBucketPolicy(GetBucketPolicyArgs.builder().bucket("document").build());
-        System.out.println(config);
+        SiteConfig siteConfig = new SiteConfig();
+        siteConfig.setUserAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
+        siteConfig.setTouristAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
+        siteConfig.setSiteName("小赵博客");
+        siteConfig.setSiteAddress("www.zhaodengxuan.top");
+        siteConfig.setSiteIntro("暂无");
+        siteConfig.setSiteNotice("hahaahaha");
+        siteConfig.setCreateSiteTime("2023-07-01");
+        siteConfig.setRecordNumber("aaaaa");
+        siteConfig.setAuthorAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
+        siteConfig.setSiteAuthor("小赵");
+        siteConfig.setAboutMe("hahahaaha");
+        siteConfig.setGithub("aaa");
+        siteConfig.setGitee("bbbb");
+        siteConfig.setBilibili("ccccc");
+        siteConfig.setQq("aaaa");
+        siteConfig.setCommentCheck(true);
+        siteConfig.setMessageCheck(true);
+        siteConfig.setIsReward(true);
+        siteConfig.setEmailNotice(true);
+        siteConfig.setIsMusic(true);
+        siteConfig.setMusicId("aaaa");
+        siteConfig.setIsChat(true);
+        siteConfig.setWebsocketUrl("aaaa");
+        String json = JSON.toJSONString(siteConfig);
+        configService.setConfig(Constants.BLOG_SITE_CONFIG, json);
     }
 
 }

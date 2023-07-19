@@ -57,8 +57,8 @@ public class BlogServiceImpl implements BlogService {
         Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>().eq(Article::getTrash, Boolean.FALSE).eq(Article::getStatus, ArticleStatusEnum.PUBLICITY.name()));
         Long cateGoryCount = categoryMapper.selectCount(null);
         Long tagCount = tagMapper.selectCount(null);
-        Long count = redisService.getObject(Constants.BLOG_VIEW_COUNT);
-        String viewCount = Optional.ofNullable(count).orElse(0L).toString();
+        Integer count = redisService.getObject(Constants.BLOG_VIEW_COUNT);
+        String viewCount = Optional.ofNullable(count).orElse(0).toString();
         String json = configService.getConfig(Constants.BLOG_SITE_CONFIG, String.class);
         SiteConfig siteConfig = JSON.parseObject(json, SiteConfig.class);
         BlogInfoVO blogInfoVO = new BlogInfoVO();

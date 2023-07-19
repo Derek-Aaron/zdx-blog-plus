@@ -14,6 +14,7 @@
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "easy-typer-js": "^2.1.0",
+    "echarts": "^5.4.3",
     "js-cookie": "^3.0.5",
     "jsencrypt": "^3.3.2",
     "naive-ui": "^2.34.4",
