@@ -9,6 +9,7 @@ import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.ArticleArchivesVo;
 import com.zdx.model.vo.front.ArticleHomeInfoVo;
 import com.zdx.model.vo.front.ArticleHomeVo;
+import com.zdx.model.vo.front.ArticleRecommendVo;
 
 import java.util.List;
 
@@ -74,4 +75,10 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     IPage<ArticleArchivesVo> archivesPage(RequestParams params);
+
+    /**
+     * 查询推荐文章
+     * @return 返回
+     */
+    List<ArticleRecommendVo> homeRecommend();
 }

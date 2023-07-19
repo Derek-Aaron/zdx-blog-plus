@@ -14,24 +14,23 @@
           <!-- 昵称 -->
           <span class="comment-name">{{ comment.nickname }}</span>
           <!-- 时间 -->
-          <div>{{ formatDate(comment.createTime) }}</div>
+          <div>{{ comment.createTime }}</div>
         </div>
         <!-- 内容 -->
-        <span class="content" v-html="comment.commentContent"></span>
+        <span class="content" v-html="comment.content"></span>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-// import { getRecentComment } from "@/api/comment";
-import { formatDate } from "@/utils/date";
+import { getRecentComment } from "@/api/comment";
 import {onMounted, ref} from "vue";
 const commentList = ref([]);
 onMounted(() => {
-  // getRecentComment().then(({ data }) => {
-  //   commentList.value = data.data;
-  // });
+  getRecentComment().then((res) => {
+    commentList.value = res.data;
+  });
 });
 </script>
 

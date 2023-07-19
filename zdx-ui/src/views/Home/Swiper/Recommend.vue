@@ -1,28 +1,28 @@
 <template>
-  <swiper v-if="articleList.length > 0" class="swiper-container" :modules="modules" :loop="true" :slides-per-view="1"
+  <swiper v-if="articleList.length > 0" class="swiper-container" :modules="modules"  :loop="true" :slides-per-view="1"
     navigation mousewheel :autoplay="{ delay: 5000, disableOnInteraction: false, }" :pagination="{ clickable: true }">
     <swiper-slide v-for="article in articleList" :key="article.id">
-      <div class="slide-content" :style="articleCover(article.articleCover)">
-        <router-link :to="`/article/${article.id}`" class="slide-title">{{ article.articleTitle }}</router-link>
-        <span class="slide-time">发布时间：{{ formatDate(article.createTime) }}</span>
+      <div class="slide-content" :style="articleCover(article.cover)">
+        <router-link :to="`/article/${article.id}`" class="slide-title">{{ article.title }}</router-link>
+        <span class="slide-time">发布时间：{{ article.createTime }}</span>
       </div>
     </swiper-slide>
   </swiper>
 </template>
 
 <script setup>
-// import { getArticleRecommend } from "@/api/article";
-import { formatDate } from "@/utils/date";
+import { getArticleRecommend } from "@/api/article";
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay, Mousewheel, Navigation, Pagination } from 'swiper';
 import {computed, onMounted, ref} from "vue";
 // 自定义模块
-const modules = [];
+const modules = [Pagination, Navigation, Mousewheel, Autoplay];
 const articleList = ref([]);
 const articleCover = computed(() => (cover) => 'background:url(' + cover + ')');
 onMounted(() => {
-  // getArticleRecommend().then(({ data }) => {
-  //   articleList.value = data.data;
-  // });
+  getArticleRecommend().then((res) => {
+    articleList.value = res.data;
+  });
 });
 </script>
 

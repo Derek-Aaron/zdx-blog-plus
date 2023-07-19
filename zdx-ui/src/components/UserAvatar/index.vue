@@ -24,15 +24,17 @@
 </template>
 
 <script setup >
-import { updateUserAvatar } from "@/api/user";
-import useStore from "@/store";
-import { UploadCustomRequestOptions } from "naive-ui";
+// import { updateUserAvatar } from "@/api/user";
+import useStore from "@/stores";
 import { VueCropper } from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
 import {reactive, ref} from "vue";
+import {transToFile} from "@/utils";
+import {uploadFile} from "@/api/base";
 const { user } = useStore();
 const dialogVisible = ref(false);
 const cropperRef = ref();
+const filename = ref()
 const options = reactive({
   img: user.avatar, // 裁剪图片的地址
   autoCrop: true, // 是否默认生成截图框
@@ -42,6 +44,7 @@ const options = reactive({
   outputType: "png", // 默认生成截图为PNG格式
 });
 const customUpload = ({ file }) => {
+	filename.value = file.filename
   const reader = new FileReader();
   reader.readAsDataURL(file.file);
   reader.onload = () => {
@@ -53,15 +56,12 @@ const handleClose = () => {
 };
 const hanleUpload = () => {
   cropperRef.value.getCropBlob((data) => {
-    let formData = new FormData();
-    formData.append("file", data);
-    updateUserAvatar(formData).then(({ data }) => {
-      if (data.flag) {
-        options.img = data.data;
-        user.avatar = options.img;
-        dialogVisible.value = false;
-      }
-    });
+	  let file = transToFile(data, filename.value, data.type)
+	  uploadFile(file).then((res) => {
+		  options.img = res.data.fileUrl;
+		  user.avatar = options.img
+		  dialogVisible.value = false
+	  })
   });
 };
 </script>

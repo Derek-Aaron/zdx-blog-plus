@@ -8,7 +8,7 @@
     <div class="page-container">
       <div v-viewer v-masonry fit-width="true" transition-duration="0.3s" item-selector=".card">
         <div v-masonry-tile class="card" v-for="photo in photoInfo.photoVOList" :key="photo.id">
-          <img class="img" :src="photo.photoUrl" alt="">
+          <img class="img" :src="photo.url" alt="">
         </div>
       </div>
     </div>
@@ -26,8 +26,8 @@ const photoInfo = ref({
   photoVOList: [],
 });
 onMounted(() => {
-  getPhotoList(Number(route.params.albumId)).then(({ data }) => {
-    photoInfo.value = data.data;
+  getPhotoList(route.params.albumId).then((res) => {
+    photoInfo.value = res.data;
   })
 })
 </script>

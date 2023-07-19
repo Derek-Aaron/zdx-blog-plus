@@ -12,9 +12,9 @@
     <vue-danmaku ref="danmaku" class="danmaku" use-slot v-model:danmus="messageList" :is-suspend="true">
       <template v-slot:dm="{ danmu }">
         <span class="danmaku-item">
-          <img :src="danmu.avatar" width="30" height="30" style="border-radius: 50%" />
+          <img :src="danmu.avatar" width="30" height="30" style="border-radius: 50%"  alt=""/>
           <span class="ml">{{ danmu.nickname }} :</span>
-          <span class="ml">{{ danmu.messageContent }}</span>
+          <span class="ml">{{ danmu.content }}</span>
         </span>
       </template>
     </vue-danmaku>
@@ -32,8 +32,8 @@ const show = ref(false);
 const danmaku = ref();
 const messageList = ref([]);
 onMounted(async () => {
-  await getMessageList().then(({ data }) => {
-    messageList.value = data.data;
+  await getMessageList().then((res) => {
+    messageList.value = res.data;
   });
 });
 const send = () => {
@@ -46,10 +46,9 @@ const send = () => {
   let message = {
     avatar: userAvatar,
     nickname: userNickname,
-    messageContent: messageContent.value,
+    content: messageContent.value,
   };
-  addMessage(message).then(({ data }) => {
-    if (data.flag) {
+  addMessage(message).then(() => {
       if (blog.blogInfo.siteConfig.messageCheck) {
         window.$message?.warning("留言成功，正在审核中");
       } else {
@@ -57,7 +56,6 @@ const send = () => {
         window.$message?.success("留言成功");
       }
       messageContent.value = "";
-    }
   });
 };
 </script>

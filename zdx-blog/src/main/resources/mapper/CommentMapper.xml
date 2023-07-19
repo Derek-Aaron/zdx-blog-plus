@@ -24,4 +24,12 @@
         from_uid,to_uid,is_check,
         create_time,update_time
     </sql>
+    <select id="selectRecentComment" resultType="com.zdx.model.vo.front.RecentCommentVo">
+        select
+            c.id,u.nickname,u.avatar,c.content,c.create_time
+        from zdx_comment c
+                 inner join us_user u on u.id = c.from_uid
+        where c.is_check = 1
+        order by c.create_time desc limit 5
+    </select>
 </mapper>

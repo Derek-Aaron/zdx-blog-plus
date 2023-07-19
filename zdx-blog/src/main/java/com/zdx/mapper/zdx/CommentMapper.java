@@ -2,6 +2,9 @@ package com.zdx.mapper.zdx;
 
 import com.zdx.entity.zdx.Comment;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zdx.model.vo.front.RecentCommentVo;
+
+import java.util.List;
 
 /**
 * @author zhaodengxuan
@@ -11,6 +14,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface CommentMapper extends BaseMapper<Comment> {
 
+    /**
+     * 查询最新评论
+     * @return 返回
+     */
+    List<RecentCommentVo> selectRecentComment();
 }
 
 

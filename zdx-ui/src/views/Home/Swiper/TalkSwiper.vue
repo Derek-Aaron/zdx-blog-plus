@@ -12,16 +12,17 @@
 </template>
 
 <script setup>
-// import { getTalkHomeList } from '@/api/talk';
+import { getTalkHomeList } from '@/api/talk';
 import { Swiper, SwiperSlide } from 'swiper/vue';
+import { Autoplay } from 'swiper';
 import {onMounted, ref} from "vue";
 // 自动播放
-const modules = [];
+const modules = [Autoplay];
 const talkList = ref([]);
 onMounted(() => {
-  // getTalkHomeList().then(({ data }) => {
-  //   talkList.value = data.data;
-  // })
+  getTalkHomeList().then((res) => {
+    talkList.value = res.data;
+  })
 });
 </script>
 

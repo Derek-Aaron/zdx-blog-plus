@@ -26,6 +26,10 @@ public class FriendController {
 
     private final FriendService friendService;
 
+    @GetMapping("/home/zdx.friend/list")
+    public Result<List<Friend>> homeList() {
+        return Result.success(friendService.list());
+    }
     @GetMapping("/zdx.friend/page")
     @ApiOperation("分页查询友链数据")
     public Result<IPage<Friend>> adminPage(RequestParams params) {

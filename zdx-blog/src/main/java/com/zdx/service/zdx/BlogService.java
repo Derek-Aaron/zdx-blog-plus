@@ -2,6 +2,7 @@ package com.zdx.service.zdx;
 
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
+import com.zdx.model.vo.front.UserInfoVo;
 
 public interface BlogService {
     /**
@@ -27,4 +28,10 @@ public interface BlogService {
      * @return 返回
      */
     SiteConfig getSite();
+
+    /**
+     * 获取当前登录用户信息
+     * @return 返回
+     */
+    UserInfoVo getUserInfo();
 }

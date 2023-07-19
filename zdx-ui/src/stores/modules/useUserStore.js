@@ -25,8 +25,6 @@ export const useUserStore = defineStore('useUserStore', () => {
 			nickname.value = res.data.nickname
 			email.value = res.data.email
 			username.value = res.data.username
-			webSite.value = res.data.webSite
-			intro.value = res.data.intro
 			loginType.value = res.data.loginType
 			articleLikeSet.value = res.data.articleLikeSet
 			commentLikeSet.value = res.data.commentLikeSet

@@ -1,5 +1,5 @@
 import {reactive, ref} from 'vue'
-import { defineStore } from 'pinia'
+import {defineStore} from 'pinia'
 
 
 export const useBlogStore = defineStore('useBlogStore', () => {
@@ -42,10 +42,11 @@ export const useBlogStore = defineStore('useBlogStore', () => {
 
 
 	const setBlogInfo = (val) => {
-	  blogInfo.articleCount = parseInt(val.articleCount)
-	  blogInfo.categoryCount = parseInt(val.categoryCount)
-	  blogInfo.tagCount = parseInt(val.tagCount)
-	  blogInfo.viewCount = parseInt(val.viewCount)
+		blogInfo.articleCount = parseInt(val.articleCount)
+		blogInfo.categoryCount = parseInt(val.categoryCount)
+		blogInfo.tagCount = parseInt(val.tagCount)
+		blogInfo.viewCount = parseInt(val.viewCount)
+		blogInfo.siteConfig = val.siteConfig
 	}
 
 	return {blogInfo, setBlogInfo}

@@ -7,3 +7,10 @@ export const pageHomeComment = (params) => {
 		params: params
 	})
 }
+
+export const getRecentComment = () => {
+	return request({
+		url:'/home/zdx.comment/recent',
+		method:'GET',
+	})
+}

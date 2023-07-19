@@ -9,10 +9,10 @@
     <div class="page-container">
       <div class="album-container">
         <div class="album-item" v-for="album in albumList" :key="album.id">
-          <img class="album-cover" v-lazy="album.albumCover">
+          <img class="album-cover" v-lazy="album.cover">
           <router-link :to="`/album/${album.id}`" class="album-info">
-            <div class="album-name">{{ album.albumName }}</div>
-            <div class="album-desc">{{ album.albumDesc }}</div>
+            <div class="album-name">{{ album.name }}</div>
+            <div class="album-desc">{{ album.description }}</div>
           </router-link>
         </div>
       </div>
@@ -25,8 +25,8 @@ import { getAlbumList } from "@/api/album";
 import {onMounted, ref} from "vue";
 const albumList = ref([]);
 onMounted(() => {
-  getAlbumList().then(({ data }) => {
-    albumList.value = data.data;
+  getAlbumList().then((res) => {
+    albumList.value = res.data;
   })
 })
 </script>

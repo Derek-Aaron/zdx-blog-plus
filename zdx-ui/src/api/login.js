@@ -16,8 +16,15 @@ export const login = (data) => {
 
 export const homeInfo = () => {
 	return request({
-		url:'/homeInfo',
+		url:'/user/info',
 		method:'GET'
+	})
+}
+
+export const getEmailCode = (email) => {
+	return request({
+		url:`/email/code/${email}`,
+		method:'GET',
 	})
 }
 

@@ -12,6 +12,7 @@ import com.zdx.mapper.zdx.AlbumMapper;
 import com.zdx.mapper.zdx.PhotoMapper;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.AlbumPhotoCountVo;
+import com.zdx.model.vo.front.PhotoInfoVo;
 import com.zdx.service.zdx.AlbumService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -61,6 +62,19 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album>
             albumPhotoCountVo.setPhotoCount(count);
         }
         return albumPhotoCountVo;
+    }
+
+    @Override
+    public PhotoInfoVo homePhotoList(String albumId) {
+        Album album = getById(albumId);
+        PhotoInfoVo photoInfoVo = new PhotoInfoVo();
+        if (ObjUtil.isNotNull(album)) {
+            photoInfoVo.setAlbumName(album.getName());
+        }
+        List<Photo> photos = photoMapper.selectList(new LambdaQueryWrapper<Photo>()
+                .eq(Photo::getAlbumId, albumId));
+        photoInfoVo.setPhotoVOList(photos);
+        return photoInfoVo;
     }
 }
 

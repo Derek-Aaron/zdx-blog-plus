@@ -26,6 +26,14 @@ public class MessageController {
 
     private final MessageService messageService;
 
+    @GetMapping("/home/zdx.message/list")
+    public Result<List<Message>> homeList() {
+        return  Result.success(messageService.list());
+    }
+    @PostMapping("/home/zdx.message/add")
+    public Result<String> homeAddMessage(@RequestBody @Validated Message message) {
+        return messageService.saveOrUpdate(message) ? Result.success() : Result.error();
+    }
     @GetMapping("/zdx.message/page")
     @ApiOperation("分页查询留言数据")
     public Result<IPage<Message>> adminPage(RequestParams params) {

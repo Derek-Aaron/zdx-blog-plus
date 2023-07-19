@@ -15,9 +15,9 @@
           <div class="talk-info">
             <span class="talk-user-name">{{ talk.nickname }}<svg-icon icon-class="badge"
                 style="margin-left: 0.4rem;"></svg-icon></span>
-            <span class="talk-time">{{ formatDateTime(talk.createTime) }}</span>
+            <span class="talk-time">{{ talk.createTime }}</span>
           </div>
-          <div class="talk-content" v-html="talk.talkContent"></div>
+          <div class="talk-content" v-html="talk.content"></div>
           <div class="talk-image" v-viewer v-if="talk.imgList">
             <img @click.prevent class="image" v-for="(img, index) in talk.imgList" :key="index" v-lazy="img" />
           </div>
@@ -39,9 +39,10 @@
 </template>
 
 <script setup>
-import { getTalk, likeTalk } from "@/api/talk";
+import { getTalk } from "@/api/talk";
 import useStore from "@/stores";
-import { formatDateTime } from "@/utils/date";
+import Waves from "@/components/Waves/index.vue"
+import CommentList from "@/components/Comment/CommentList.vue";
 import {useRoute} from "vue-router";
 import {computed, onMounted, reactive, toRefs} from "vue";
 const route = useRoute();
@@ -72,21 +73,21 @@ const like = () => {
     return;
   }
   let id = talk.value.id;
-  likeTalk(id).then(({ data }) => {
-    if (data.flag) {
-      //判断是否点赞
-      if (user.talkLikeSet.indexOf(id) !== -1) {
-        talk.value.likeCount -= 1;
-      } else {
-        talk.value.likeCount += 1;
-      }
-      user.talkLike(id);
-    }
-  });
+  // likeTalk(id).then(({ data }) => {
+  //   if (data.flag) {
+  //     //判断是否点赞
+  //     if (user.talkLikeSet.indexOf(id) !== -1) {
+  //       talk.value.likeCount -= 1;
+  //     } else {
+  //       talk.value.likeCount += 1;
+  //     }
+  //     user.talkLike(id);
+  //   }
+  // });
 };
 onMounted(() => {
-  getTalk(Number(route.params.id)).then(({ data }) => {
-    talk.value = data.data;
+  getTalk(route.params.id).then( res => {
+    talk.value = res.data;
   })
 })
 </script>

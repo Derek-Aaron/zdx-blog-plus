@@ -9,6 +9,7 @@ import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.ArticleArchivesVo;
 import com.zdx.model.vo.front.ArticleHomeInfoVo;
 import com.zdx.model.vo.front.ArticleHomeVo;
+import com.zdx.model.vo.front.ArticleRecommendVo;
 import com.zdx.service.zdx.ArticleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,6 +46,11 @@ public class ArticleController {
     @ApiOperation("前台查询文章")
     public Result<ArticleHomeInfoVo> getHomeById(@PathVariable @NotBlank String id) {
         return Result.success(articleService.getHomeById(id));
+    }
+
+    @GetMapping("/home/zdx.article/recommend")
+    public Result<List<ArticleRecommendVo>> homeRecommend() {
+        return Result.success(articleService.homeRecommend());
     }
 
     @GetMapping("/home/zdx.article/archives")

@@ -9,12 +9,18 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.entity.us.User;
+import com.zdx.entity.zdx.Comment;
 import com.zdx.entity.zdx.Talk;
+import com.zdx.enums.CommentTypeEnum;
 import com.zdx.mapper.us.UserMapper;
+import com.zdx.mapper.zdx.CommentMapper;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.TalkPageVo;
+import com.zdx.model.vo.front.TalkHomeInfoVo;
+import com.zdx.model.vo.front.TalkHomeListVo;
 import com.zdx.service.zdx.TalkService;
 import com.zdx.mapper.zdx.TalkMapper;
+import com.zdx.utils.MybatisPlusUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -33,16 +39,14 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk>
 
     private final UserMapper userMapper;
 
+    private final CommentMapper commentMapper;
+
     @Override
     public IPage<TalkPageVo> adminPage(RequestParams params) {
         IPage<Talk> iPage = new Page<>(params.getPage(), params.getLimit());
         IPage<Talk> page = page(iPage, new LambdaQueryWrapper<Talk>()
                 .eq(params.hasParam("status"), Talk::getStatus, params.getParam("status", Boolean.class)));
-        IPage<TalkPageVo> talkPageVoIPage = new Page<>(params.getPage(), params.getLimit());
-        talkPageVoIPage.setPages(page.getPages());
-        talkPageVoIPage.setTotal(page.getTotal());
-        talkPageVoIPage.setSize(page.getSize());
-        talkPageVoIPage.setCurrent(page.getCurrent());
+
         List<TalkPageVo> talkPageVos = new ArrayList<>();
         for (Talk talk : page.getRecords()) {
             User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
@@ -60,8 +64,69 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk>
             }
             talkPageVos.add(talkPageVo);
         }
-        talkPageVoIPage.setRecords(talkPageVos);
-        return talkPageVoIPage;
+        return MybatisPlusUtils.pageConvert(page, talkPageVos);
+    }
+
+    @Override
+    public IPage<TalkHomeListVo> homePage(RequestParams params) {
+        IPage<Talk> iPage = new Page<>(params.getPage(), params.getLimit());
+        LambdaQueryWrapper<Talk> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Talk::getId, Talk::getUserId, Talk::getImages, Talk::getLikeCount, Talk::getContent);
+        IPage<Talk> page = page(iPage, queryWrapper.eq(Talk::getStatus, Boolean.TRUE));
+        List<TalkHomeListVo> talkHomeListVos = new ArrayList<>();
+        for (Talk talk : page.getRecords()) {
+            TalkHomeListVo talkHomeListVo = BeanUtil.copyProperties(talk, TalkHomeListVo.class);
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                    .select(User::getUsername, User::getNickname, User::getAvatar)
+                    .eq(User::getId, talk.getUserId())
+            );
+            if (ObjUtil.isNotNull(user)) {
+                talkHomeListVo.setNickname(StrUtil.isNotBlank(user.getNickname()) ? user.getNickname() : user.getUsername());
+                talkHomeListVo.setAvatar(user.getAvatar());
+            }
+            if (StrUtil.isNotBlank(talk.getImages()) && talk.getImages().startsWith("[")) {
+                List<String> urls = JSON.parseArray(talk.getImages(), String.class);
+                talkHomeListVo.setImgList(urls);
+            }
+            Long commentCount = commentMapper.selectCount(new LambdaQueryWrapper<Comment>()
+                    .eq(Comment::getCommentType, CommentTypeEnum.TALK.name())
+                    .eq(Comment::getTypeId, talk.getId())
+            );
+            talkHomeListVo.setCommentCount(commentCount);
+            talkHomeListVos.add(talkHomeListVo);
+        }
+        return MybatisPlusUtils.pageConvert(page, talkHomeListVos);
+    }
+
+    @Override
+    public TalkHomeInfoVo homeGetById(String id) {
+        Talk talk = getById(id);
+        TalkHomeInfoVo talkHomeInfoVo = null;
+        if (ObjUtil.isNotNull(talk)) {
+            talkHomeInfoVo = BeanUtil.copyProperties(talk, TalkHomeInfoVo.class);
+            User user = userMapper.selectOne(new LambdaQueryWrapper<User>()
+                    .select(User::getUsername, User::getNickname, User::getAvatar)
+                    .eq(User::getId, talk.getUserId())
+            );
+            if (ObjUtil.isNotNull(user)) {
+                talkHomeInfoVo.setNickname(StrUtil.isNotBlank(user.getNickname()) ? user.getNickname() : user.getUsername());
+                talkHomeInfoVo.setAvatar(user.getAvatar());
+            }
+            if (StrUtil.isNotBlank(talk.getImages()) && talk.getImages().startsWith("[")) {
+                List<String> urls = JSON.parseArray(talk.getImages(), String.class);
+                talkHomeInfoVo.setImgList(urls);
+            }
+        }
+        return talkHomeInfoVo;
+    }
+
+    @Override
+    public List<String> homeList() {
+        LambdaQueryWrapper<Talk> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Talk::getContent);
+        queryWrapper.eq(Talk::getStatus, Boolean.TRUE);
+        queryWrapper.last("limit 5");
+        return list(queryWrapper).stream().map(Talk::getContent).toList();
     }
 }
 

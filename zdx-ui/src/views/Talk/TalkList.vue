@@ -15,11 +15,11 @@
           <div class="talk-info">
             <span class="talk-user-name">{{ talk.nickname }}<svg-icon icon-class="badge"
                 style="margin-left: 0.4rem;"></svg-icon></span>
-            <span class="talk-time">{{ formatDateTime(talk.createTime) }}</span>
+            <span class="talk-time">{{ talk.createTime }}</span>
           </div>
         </div>
         <!-- 说说内容 -->
-        <div class="talk-content" v-html="talk.talkContent">
+        <div class="talk-content" v-html="talk.content">
         </div>
         <!-- 说说图片 -->
         <div class="talk-image" v-viewer>
@@ -51,14 +51,14 @@
 </template>
 
 <script setup>
-// import { getTalkList } from "@/api/talk";
-import { formatDateTime } from "@/utils/date";
+import { talkPage } from "@/api/talk";
+import Waves from "@/components/Waves/index.vue"
 import {onMounted, reactive, toRefs} from "vue";
 const data = reactive({
   count: 0,
   queryParams: {
-    current: 1,
-    size: 5
+    page: 1,
+    limit: 5
   } ,
   talkList: [],
 });
@@ -68,15 +68,15 @@ const {
   talkList,
 } = toRefs(data);
 const getList = () => {
-  // getTalkList(queryParams.value).then(({ data }) => {
-  //   if (queryParams.value.current === 1) {
-  //     talkList.value = data.data.recordList;
-  //   } else {
-  //     talkList.value.push(...data.data.recordList);
-  //   }
-  //   queryParams.value.current++;
-  //   count.value = data.data.count;
-  // });
+	talkPage(queryParams.value).then((res) => {
+    if (queryParams.value.page === 1) {
+      talkList.value = res.data.records;
+    } else {
+      talkList.value.push(...res.data.records);
+    }
+    queryParams.value.page++;
+    count.value = parseInt(res.data.total);
+  });
 };
 onMounted(() => {
   getList();

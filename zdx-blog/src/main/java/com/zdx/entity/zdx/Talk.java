@@ -5,6 +5,8 @@ import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @TableName zdx_talk
  */
@@ -19,9 +21,12 @@ public class Talk extends BaseTimeEntity {
 
     private String images;
 
+    private Long likeCount;
+
     private Boolean isTop;
 
     private Boolean status;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

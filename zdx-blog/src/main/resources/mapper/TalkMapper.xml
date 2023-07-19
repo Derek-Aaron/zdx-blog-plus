@@ -7,6 +7,7 @@
     <resultMap id="BaseResultMap" type="com.zdx.entity.zdx.Talk">
             <id property="id" column="id" jdbcType="BIGINT"/>
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
+            <result property="likeCount" column="like_count" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="images" column="images" jdbcType="VARCHAR"/>
             <result property="isTop" column="is_top" jdbcType="BIT"/>
@@ -16,7 +17,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,user_id,content,
+        id,user_id,content,like_count
         images,is_top,status,
         create_time,update_time
     </sql>

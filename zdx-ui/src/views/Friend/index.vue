@@ -48,14 +48,16 @@
 
 <script setup>
 import { getFriendList } from "@/api/friend";
+import CommentList from "@/components/Comment/CommentList.vue";
+import Waves from "@/components/Waves/index.vue"
 import useStore from "@/stores";
 import {onMounted, ref} from "vue";
 const { blog } = useStore();
 const commentType = ref(2);
 const friendList = ref([]);
 onMounted(() => {
-  getFriendList().then(({ data }) => {
-    friendList.value = data.data;
+  getFriendList().then((res) => {
+    friendList.value = res.data;
   });
 });
 </script>

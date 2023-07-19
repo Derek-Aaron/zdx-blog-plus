@@ -5,7 +5,7 @@
     <n-input-group class="mt-11">
       <n-input placeholder="验证码" v-model:value="emailForm.code" />
       <n-button color="#49b1f5" :disabled="flag" @click="sendCode">
-        {{ timer == 0 ? '发送' : `${timer}s` }}
+        {{ timer === 0 ? '发送' : `${timer}s` }}
       </n-button>
     </n-input-group>
     <n-button class="mt-11" color="#4caf50" style="width:100%" @click="handleUpdate" :loading="loading">
@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-// import { getCode } from '@/api/login';
+import { getEmailCode } from '@/api/login';
 // import { updateUserEmail } from '@/api/user';
 import useStore from "@/stores";
 import { useIntervalFn } from '@vueuse/core';
@@ -52,11 +52,9 @@ const sendCode = () => {
     return;
   }
   start(60);
-  // getCode(emailForm.value.email).then(({ data }) => {
-  //   if (data.flag) {
-  //     window.$message?.success("发送成功");
-  //   }
-  // });
+	getEmailCode(emailForm.value.email).then(() => {
+		window.$message?.success("发送成功");
+  });
 };
 const dialogVisible = computed({
   get: () => app.emailFlag,

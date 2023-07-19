@@ -3,6 +3,7 @@ package com.zdx.controller.zdx;
 import com.zdx.handle.Result;
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
+import com.zdx.model.vo.front.UserInfoVo;
 import com.zdx.service.zdx.BlogService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,11 @@ public class BlogController {
     public Result<String> result() {
         blogService.result();
         return Result.success();
+    }
+
+    @GetMapping("/user/info")
+    public Result<UserInfoVo> userInfo() {
+        return Result.success(blogService.getUserInfo());
     }
 
     @GetMapping("/home/")

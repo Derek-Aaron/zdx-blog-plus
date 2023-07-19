@@ -21,10 +21,7 @@ import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
-import com.zdx.model.vo.front.ArticleArchivesVo;
-import com.zdx.model.vo.front.ArticleHomeInfoVo;
-import com.zdx.model.vo.front.ArticleHomeVo;
-import com.zdx.model.vo.front.ArticlePaginationVO;
+import com.zdx.model.vo.front.*;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.tk.RedisService;
 import com.zdx.service.zdx.ArticleService;
@@ -227,6 +224,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         articleArchivesVoIPage.setCurrent(page.getCurrent());
         articleArchivesVoIPage.setRecords(articleArchivesVos);
         return articleArchivesVoIPage;
+    }
+
+    @Override
+    public List<ArticleRecommendVo> homeRecommend() {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(Article::getId, Article::getTitle, Article::getCreateTime, Article::getCover);
+        queryWrapper.last(" limit 5");
+        List<Article> articles = list(queryWrapper);
+        return articles.stream().map(article -> BeanUtil.copyProperties(article, ArticleRecommendVo.class)).toList();
     }
 }
 

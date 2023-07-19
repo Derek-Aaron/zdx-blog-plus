@@ -1,5 +1,6 @@
 package com.zdx.service.zdx.impl;
 
+import cn.hutool.core.bean.BeanUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
@@ -10,6 +11,10 @@ import com.zdx.mapper.zdx.CategoryMapper;
 import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
+import com.zdx.model.vo.front.UserInfoVo;
+import com.zdx.security.UserSessionFactory;
+import com.zdx.security.vo.UserPrincipal;
+import com.zdx.security.vo.UserSession;
 import com.zdx.service.tk.ConfigService;
 import com.zdx.service.tk.RedisService;
 import com.zdx.service.zdx.BlogService;
@@ -24,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -80,5 +86,19 @@ public class BlogServiceImpl implements BlogService {
     public SiteConfig getSite() {
         String json = configService.getConfig(Constants.BLOG_SITE_CONFIG, String.class);
         return JSON.parseObject(json, SiteConfig.class);
+    }
+
+    @Override
+    public UserInfoVo getUserInfo() {
+        UserSession userSession = UserSessionFactory.userDetails();
+        Long userId = userSession.getUserId();
+        UserInfoVo userInfoVo = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), UserInfoVo.class);
+        Set<Object> articleLikeSet = redisService.getSet(Constants.USER_ARTICLE_LIKE + userId);
+        Set<Object> commentLikeSet = redisService.getSet(Constants.USER_COMMENT_LIKE + userId);
+        Set<Object> talkLikeSet = redisService.getSet(Constants.USER_TALK_LIKE + userId);
+        userInfoVo.setArticleLikeSet(articleLikeSet);
+        userInfoVo.setCommentLikeSet(commentLikeSet);
+        userInfoVo.setTalkLikeSet(talkLikeSet);
+        return userInfoVo;
     }
 }

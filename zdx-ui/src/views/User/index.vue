@@ -43,10 +43,10 @@
 </template>
 
 <script setup>
-import { updateUserInfo } from "@/api/user";
-import { UserInfo } from "@/api/user/types";
+// import { updateUserInfo } from "@/api/user";
+import UserAvatar from "@/components/UserAvatar/index.vue"
+import Waves from "@/components/Waves/index.vue"
 import useStore from "@/stores";
-import { FormInst } from 'naive-ui';
 import {onMounted, ref} from "vue";
 import {useRouter} from "vue-router";
 const formInstRef = ref()
@@ -58,7 +58,7 @@ const rules = {
     message: "昵称不能为空",
   },
 };
-const userForm = ref<UserInfo>({
+const userForm = ref({
   nickname: user.nickname,
   intro: user.intro,
   webSite: user.webSite,
@@ -66,12 +66,12 @@ const userForm = ref<UserInfo>({
 const handleUpdate = () => {
   formInstRef.value?.validate((errors) => {
     if (!errors) {
-      updateUserInfo(userForm.value).then(({ data }) => {
-        if (data.flag) {
-          user.updateUserInfo(userForm.value);
-          window.$message?.success("修改成功");
-        }
-      });
+      // updateUserInfo(userForm.value).then(({ data }) => {
+      //   if (data.flag) {
+      //     user.updateUserInfo(userForm.value);
+      //     window.$message?.success("修改成功");
+      //   }
+      // });
     }
   })
 };

@@ -8,7 +8,7 @@
   <div class="bg">
     <div class="page-container">
       <div class="avatar-box">
-        <img class="author-avatar" :src="blog.blogInfo.siteConfig.authorAvatar" />
+        <img class="author-avatar" :src="blog.blogInfo.siteConfig.authorAvatar"  alt=""/>
       </div>
       <v-md-preview class="md" :text="blog.blogInfo.siteConfig.aboutMe"></v-md-preview>
     </div>
@@ -17,6 +17,7 @@
 
 <script setup>
 import useStore from "@/stores";
+import Waves from "@/components/Waves/index.vue"
 const { blog } = useStore();
 </script>
 

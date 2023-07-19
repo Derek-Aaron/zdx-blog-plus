@@ -1,10 +1,12 @@
 package com.zdx.controller.zdx;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Album;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.AlbumPhotoCountVo;
+import com.zdx.model.vo.front.PhotoInfoVo;
 import com.zdx.service.zdx.AlbumService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +27,18 @@ public class AlbumController {
 
     private final AlbumService albumService;
 
+
+    @GetMapping("/home/zdx.album/list")
+    public Result<List<Album>> homeList() {
+        LambdaQueryWrapper<Album> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.eq(Album::getStatus, Boolean.TRUE);
+        return Result.success(albumService.list(queryWrapper));
+    }
+
+    @GetMapping("/home/zdx.album/photoList/{albumId}")
+    public Result<PhotoInfoVo> homePhotoList(@PathVariable @NotBlank String albumId) {
+        return Result.success(albumService.homePhotoList(albumId));
+    }
     @GetMapping("/zdx.album/page")
     @ApiOperation("后台分页查询相册")
     public Result<IPage<AlbumPhotoCountVo>> adminPage(RequestParams params) {

@@ -8,6 +8,13 @@ export const getHomeById = (id) => {
 	})
 }
 
+export const getArticleRecommend = () => {
+	return request({
+		url:'/home/zdx.article/recommend',
+		method:'GET'
+	})
+}
+
 export const likeArticle = (id) => {
 	return request({
 		url:`/zdx.article/likeArticle/${id}`,

@@ -19,12 +19,10 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +41,11 @@ public class LoginController {
     public Result<Map<String, String>> login(@RequestBody @Validated @Encrypt UserLogin userLogin, HttpServletRequest request) {
         String token = loginService.login(request, userLogin);
         return Result.success(Map.of("token", token));
+    }
+
+    @GetMapping("/email/code/{email}")
+    public Result<String> emailCode(@PathVariable @NotBlank String email) {
+        return Result.success("功能开发中");
     }
 
 

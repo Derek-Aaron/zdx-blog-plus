@@ -11,15 +11,15 @@
       <span class="colorFlag" @click="handleRegister">立即注册</span>
       <span class="colorFlag" @click="handleForget">忘记密码?</span>
     </div>
-    <div>
-      <div class="social-login-title">社交账号登录</div>
-      <div class="social-login-wrapper">
-        <svg-icon class="icon" icon-class="qq" size="2rem" color="#00aaee" v-if="showLogin('qq')"
-          @click="qqLogin"></svg-icon>
-        <svg-icon class="icon" icon-class="gitee" size="2rem" v-if="showLogin('gitee')" @click="giteeLogin"></svg-icon>
-        <svg-icon class="icon" icon-class="github" size="2rem" v-if="showLogin('github')" @click="githubLogin"></svg-icon>
-      </div>
-    </div>
+<!--    <div>-->
+<!--      <div class="social-login-title">社交账号登录</div>-->
+<!--      <div class="social-login-wrapper">-->
+<!--        <svg-icon class="icon" icon-class="qq" size="2rem" color="#00aaee" v-if="showLogin('qq')"-->
+<!--          @click="qqLogin"></svg-icon>-->
+<!--        <svg-icon class="icon" icon-class="gitee" size="2rem" v-if="showLogin('gitee')" @click="giteeLogin"></svg-icon>-->
+<!--        <svg-icon class="icon" icon-class="github" size="2rem" v-if="showLogin('github')" @click="githubLogin"></svg-icon>-->
+<!--      </div>-->
+<!--    </div>-->
   </n-modal>
 </template>
 
@@ -41,9 +41,9 @@ const dialogVisible = computed({
   get: () => app.loginFlag,
   set: (value) => (app.loginFlag = value),
 });
-const showLogin = computed(
-  () => (type) => blog.blogInfo.siteConfig.loginList.includes(type)
-);
+// const showLogin = computed(
+//   () => (type) => blog.blogInfo.siteConfig.loginList.includes(type)
+// );
 const handleRegister = () => {
   app.setLoginFlag(false);
   app.setRegisterFlag(true);

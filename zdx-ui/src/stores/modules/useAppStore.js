@@ -9,7 +9,7 @@ export const useAppStore = defineStore('useAppStore', () => {
 	const registerFlag = ref(false)
 	const forgetFlag = ref(false)
 	const emailFlag = ref(false)
-	const sideFlag = ref(true)
+	const sideFlag = ref(false)
 
 	const setCollapse = (flag) => {
 	  isCollapse.value = flag
