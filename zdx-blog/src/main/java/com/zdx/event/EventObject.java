@@ -80,7 +80,12 @@ public class EventObject extends ApplicationEvent {
 		public static final String ARTICLE_ID = "article_id";
 
 		public static final String INSERT_VIEW_COUNT = "insert_view_count";
+		public static final String INSERT_LIKE_COUNT = "insert_like_count";
 		public static final String VIEW_COUNT = "view_count";
+		public static final String LIKE_COUNT = "like_count";
+		public static final String INSERT_OR_REMOVE_ARTICLE_LIKE = "insert_or_remove_article_like";
+		public static final String INSERT_OR_REMOVE_COMMENT_LIKE = "insert_or_remove_comment_like";
+		public static final String LIKE_COUNT_TYPE = "like_count_type";
 
 		public static final String LOGOUT = "logout";
 		public static final String DELCONTENTCACHE = "delContent";

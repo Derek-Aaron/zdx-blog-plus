@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.zdx.Constants;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
@@ -201,8 +200,6 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         articleHomeInfoVo.setLastArticle(lastArticle);
         ArticlePaginationVO nextArticle = baseMapper.selectNextArticle(article.getId());
         articleHomeInfoVo.setNextArticle(nextArticle);
-        Integer likeCount = redisService.getHash(Constants.ARTICLE_LIKE_COUNT, id);
-        articleHomeInfoVo.setLikeCount(Optional.ofNullable(likeCount).orElse(0).longValue());
         return articleHomeInfoVo;
     }
 

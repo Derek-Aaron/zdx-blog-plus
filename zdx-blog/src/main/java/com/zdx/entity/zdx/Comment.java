@@ -21,6 +21,8 @@ public class Comment extends BaseTimeEntity {
 
     private Long replyId;
 
+    private Long likeCount;
+
     private String content;
 
     private Long fromUid;

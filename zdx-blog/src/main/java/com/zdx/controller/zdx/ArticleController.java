@@ -2,6 +2,7 @@ package com.zdx.controller.zdx;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.enums.LikeTypeEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
@@ -11,6 +12,7 @@ import com.zdx.model.vo.front.ArticleHomeInfoVo;
 import com.zdx.model.vo.front.ArticleHomeVo;
 import com.zdx.model.vo.front.ArticleRecommendVo;
 import com.zdx.service.zdx.ArticleService;
+import com.zdx.strategy.context.StrategyContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +31,8 @@ import java.util.List;
 public class ArticleController {
 
     private final ArticleService articleService;
+
+    private final StrategyContext strategyContext;
 
     @GetMapping("/zdx.article/page")
     @ApiOperation("后台文章分页")
@@ -68,6 +72,12 @@ public class ArticleController {
     @ApiOperation("保存文章")
     public Result<String> save(@RequestBody @Validated ArticleSaveVo articleSave) {
         return articleService.adminSave(articleSave) ? Result.success() : Result.error();
+    }
+
+    @GetMapping("/zdx.article/likeArticle/{id}")
+    public Result<String> likeArticle(@PathVariable @NotBlank String id) {
+        strategyContext.executeLike(LikeTypeEnum.ARTICLE, id);
+        return Result.success();
     }
 
     @PostMapping("/zdx.article/batchTrash")

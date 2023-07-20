@@ -30,11 +30,11 @@ public class UserInfoVo {
     private String loginType;
 
     @ApiModelProperty("用户喜欢的文章列表")
-    private Set<Object> articleLikeSet;
+    private Set<String> articleLikeSet;
 
     @ApiModelProperty("用户喜欢评论id")
-    private Set<Object> commentLikeSet;
+    private Set<String> commentLikeSet;
 
     @ApiModelProperty("用户系统说说id")
-    private Set<Object> talkLikeSet;
+    private Set<String> talkLikeSet;
 }

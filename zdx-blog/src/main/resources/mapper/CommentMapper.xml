@@ -12,6 +12,7 @@
             <result property="replyId" column="reply_id" jdbcType="BIGINT"/>
             <result property="content" column="content" jdbcType="VARCHAR"/>
             <result property="fromUid" column="from_uid" jdbcType="BIGINT"/>
+            <result property="likeCount" column="like_count" jdbcType="BIGINT"/>
             <result property="toUid" column="to_uid" jdbcType="BIGINT"/>
             <result property="isCheck" column="is_check" jdbcType="BIT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -19,7 +20,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,comment_type,type_id,
+        id,comment_type,type_id,like_count
         parent_id,reply_id,content,
         from_uid,to_uid,is_check,
         create_time,update_time
@@ -31,5 +32,41 @@
                  inner join us_user u on u.id = c.from_uid
         where c.is_check = 1
         order by c.create_time desc limit 5
+    </select>
+    <select id="selectReplyByParentIdList" resultType="com.zdx.model.vo.front.ReplyVo">
+        SELECT *
+        FROM (
+        SELECT c.from_uid,
+        u.nickname AS from_nickname,
+        u.avatar,
+        c.to_uid,
+        c.like_count,
+        r.nickname AS to_nickname,
+        c.id,
+        c.parent_id,
+        c.content,
+        c.create_time,
+        ROW_NUMBER() over (PARTITION BY parent_id ORDER BY create_time ASC ) row_num
+        FROM zdx_comment c
+        JOIN us_user u ON c.from_uid = u.id
+        JOIN us_user r ON c.to_uid = r.id
+        WHERE c.is_check = 1
+        AND parent_id IN
+        <foreach collection="commentIds" open="(" close=")" item="commentId" separator=",">
+            #{commentId}
+        </foreach>
+        ) t
+        WHERE 4 > row_num
+    </select>
+    <select id="selectReplyCountByParentId" resultType="com.zdx.model.vo.front.ReplyCountVO">
+        SELECT parent_id as comment_id,
+        count(1) AS reply_count
+        FROM zdx_comment
+        WHERE is_check = 1
+        AND parent_id IN
+        <foreach collection="commentIds" open="(" close=")" item="commentId" separator=",">
+            #{commentId}
+        </foreach>
+        GROUP BY parent_id
     </select>
 </mapper>

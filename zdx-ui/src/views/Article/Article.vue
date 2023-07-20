@@ -122,7 +122,6 @@
 </template>
 
 <script setup>
-// import { getArticle, likeArticle } from "@/api/article";
 import CommentList from "@/components/Comment/CommentList.vue";
 import Waves from "@/components/Waves/index.vue"
 import Catalog from "@/components/Catalog/index.vue"

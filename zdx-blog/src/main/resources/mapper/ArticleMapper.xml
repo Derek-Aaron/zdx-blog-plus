@@ -13,7 +13,7 @@
         <result property="description" column="description" jdbcType="VARCHAR"/>
         <result property="type" column="type" jdbcType="VARCHAR"/>
         <result property="isTop" column="is_top" jdbcType="BIT"/>
-        <result property="likesCount" column="likes_count" jdbcType="BIGINT"/>
+        <result property="likeCount" column="like_count" jdbcType="BIGINT"/>
         <result property="viewCount" column="view_count" jdbcType="BIGINT"/>
         <result property="trash" column="trash" jdbcType="BIT"/>
         <result property="isRecommend" column="is_recommend" jdbcType="BIT"/>
@@ -26,7 +26,7 @@
         id
         ,user_id,category_id,
         cover,title,description,
-        type,is_top,likes_count,
+        type,is_top,like_count,
         view_count,trash,is_recommend,
         status,create_time,update_time
     </sql>

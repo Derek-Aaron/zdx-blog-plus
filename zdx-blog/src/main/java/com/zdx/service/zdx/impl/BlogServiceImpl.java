@@ -5,9 +5,12 @@ import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
 import com.zdx.entity.zdx.Article;
+import com.zdx.entity.zdx.Like;
 import com.zdx.enums.ArticleStatusEnum;
+import com.zdx.enums.LikeTypeEnum;
 import com.zdx.mapper.zdx.ArticleMapper;
 import com.zdx.mapper.zdx.CategoryMapper;
+import com.zdx.mapper.zdx.LikeMapper;
 import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
@@ -30,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -44,6 +48,8 @@ public class BlogServiceImpl implements BlogService {
     private final TagMapper tagMapper;
 
     private final ConfigService configService;
+
+    private final LikeMapper likeMapper;
     @Override
     public void result() {
         HttpServletRequest request = ServletUtils.getRequest();
@@ -93,9 +99,18 @@ public class BlogServiceImpl implements BlogService {
         UserSession userSession = UserSessionFactory.userDetails();
         Long userId = userSession.getUserId();
         UserInfoVo userInfoVo = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), UserInfoVo.class);
-        Set<Object> articleLikeSet = redisService.getSet(Constants.USER_ARTICLE_LIKE + userId);
-        Set<Object> commentLikeSet = redisService.getSet(Constants.USER_COMMENT_LIKE + userId);
-        Set<Object> talkLikeSet = redisService.getSet(Constants.USER_TALK_LIKE + userId);
+        Set<String> articleLikeSet = likeMapper.selectList(new LambdaQueryWrapper<Like>()
+                .eq(Like::getType, LikeTypeEnum.ARTICLE.name())
+                .eq(Like::getUserId, userId)
+        ).stream().map(like -> String.valueOf(like.getTypeId())).collect(Collectors.toSet());
+        Set<String> commentLikeSet = likeMapper.selectList(new LambdaQueryWrapper<Like>()
+                .eq(Like::getType, LikeTypeEnum.COMMENT.name())
+                .eq(Like::getUserId, userId)
+        ).stream().map(like -> String.valueOf(like.getTypeId())).collect(Collectors.toSet());
+        Set<String> talkLikeSet = likeMapper.selectList(new LambdaQueryWrapper<Like>()
+                .eq(Like::getType, LikeTypeEnum.TALK.name())
+                .eq(Like::getUserId, userId)
+        ).stream().map(like -> String.valueOf(like.getTypeId())).collect(Collectors.toSet());
         userInfoVo.setArticleLikeSet(articleLikeSet);
         userInfoVo.setCommentLikeSet(commentLikeSet);
         userInfoVo.setTalkLikeSet(talkLikeSet);

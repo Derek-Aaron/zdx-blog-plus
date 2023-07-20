@@ -27,7 +27,7 @@ public class Article extends BaseTimeEntity {
 
     private Boolean isTop;
 
-    private Long likesCount;
+    private Long likeCount;
 
     private Long viewCount;
 

@@ -44,21 +44,6 @@ public class Constants {
 
     public static final String BLOG_VIEW_COUNT = "blog_view_count";
 
-    public static final String USER_ARTICLE_LIKE = "user_article_like:";
-
-
-    public static final String USER_COMMENT_LIKE = "user_comment_like:";
-
-    public static final String ARTICLE_VIEW_COUNT = "article_view_count";
-
-    public static final String ARTICLE_LIKE_COUNT = "article_like_count";
-
-
-
-    public static final String USER_TALK_LIKE = "user_talk_like:";
-
-    public static final String COMMENT_LIKE_COUNT = "comment_like_count";
-
 
 
 }
