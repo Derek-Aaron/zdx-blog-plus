@@ -20,7 +20,6 @@
 </template>
 
 <script setup>
-// import { addComment } from "@/api/comment";
 import Emoji from "@/components/Emoji/index.vue"
 import useStore from "@/stores";
 import emojiList from "@/utils/emoji";
