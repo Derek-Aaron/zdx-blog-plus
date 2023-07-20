@@ -16,6 +16,13 @@ export const getTalk = (id) => {
 	})
 }
 
+export const likeTalk = (id) => {
+	return request({
+		url:`/zdx.talk/like/${id}`,
+		method:'GET'
+	})
+}
+
 export const getTalkHomeList = () => {
 	return request({
 		url:'/home/zdx.talk/list',

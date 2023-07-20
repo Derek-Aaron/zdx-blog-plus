@@ -3,6 +3,7 @@ package com.zdx.controller.zdx;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.entity.zdx.Talk;
+import com.zdx.enums.LikeTypeEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.TalkPageVo;
@@ -10,6 +11,7 @@ import com.zdx.model.vo.front.TalkHomeInfoVo;
 import com.zdx.model.vo.front.TalkHomeListVo;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.zdx.TalkService;
+import com.zdx.strategy.context.StrategyContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
@@ -25,6 +27,7 @@ import java.util.List;
 @Validated
 public class TalkController {
 
+    private final StrategyContext strategyContext;
 
     private final TalkService talkService;
 
@@ -40,6 +43,12 @@ public class TalkController {
     @GetMapping("/home/zdx.talk/list")
     public Result<List<String>> homeList() {
         return  Result.success(talkService.homeList());
+    }
+
+    @GetMapping("/zdx.talk/like/{id}")
+    public Result<String> likeTalk(@PathVariable String id) {
+        strategyContext.executeLike(LikeTypeEnum.TALK, id);
+        return Result.success();
     }
 
     @GetMapping("/zdx.talk/page")

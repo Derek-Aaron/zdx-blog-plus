@@ -24,7 +24,7 @@ public class CommonProperties {
 	/**
 	 * xss要过滤的路径
 	 */
-	private String xssUrlPatterns = "/captcha/**,/zdx.talk/save";
+	private String xssUrlPatterns = "/captcha/**,/zdx.talk/save,/zdx.comment/add";
 
 
 	/**
