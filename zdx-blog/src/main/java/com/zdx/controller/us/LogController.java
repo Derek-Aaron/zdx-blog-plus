@@ -9,6 +9,7 @@ import com.zdx.entity.us.Log;
 import com.zdx.handle.Result;
 import com.zdx.service.us.LogService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -38,6 +39,7 @@ public class LogController extends BaseController<Log> {
     }
 
     @GetMapping("/clear")
+    @ApiOperation("清除日志")
     public Result<String> clear(String event) {
         return logService.clear(event) ? Result.success() : Result.error();
     }

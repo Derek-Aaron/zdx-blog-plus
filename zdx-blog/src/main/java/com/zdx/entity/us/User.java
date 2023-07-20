@@ -35,6 +35,7 @@ public class User extends BaseTimeEntity {
     @ApiModelProperty("昵称")
     private String nickname;
 
+    @ApiModelProperty("头像")
     private String avatar;
 
     @ApiModelProperty(value = "邮箱", required = true)
@@ -47,6 +48,7 @@ public class User extends BaseTimeEntity {
     private String gender;
 
     @TableField(fill = FieldFill.INSERT)
+    @ApiModelProperty("唯一标识")
     private String personId;
 
     @ApiModelProperty("是否禁用")

@@ -2,7 +2,9 @@ package com.zdx.controller.zdx;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Category;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.front.CategoryTagArticleVo;
@@ -31,11 +33,13 @@ public class CategoryController {
 
 
     @GetMapping("/home/zdx.category/list")
+    @ApiOperation("前台查询分类文章数量列表")
     public Result<List<CategoryCountVo>> homeList() {
         return Result.success(categoryService.homeList());
     }
 
     @GetMapping("/home/zdx.category/articlePage")
+    @ApiOperation("前台分类查询文章分页")
     public Result<IPage<CategoryTagArticleVo>> homeArticlePage(RequestParams params) {
         return Result.success(categoryService.homeArticlePage(params));
     }
@@ -52,11 +56,14 @@ public class CategoryController {
 
     @PostMapping("/zdx.category/save")
     @ApiOperation("保存分类数据")
+    @Log(type = LogEventEnum.SAVE, desc = "保存分类数据")
     public Result<String> save(@RequestBody @Validated Category category) {
         return categoryService.saveOrUpdate(category) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.category/batchDelete")
+    @ApiOperation("批量删除分类")
+    @Log(type = LogEventEnum.DELETE, desc = "批量删除分类")
     public Result<String> batchDelete(@RequestBody @ApiParam("分类id") @NotEmpty List<String> ids) {
         return categoryService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

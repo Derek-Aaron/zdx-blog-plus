@@ -2,7 +2,9 @@ package com.zdx.controller.zdx;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Album;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.AlbumPhotoCountVo;
@@ -29,6 +31,7 @@ public class AlbumController {
 
 
     @GetMapping("/home/zdx.album/list")
+    @ApiOperation("前台查询全部相册")
     public Result<List<Album>> homeList() {
         LambdaQueryWrapper<Album> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Album::getStatus, Boolean.TRUE);
@@ -36,6 +39,7 @@ public class AlbumController {
     }
 
     @GetMapping("/home/zdx.album/photoList/{albumId}")
+    @ApiOperation("前台相册id查询图片列表")
     public Result<PhotoInfoVo> homePhotoList(@PathVariable @NotBlank String albumId) {
         return Result.success(albumService.homePhotoList(albumId));
     }
@@ -46,18 +50,21 @@ public class AlbumController {
     }
 
     @GetMapping("/zdx.album/getById/{id}")
+    @ApiOperation("通过相册id查询相册图片列表")
     public Result<AlbumPhotoCountVo> getAlbumPhotoCountById(@PathVariable @NotBlank String id) {
         return Result.success(albumService.getAlbumPhotoCountById(id));
     }
 
     @PostMapping("/zdx.album/save")
     @ApiOperation("保存相册")
+    @Log(type = LogEventEnum.SAVE, desc = "保存相册")
     public Result<String> save(@RequestBody @Validated Album album) {
         return albumService.saveOrUpdate(album) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.album/batchDelete")
     @ApiOperation("批量删除相册")
+    @Log(type = LogEventEnum.DELETE, desc = "批量删除相册")
     public Result<String> batchDelete(@RequestBody @ApiParam("标签id") @NotEmpty List<String> ids) {
         return albumService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

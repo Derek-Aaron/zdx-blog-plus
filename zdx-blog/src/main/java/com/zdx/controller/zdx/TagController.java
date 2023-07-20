@@ -2,7 +2,9 @@ package com.zdx.controller.zdx;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Tag;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.front.CategoryTagArticleVo;
@@ -32,11 +34,13 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/home/zdx.tag/list")
+    @ApiOperation("前台查询标签列表")
     public Result<List<TagCountVo>> homeList() {
         return Result.success(tagService.homeList());
     }
 
     @GetMapping("/home/zdx.tag/articlePage")
+    @ApiOperation("前台分页查询标签文章")
     public Result<IPage<CategoryTagArticleVo>> homeArticlePage(RequestParams params) {
         return Result.success(tagService.homeArticlePage(params));
     }
@@ -55,12 +59,14 @@ public class TagController {
 
     @PostMapping("/zdx.tag/save")
     @ApiOperation("保存标签数据")
+    @Log(type = LogEventEnum.SAVE, desc = "保存标签数据")
     public Result<String> save(@RequestBody @Validated Tag tag) {
         return tagService.saveOrUpdate(tag) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.tag/batchDelete")
     @ApiOperation("批量删除标签")
+    @Log(type = LogEventEnum.DELETE, desc = "批量删除标签")
     public Result<String> batchDelete(@RequestBody @ApiParam("标签id") @NotEmpty List<String> ids) {
         return tagService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

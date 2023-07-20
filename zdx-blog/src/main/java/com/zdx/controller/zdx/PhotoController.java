@@ -2,7 +2,9 @@ package com.zdx.controller.zdx;
 
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Photo;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.PhotoAddDto;
 import com.zdx.model.dto.RequestParams;
@@ -35,18 +37,21 @@ public class PhotoController {
 
     @PostMapping("/zdx.photo/add")
     @ApiOperation("增加相册图片")
+    @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
     public Result<String> addPhoto(@RequestBody @Validated PhotoAddDto photoAddDto) {
         return photoService.addPhoto(photoAddDto) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.photo/save")
     @ApiOperation("保存相册图片")
+    @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
     public Result<String> save(@RequestBody @Validated Photo photo) {
         return photoService.saveOrUpdate(photo) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.photo/batchDelete")
     @ApiOperation("批量删除相册图片")
+    @Log(type = LogEventEnum.DELETE, desc = "批量删除相册图片")
     public Result<String> batchDelete(@RequestBody @ApiParam("图片id") @NotEmpty List<String> ids) {
         return photoService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

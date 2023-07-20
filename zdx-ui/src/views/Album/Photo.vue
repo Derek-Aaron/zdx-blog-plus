@@ -17,6 +17,7 @@
 
 <script setup>
 import { getPhotoList } from '@/api/album';
+import Waves from "@/components/Waves/index.vue"
 import {useRoute} from "vue-router";
 import {onMounted, ref} from "vue";
 

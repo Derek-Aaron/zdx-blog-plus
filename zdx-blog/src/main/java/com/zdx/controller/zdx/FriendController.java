@@ -1,7 +1,9 @@
 package com.zdx.controller.zdx;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Friend;
+import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.service.zdx.FriendService;
@@ -27,6 +29,7 @@ public class FriendController {
     private final FriendService friendService;
 
     @GetMapping("/home/zdx.friend/list")
+    @ApiOperation("前台查询友链列表")
     public Result<List<Friend>> homeList() {
         return Result.success(friendService.list());
     }
@@ -37,12 +40,14 @@ public class FriendController {
     }
     @PostMapping("/zdx.friend/save")
     @ApiOperation("保存友链数据")
+    @Log(type = LogEventEnum.SAVE, desc = "保存友链数据")
     public Result<String> save(@RequestBody @Validated Friend friend) {
         return friendService.saveOrUpdate(friend) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.friend/batchDelete")
     @ApiOperation("批量删除友链数据")
+    @Log(type = LogEventEnum.DELETE, desc = "批量删除友链数据")
     public Result<String> batchDelete(@RequestBody @ApiParam("分类id") @NotEmpty List<String> ids) {
         return friendService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
