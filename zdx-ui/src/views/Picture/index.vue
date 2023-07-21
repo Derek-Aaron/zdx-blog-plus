@@ -44,7 +44,7 @@
 </template>
 
 <script setup>
-import { biliUpload } from "@/api/user";
+// import { biliUpload } from "@/api/user";
 import { useClipboard } from "@vueuse/core";
 import {onMounted, reactive, ref} from "vue";
 const form = reactive({
@@ -86,12 +86,12 @@ const changeFile = (options) => {
       formData.append("csrf", form.csrf);
       formData.append("data", form.data);
       loading.value = true;
-      biliUpload(formData).then(({ data }) => {
-        if (data.flag) {
-          imgList.push(data.data);
-          loading.value = false;
-        }
-      })
+      // biliUpload(formData).then(({ data }) => {
+      //   if (data.flag) {
+      //     imgList.push(data.data);
+      //     loading.value = false;
+      //   }
+      // })
     }
   })
 }
