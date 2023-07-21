@@ -1,9 +1,12 @@
 package com.zdx.strategy.context;
 
 
+import com.zdx.enums.AuthSourceEnum;
 import com.zdx.enums.LikeTypeEnum;
+import com.zdx.strategy.AuthStrategy;
 import com.zdx.strategy.LikeStrategy;
 import lombok.RequiredArgsConstructor;
+import me.zhyd.oauth.request.AuthRequest;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,6 +16,8 @@ import java.util.List;
 public class StrategyContext {
 
     private final List<LikeStrategy> likeStrategies;
+
+    private final List<AuthStrategy> authStrategies;
 
 
     /**
@@ -27,5 +32,14 @@ public class StrategyContext {
                 break;
             }
         }
+    }
+
+    public AuthRequest executeAuth(AuthSourceEnum sourceEnum, String source, String callbackUrl) {
+        for (AuthStrategy authStrategy : authStrategies) {
+            if (authStrategy.source().equals(sourceEnum)) {
+                return authStrategy.execute(source, callbackUrl);
+            }
+        }
+        return null;
     }
 }

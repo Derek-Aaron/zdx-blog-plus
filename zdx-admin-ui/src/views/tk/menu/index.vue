@@ -100,6 +100,14 @@ const selected = (name) => {
     showChooseIcon.value = false;
 }
 
+const hideSelectIcon = (event) => {
+	let elem = event.relatedTarget || event.srcElement || event.target || event.currentTarget;
+	let className = elem.className;
+	if (className !== "el-input__inner") {
+		showChooseIcon.value = false;
+	}
+}
+
 const handleAdd = (row) => {
     entity.value = {}
     if (row) {

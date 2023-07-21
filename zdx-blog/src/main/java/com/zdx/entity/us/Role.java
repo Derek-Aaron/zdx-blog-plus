@@ -20,6 +20,8 @@ public class Role extends BaseEntity {
 
     public final static String ADMIN_ROLE_ID = "1676828496567656450";
 
+    public final static String BLOG_USE_ID = "1662392175966093313";
+
     @Serial
     private static final long serialVersionUID = 1L;
 

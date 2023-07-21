@@ -37,8 +37,14 @@
           <span v-if="!loading">登 录</span>
           <span v-else>登 录 中...</span>
         </el-button>
-        <div style="float: right;" v-if="register">
+        <div style="float: right; width: 100%" v-if="register">
           <router-link class="link-type" :to="'/register'">立即注册</router-link>
+			<el-divider v-if="auths.length !== 0">登录方式</el-divider>
+			<div v-if="auths.length !== 0" style="display: flex;justify-content: space-between">
+				<div v-for="item in auths">
+					<svg-icon :icon-class="item.icon" size="2rem" @click="getLoginType(item.source)" />
+				</div>
+			</div>
         </div>
       </el-form-item>
     </el-form>
@@ -52,12 +58,15 @@
 
 <script setup>
 import {useRouter} from "vue-router";
-import {ref} from "vue";
+import {onMounted, ref} from "vue";
 import zdxVerify from "@/components/Verifition/index.vue";
 import {useStore} from "@/stores";
+import {authList, loginType} from "@/api/login";
+import SvgIcon from "@/components/SvgIcon/index.vue";
 
 const loginRef = ref()
 const router = useRouter();
+const auths = ref([])
 
 const loginForm = ref({
   username: "admin",
@@ -74,7 +83,7 @@ const loading = ref(false);
 const captchaType = ref('');
 const verify = ref();
 // 注册开关
-const register = ref(false);
+const register = ref(true);
 const onShow = (type)=>{
   captchaType.value = type
   verify.value.show()
@@ -98,6 +107,20 @@ const handleSuccess = async () => {
   }).catch(() => {
     loading.value = false
   })
+}
+onMounted(() => {
+	authAll()
+})
+const authAll = () => {
+	authList().then((res) => {
+		auths.value = res.data
+	})
+}
+
+const getLoginType = (type) => {
+	loginType(type).then((res) => {
+		location.href = res.data.url
+	})
 }
 </script>
 

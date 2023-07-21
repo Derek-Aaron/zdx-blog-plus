@@ -5,13 +5,19 @@ import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.entity.us.Account;
 import com.zdx.entity.us.User;
+import com.zdx.mapper.us.AccountMapper;
 import com.zdx.mapper.us.UserMapper;
 import com.zdx.model.dto.ResetPwd;
 import com.zdx.model.dto.UserStatus;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.us.UserService;
+import com.zdx.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.DisabledException;
+import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -26,6 +32,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
+
+    private final AccountMapper accountMapper;
 
     @Override
     public Boolean resetPwd(ResetPwd resetPwd) {
@@ -67,6 +75,35 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         queryWrapper.select(User::getId, User::getUsername);
         queryWrapper.last("limit 10");
         return listMaps(queryWrapper);
+    }
+
+    @Override
+    public User getUserByUserName(String username) {
+        LambdaQueryWrapper<Account> accountQueryWrapper = new LambdaQueryWrapper<>();
+        accountQueryWrapper.eq(Account::getUsername, username);
+        Account account = accountMapper.selectOne(accountQueryWrapper);
+        User user = null;
+        if (ObjUtil.isNull(account)) {
+            LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
+            queryWrapper.eq(User::getUsername, username);
+            user = baseMapper.selectOne(queryWrapper);
+        } else {
+            user = getById(account.getUserId());
+            user.setUsername(username);
+            user.setPassword(account.getPassword());
+            user.setIsLocked(account.getIsLocked());
+            user.setIsDisabled(account.getIsDisabled());
+        }
+        if (ObjUtil.isNull(user)) {
+            throw new BadCredentialsException(MessageUtil.message("zdx.user.null"));
+        }
+        if (user.getIsLocked()) {
+            throw new LockedException(MessageUtil.message("zdx.user.locking"));
+        }
+        if (user.getIsDisabled()) {
+            throw new DisabledException(MessageUtil.message("zdx.user.disable"));
+        }
+        return user;
     }
 }
 

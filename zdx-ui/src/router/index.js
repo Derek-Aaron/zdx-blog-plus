@@ -116,15 +116,7 @@ const routes = [
     },
   },
   {
-    path: "/oauth/login/gitee",
-    component: () => import("@/components/Oauth/index.vue"),
-  },
-  {
-    path: "/oauth/login/github",
-    component: () => import("@/components/Oauth/index.vue"),
-  },
-  {
-    path: "/oauth/login/qq",
+    path: "/callback",
     component: () => import("@/components/Oauth/index.vue"),
   },
   { path: "/:catchAll(.*)", redirect: "/404" },

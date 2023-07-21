@@ -8,6 +8,10 @@ import {del, page, save} from "@/api/base";
 import router from "@/router";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {getToken} from "@/utils/auth";
+import {checkRole} from "@/directive";
+import {useDict} from "@/utils/dict";
+
+const { zdx_auth_source } = useDict('zdx_auth_source')
 
 const queryParams = reactive({
 	params: {
@@ -135,7 +139,7 @@ onMounted(() => {
 							<template #dropdown>
 								<el-dropdown-menu >
 									<el-dropdown-item @click="handleUpdate(album)">编辑</el-dropdown-item>
-									<el-dropdown-item @click="handleDelete(album.id)">删除</el-dropdown-item>
+									<el-dropdown-item v-if="!checkRole('use_blog')" @click="handleDelete(album.id)">删除</el-dropdown-item>
 								</el-dropdown-menu>
 							</template>
 						</el-dropdown>

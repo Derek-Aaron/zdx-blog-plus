@@ -37,4 +37,10 @@ public interface UserService extends IService<User> {
      */
     List<Map<String, Object>> listUserAll(String words);
 
+    /**
+     * 通过用户名获取用户
+     * @param username 用户名
+     * @return 返回
+     */
+    User getUserByUserName(String username);
 }

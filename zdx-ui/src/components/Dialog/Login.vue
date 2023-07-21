@@ -11,28 +11,26 @@
       <span class="colorFlag" @click="handleRegister">立即注册</span>
       <span class="colorFlag" @click="handleForget">忘记密码?</span>
     </div>
-<!--    <div>-->
-<!--      <div class="social-login-title">社交账号登录</div>-->
-<!--      <div class="social-login-wrapper">-->
-<!--        <svg-icon class="icon" icon-class="qq" size="2rem" color="#00aaee" v-if="showLogin('qq')"-->
-<!--          @click="qqLogin"></svg-icon>-->
-<!--        <svg-icon class="icon" icon-class="gitee" size="2rem" v-if="showLogin('gitee')" @click="giteeLogin"></svg-icon>-->
-<!--        <svg-icon class="icon" icon-class="github" size="2rem" v-if="showLogin('github')" @click="githubLogin"></svg-icon>-->
-<!--      </div>-->
-<!--    </div>-->
+    <div>
+      <div class="social-login-title">社交账号登录</div>
+      <div class="social-login-wrapper">
+		  <svg-icon v-for="item in auths" class="icon" :icon-class="item.icon" size="2rem"  @click="getLoginType(item.source)"/>
+      </div>
+    </div>
   </n-modal>
 </template>
 
 <script setup >
-import { login } from "@/api/login.js";
+import {login, authList, loginType} from "@/api/login.js";
 import config from "@/assets/js/config";
 import useStore from "@/stores";
 import { setToken } from "@/utils/token";
 import {useRoute} from "vue-router";
-import {computed, ref} from "vue";
+import {computed, onMounted, ref} from "vue";
 const { app, user, blog } = useStore();
 const route = useRoute();
 const loading = ref(false);
+const auths = ref([])
 const loginForm = ref({
   username: "",
   password: "",
@@ -41,9 +39,6 @@ const dialogVisible = computed({
   get: () => app.loginFlag,
   set: (value) => (app.loginFlag = value),
 });
-// const showLogin = computed(
-//   () => (type) => blog.blogInfo.siteConfig.loginList.includes(type)
-// );
 const handleRegister = () => {
   app.setLoginFlag(false);
   app.setRegisterFlag(true);
@@ -90,6 +85,14 @@ const githubLogin = () => {
     "_self"
   );
 };
+
+const getLoginType = (source) => {
+	user.savePath(route.path);
+	app.setLoginFlag(false);
+	loginType(source).then((res) => {
+		window.open(res.data.url)
+	})
+}
 const handlelogin = () => {
   // let reg = /^[A-Za-z0-9\u4e00-\u9fa5]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/;
   // if (!reg.test(loginForm.value.username)) {
@@ -115,6 +118,11 @@ const handlelogin = () => {
     loading.value = false;
   });
 };
+onMounted(() => {
+	authList().then(res => {
+		auths.value = res.data
+	})
+})
 </script>
 
 <style scoped>

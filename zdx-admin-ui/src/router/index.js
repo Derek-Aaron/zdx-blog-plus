@@ -12,6 +12,14 @@ const router = createRouter({
       component: Login
     },
     {
+      path: '/callback',
+      name: 'callback',
+      meta:{
+        title:'回调页面'
+      },
+      component: () => import('@/views/Callback.vue')
+    },
+    {
       path: '/index',
       name: 'index',
       meta:{
