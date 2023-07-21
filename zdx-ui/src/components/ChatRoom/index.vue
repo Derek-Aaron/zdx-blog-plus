@@ -16,7 +16,7 @@
             <div class="user-info" :class="isMy(chat) ? 'my-chat' : ''">
               <span style="color: var(--color-red);">{{ chat.nickname }}</span>
               <span style="color :var(--color-blue);" :class="isMy(chat) ? 'right-info' : 'left-info'">
-                {{ formatDateTime(chat.createTime) }}
+                {{ chat.createTime }}
               </span>
             </div>
             <div class="user-content" :class="isMy(chat) ? 'my-content' : ''"
@@ -44,12 +44,19 @@
 </template>
 
 <script setup>
+import Emoji from "@/components/Emoji/index.vue"
 import useStore from "@/stores";
-import { formatDateTime } from '@/utils/date';
 import emojiList from "@/utils/emoji";
 import tvList from "@/utils/tv";
 import {computed, onUpdated, reactive, ref, toRefs} from "vue";
 const { user, blog } = useStore();
+const Type = {
+	ONLINE_COUNT: 0, //在线人数
+	HISTORY_RECORD: 1, //历史记录
+	SEND_MESSAGE: 2, //发消息
+	RECALL_MESSAGE: 3, //撤回
+	HEART_BEAT: 4 //心跳
+}
 const data = reactive({
   show: false,
   ipAddress: "",
@@ -75,7 +82,7 @@ const userNickname = computed(() => user.nickname ? user.nickname : ipAddress.va
 const userAvatar = computed(() => user.avatar ? user.avatar : blog.blogInfo.siteConfig.touristAvatar);
 const handleOpen = () => {
   if (websocket.value === undefined) {
-    websocket.value = new WebSocket(blog.blogInfo.siteConfig.websocketUrl);
+    websocket.value = new WebSocket(blog.blogInfo.siteConfig.websocketUrl !== "" ? blog.blogInfo.siteConfig.websocketUrl : "ws://127.0.0.1:8080/ws/chat");
     websocket.value.onopen = () => {
       webSocketState.value = true;
       startHeart();
@@ -112,7 +119,7 @@ const handleOpen = () => {
       }
     }
     websocket.value.onclose = () => {
-      alert("关闭连接");
+      window?.$message.error("链接被关闭")
       webSocketState.value = false;
       clear();
     }

@@ -8,6 +8,16 @@ export const getHomeById = (id) => {
 	})
 }
 
+export const searchArticle = (keyword) => {
+	return request({
+		url:'/home/zdx.article/search',
+		method:'GET',
+		params:{
+			keyword: keyword
+		}
+	})
+}
+
 export const getArticleRecommend = () => {
 	return request({
 		url:'/home/zdx.article/recommend',

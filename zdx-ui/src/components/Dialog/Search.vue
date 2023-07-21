@@ -18,10 +18,10 @@
         <li class="search-result" v-for="article in articleList" :key="article.id">
           <!-- 文章标题 -->
           <router-link class="search-title" :to="`/article/${article.id}`">
-            <span @click="dialogVisible = false" v-html="article.articleTitle"></span>
+            <span @click="dialogVisible = false" v-html="article.title"></span>
           </router-link>
           <!-- 文章内容 -->
-          <p class="search-content" v-html="article.articleContent"></p>
+          <p class="search-content" v-html="article.description"></p>
         </li>
       </ul>
       <!-- 搜索结果不存在提示 -->
@@ -33,7 +33,7 @@
 </template>
 
 <script setup>
-// import { searchArticle } from "@/api/article";
+import { searchArticle } from "@/api/article";
 import useStore from "@/stores";
 import { debouncedWatch } from "@vueuse/core";
 import {computed, ref} from "vue";
@@ -50,9 +50,9 @@ debouncedWatch(
   { debounce: 300 },
 );
 const handleSearch = () => {
-  // searchArticle(keyword.value).then(({ data }) => {
-  //   articleList.value = data.data;
-  // })
+  searchArticle(keyword.value).then((res) => {
+    articleList.value = res.data;
+  })
 }
 </script>
 

@@ -6,10 +6,7 @@ import com.zdx.entity.zdx.Article;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
-import com.zdx.model.vo.front.ArticleArchivesVo;
-import com.zdx.model.vo.front.ArticleHomeInfoVo;
-import com.zdx.model.vo.front.ArticleHomeVo;
-import com.zdx.model.vo.front.ArticleRecommendVo;
+import com.zdx.model.vo.front.*;
 
 import java.util.List;
 
@@ -81,4 +78,11 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     List<ArticleRecommendVo> homeRecommend();
+
+    /**
+     * 前台搜索文章
+     * @param keyword 关键词
+     * @return 返回
+     */
+    List<ArticleSearchVo> searchArticle(String keyword);
 }

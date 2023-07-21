@@ -9,10 +9,7 @@ import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
-import com.zdx.model.vo.front.ArticleArchivesVo;
-import com.zdx.model.vo.front.ArticleHomeInfoVo;
-import com.zdx.model.vo.front.ArticleHomeVo;
-import com.zdx.model.vo.front.ArticleRecommendVo;
+import com.zdx.model.vo.front.*;
 import com.zdx.service.zdx.ArticleService;
 import com.zdx.strategy.context.StrategyContext;
 import io.swagger.annotations.Api;
@@ -40,6 +37,12 @@ public class ArticleController {
     @ApiOperation("前台查询文章列表")
     public Result<IPage<ArticleHomeVo>> homePage(RequestParams params) {
         return Result.success(articleService.homePage(params));
+    }
+
+    @GetMapping("/home/zdx.article/search")
+    @ApiOperation("前台搜索文章")
+    public Result<List<ArticleSearchVo>> searchArticle(String keyword) {
+        return Result.success(articleService.searchArticle(keyword));
     }
 
     @GetMapping("/home/zdx.article/getHomeById/{id}")

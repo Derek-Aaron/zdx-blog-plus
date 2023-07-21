@@ -231,6 +231,19 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         List<Article> articles = list(queryWrapper);
         return articles.stream().map(article -> BeanUtil.copyProperties(article, ArticleRecommendVo.class)).toList();
     }
+
+    @Override
+    public List<ArticleSearchVo> searchArticle(String keyword) {
+        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.like(Article::getTitle, keyword);
+        queryWrapper.or();
+        queryWrapper.like(Article::getDescription, keyword);
+        List<ArticleContent> articleContents = articleContentMapper.selectList(new LambdaQueryWrapper<ArticleContent>().like(ArticleContent::getContent, keyword));
+        List<Long> articleIds = articleContents.stream().map(ArticleContent::getArticleId).toList();
+        queryWrapper.or();
+        queryWrapper.in(Article::getId, articleIds);
+        return list(queryWrapper).stream().map(article -> BeanUtil.copyProperties(article, ArticleSearchVo.class)).toList();
+    }
 }
 
 
