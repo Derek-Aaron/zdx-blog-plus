@@ -8,6 +8,7 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
 import com.zdx.entity.zdx.Comment;
 import com.zdx.entity.zdx.Talk;
@@ -18,6 +19,7 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.TalkPageVo;
 import com.zdx.model.vo.front.TalkHomeInfoVo;
 import com.zdx.model.vo.front.TalkHomeListVo;
+import com.zdx.security.UserSessionFactory;
 import com.zdx.service.zdx.TalkService;
 import com.zdx.mapper.zdx.TalkMapper;
 import com.zdx.utils.MybatisPlusUtils;
@@ -44,7 +46,11 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk>
     @Override
     public IPage<TalkPageVo> adminPage(RequestParams params) {
         IPage<Talk> iPage = new Page<>(params.getPage(), params.getLimit());
-        IPage<Talk> page = page(iPage, new LambdaQueryWrapper<Talk>()
+        LambdaQueryWrapper<Talk> queryWrapper = new LambdaQueryWrapper<>();
+        if (!UserSessionFactory.hasRole(Role.ADMIN_ROLE_ID)) {
+            queryWrapper.eq(Talk::getUserId, UserSessionFactory.getUserId());
+        }
+        IPage<Talk> page = page(iPage, queryWrapper
                 .eq(params.hasParam("status"), Talk::getStatus, params.getParam("status", Boolean.class)));
 
         List<TalkPageVo> talkPageVos = new ArrayList<>();
