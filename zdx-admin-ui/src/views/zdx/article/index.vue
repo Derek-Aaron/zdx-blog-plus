@@ -238,12 +238,12 @@ onMounted(() => {
 			</el-col>
 			<el-col :span="1.5" v-if="status !== 'delete'">
 				<el-button type="danger" plain icon="Delete" :disabled="!ids.length > 0"
-						   @click="handleTrash">删除
+						   @click="handleTrash" v-checkRole="'use_blog'">删除
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status === 'delete'">
 				<el-button type="danger"  plain icon="Delete" :disabled="!ids.length > 0"
-						   @click="handleDelete">彻底删除
+						   @click="handleDelete" v-checkRole="'use_blog'">彻底删除
 				</el-button>
 			</el-col>
 			<zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="pageArticle"
@@ -277,7 +277,7 @@ onMounted(() => {
 					<el-tooltip content="修改" placement="top">
 						<el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)"/>
 					</el-tooltip>
-					<el-tooltip content="删除" placement="top">
+					<el-tooltip content="删除" placement="top" v-checkRole="'use_blog'">
 						<el-button link type="primary" icon="Delete" @click="handleTrash(scope.row.id)"/>
 					</el-tooltip>
 				</template>

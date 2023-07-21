@@ -127,13 +127,13 @@ onMounted(() => {
 			<el-empty v-if="albumList === null" description="暂无相册" />
 			<el-col v-for="album of albumList" :key="album.id" :xs="12" :sm="12" :lg="6">
 				<div class="album-item" @click="checkPhoto(album.id)">
-					<div class="album-operation">
-						<el-dropdown>
+					<div class="album-operation" >
+						<el-dropdown >
 							<el-icon style="color:#fff">
 								<MoreFilled />
 							</el-icon>
 							<template #dropdown>
-								<el-dropdown-menu>
+								<el-dropdown-menu >
 									<el-dropdown-item @click="handleUpdate(album)">编辑</el-dropdown-item>
 									<el-dropdown-item @click="handleDelete(album.id)">删除</el-dropdown-item>
 								</el-dropdown-menu>

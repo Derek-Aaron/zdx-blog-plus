@@ -130,9 +130,11 @@ onMounted(() => {
             <el-table-column label="回复人" align="center" key="toName" prop="toName" show-overflow-tooltip/>
             <el-table-column label="评论内容" align="center" key="content" prop="content" show-overflow-tooltip/>
             <el-table-column label="审核" align="center" key="isCheck" prop="isCheck" show-overflow-tooltip >
-                <el-switch v-model="scope.row.isCheck" class="ml-2" :active-value="false" :inactive-value="true"
-                  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
-                  @change="handleChange(scope.row)"></el-switch>
+               <template #default="scope">
+				   <el-switch v-model="scope.row.isCheck" class="ml-2" :active-value="true" :inactive-value="false"
+							  style="--el-switch-on-color: #13ce66; --el-switch-off-color: #ff4949"
+							  @change="handleChange(scope.row)"></el-switch>
+			   </template>
             </el-table-column>
             <el-table-column label="来源" align="center" key="commentType" prop="commentType" show-overflow-tooltip >
                 <template #default="scope">

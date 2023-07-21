@@ -36,8 +36,22 @@ router.beforeEach((to, from, next) => {
         if (useStore().usePermission.routers.length === 0) {
             useStore().usePermission.refreshRouters().then(r => {})
         }
+	    const permission = to.meta.permission
         if (useStore().useUser.avatar === '' || useStore().useUser.nickname === '' || useStore().useUser.username === '') {
-            useStore().useUser.doInfo().then(r => {})
+            useStore().useUser.doInfo().then(r => {
+				if (!permission) {
+					next()
+				} else {
+					useStore().useUser.checkPermission(to.meta.permission).then((value) => {
+						if (value) {
+							next()
+						} else {
+							ElMessage.error("权限异常，请联系管理员")
+							location.href = "/"
+						}
+					})
+				}
+            })
         }
         next()
     }

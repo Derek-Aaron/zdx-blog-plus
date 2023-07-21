@@ -158,36 +158,50 @@ const successHandle = (formEl) => {
 }
 
 const roleChange = (data) => {
-    data.resources = ['tk:menu:' + entityId.value]
+    data.resources = ids.value
     save('acl', data).then(res => {
         ElMessage.success(res.message)
     })
 }
 
 const userChange = (data) => {
-    data.resources = ['tk:menu:' + entityId.value]
+    data.resources = ids.value
     save('acl', data).then(res => {
         ElMessage.success(res.message)
     })
 }
 
 const handleAuth = (id) => {
-    subject({ resource: 'tk:menu:' + id }).then(res => {
-        let roleArray = []
-        let userArray = []
-        for (const item of res.data) {
-            if (item.subject && item.subject.indexOf('us:role:') !== -1) {
-                roleArray.push(item.subject)
-            }
-            if (item.subject && item.subject.indexOf('us:user:') !== -1) {
-                userArray.push(item.subject)
-            }
-        }
-        roleIds.value = roleArray
-        userIds.value = userArray
-        openAuth.value = true
-        entityId.value = id
-    })
+	let array = []
+	let flag = false
+	if (typeof id === 'string' && id) {
+		flag = true
+		ids.value = []
+		array.push(id)
+	}
+	if (ids.value.length !== 0) {
+		array = ids.value
+	}
+	array = array.map(item => 'tk:menu:' + item)
+	ids.value = array
+	openAuth.value = true
+	if (flag) {
+		subject({ resource: 'tk:menu:' + id }).then(res => {
+			let roleArray = []
+			let userArray = []
+			for (const item of res.data) {
+				if (item.subject && item.subject.indexOf('us:role:') !== -1) {
+					roleArray.push(item.subject)
+				}
+				if (item.subject && item.subject.indexOf('us:user:') !== -1) {
+					userArray.push(item.subject)
+				}
+			}
+			roleIds.value = roleArray
+			userIds.value = userArray
+			entityId.value = id
+		})
+	}
 }
 onMounted(() => {
     listMenu()
@@ -218,6 +232,9 @@ onMounted(() => {
             <el-col :span="1.5">
                 <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
             </el-col>
+			<el-col :span="1.5">
+				<el-button type="primary" plain icon="Plus" @click="handleAuth">批量权限</el-button>
+			</el-col>
             <el-col :span="1.5">
                 <el-button type="danger" plain icon="Delete" :disabled="!ids.length > 0"
                     @click="handleDelete">批量删除</el-button>
@@ -281,7 +298,7 @@ onMounted(() => {
             </el-table-column>
         </el-table>
 
-        <zdxDialog :dialog="dialog" :title="title" @close="close" width="50%">
+        <zdx-dialog :dialog="dialog" :title="title" @close="close" width="50%">
             <template #content>
                 <el-form :model="entity" :rules="rules" ref="menuRef" label-width="80px">
                     <el-row>
@@ -356,8 +373,8 @@ onMounted(() => {
                     保存
                 </el-button>
             </template>
-        </zdxDialog>
-        <zdxDialog :dialog="openAuth" @close="openAuth = false" width="50%">
+        </zdx-dialog>
+        <zdx-dialog :dialog="openAuth" @close="openAuth = false" title="权限" width="50%">
             <template #content>
                 <el-card>
                     <template #header>
@@ -375,7 +392,7 @@ onMounted(() => {
                     </el-tabs>
                 </el-card>
             </template>
-        </zdxDialog>
+        </zdx-dialog>
     </div>
 </template>
 

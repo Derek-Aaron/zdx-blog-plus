@@ -18,6 +18,7 @@ import locale from 'element-plus/lib/locale/lang/zh-cn' // 中文语言
 import 'element-plus/dist/index.css'
 import 'element-plus/theme-chalk/dark/css-vars.css'
 import plugins from '@/plugins'
+import directive from "@/directive"
 import '@/permission'
 import App from './App.vue'
 import router from './router'
@@ -32,11 +33,20 @@ app.use(createPinia())
 app.use(router)
 app.use(VMdEditor);
 app.use(plugins)
+app.use(directive)
 app.use(ElementPlus,{
     locale: locale,
     size: Cookies.get('size') || 'default'
 })
 app.use(elementIcons)
+
+app.config.warnHandler = (msg) => {
+    console.warn(msg)
+}
+
+app.config.errorHandler = (msg) => {
+    console.error(msg)
+}
 
 app.component('svg-icon', SvgIcon)
 

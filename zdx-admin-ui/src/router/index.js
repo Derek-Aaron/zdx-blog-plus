@@ -15,34 +15,44 @@ const router = createRouter({
       path: '/index',
       name: 'index',
       meta:{
-        title: '首页'
+        title: '首页',
+        permission: false
       },
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
       component: () => import('@/layout/index.vue'),
       children:[
         {
-          path:'/user',
-          name:'user',
+          path:'/home',
+          name:'首页',
           meta:{
-            title: '用户管理',
+            title: '首页',
+            permission: false
           },
-          component: () => import('@/views/us/user/index.vue')
+          component: () => import('@/views/index.vue')
         },
         {
           path:'/profile',
           name:'profile',
           meta:{
             title: '个人中心',
+            permission: false
           },
           component: () => import('@/views/us/user/profile/index.vue')
+        },
+        {
+          path:'/user',
+          name:'user',
+          meta:{
+            title: '用户管理',
+            permission:'zdx:user'
+          },
+          component: () => import('@/views/us/user/index.vue')
         },
         {
           path:'/role',
           name:'role',
           meta:{
             title: '角色管理',
+            permission:'zdx:role'
           },
           component: () => import('@/views/us/role/index.vue')
         },
@@ -51,6 +61,7 @@ const router = createRouter({
           name:'menu',
           meta:{
             title: '菜单管理',
+            permission:'zdx:menu'
           },
           component: () => import('@/views/tk/menu/index.vue')
         },
@@ -59,6 +70,7 @@ const router = createRouter({
           name:'auth',
           meta:{
             title: '登录管理',
+            permission:'zdx:auth'
           },
           component: () => import('@/views/us/auth/index.vue')
         },
@@ -67,6 +79,7 @@ const router = createRouter({
           name:'dict',
           meta:{
             title: '字典管理',
+            permission:'zdx:dict'
           },
           component: () => import('@/views/tk/dict/index.vue')
         },
@@ -75,6 +88,7 @@ const router = createRouter({
           name:'config',
           meta:{
             title: '配置管理',
+            permission:'zdx:config'
           },
           component: () => import('@/views/tk/config/index.vue')
         },
@@ -83,6 +97,7 @@ const router = createRouter({
           name:'online',
           meta:{
             title: '在线用户',
+            permission:'zdx:online'
           },
           component: () => import('@/views/us/online/index.vue')
         },
@@ -91,6 +106,7 @@ const router = createRouter({
           name:'file',
           meta:{
             title: '文件管理',
+            permission:'zdx:file'
           },
           component: () => import('@/views/tk/file/index.vue')
         },
@@ -99,6 +115,7 @@ const router = createRouter({
           name:'schedule',
           meta: {
             title:'定时任务',
+            permission:'zdx:schedule'
           },
           component: () => import('@/views/tk/schedule/index.vue')
         },
@@ -107,6 +124,7 @@ const router = createRouter({
           name:'schedule-log',
           meta: {
             title:'定时任务日志',
+            permission:'zdx:schedule-log'
           },
           component: () => import('@/views/tk/schedule/log.vue')
         },
@@ -115,6 +133,7 @@ const router = createRouter({
           name:'druid',
           meta: {
             title:'数据监控',
+            permission:'zdx:druid'
           },
           component: () => import('@/views/system/druid/index.vue')
         },
@@ -123,6 +142,7 @@ const router = createRouter({
           name:'server',
           meta: {
             title:'服务监控',
+            permission:'zdx:server'
           },
           component: () => import('@/views/system/server/index.vue')
         },
@@ -131,6 +151,7 @@ const router = createRouter({
           name:'cache',
           meta: {
             title:'缓存监控',
+            permission:'zdx:cache'
           },
           component: () => import('@/views/system/cache/index.vue')
         },
@@ -141,7 +162,8 @@ const router = createRouter({
             title:'登录日志',
             params:{
               event: 'LOGIN',
-            }
+            },
+            permission:'zdx:log:login'
           },
           component: () => import('@/views/us/log/index.vue')
         },
@@ -152,7 +174,8 @@ const router = createRouter({
             title:'操作日志',
             params:{
               event: '',
-            }
+            },
+            permission:'zdx:log:operate'
           },
           component: () => import('@/views/us/log/index.vue')
         },
@@ -161,6 +184,7 @@ const router = createRouter({
           name:'add-article',
           meta: {
             title:'编写文章',
+            permission:'zdx:add:article'
           },
           component: () => import('@/views/zdx/article/addArticle.vue')
         },
@@ -169,6 +193,7 @@ const router = createRouter({
           name:'article',
           meta: {
             title:'文章列表',
+            permission:'zdx:article:list'
           },
           component: () => import('@/views/zdx/article/index.vue')
         },
@@ -177,6 +202,7 @@ const router = createRouter({
           name:'category',
           meta: {
             title:'分类管理',
+            permission:'zdx:category'
           },
           component: () => import('@/views/zdx/category/index.vue')
         },
@@ -185,6 +211,7 @@ const router = createRouter({
           name:'tag',
           meta: {
             title:'标签管理',
+            permission:'zdx:tag'
           },
           component: () => import('@/views/zdx/tag/index.vue')
         },
@@ -193,6 +220,7 @@ const router = createRouter({
           name:'comment',
           meta: {
             title:'评论管理',
+            permission:'zdx:comment'
           },
           component: () => import('@/views/zdx/comment/index.vue')
         },
@@ -201,6 +229,7 @@ const router = createRouter({
           name:'friend',
           meta: {
             title:'友链管理',
+            permission:'zdx:friend'
           },
           component: () => import('@/views/zdx/friend/index.vue')
         },
@@ -209,6 +238,7 @@ const router = createRouter({
           name:'talk',
           meta: {
             title:'说说管理',
+            permission:'zdx:talk'
           },
           component: () => import('@/views/zdx/talk/index.vue')
         },
@@ -217,6 +247,7 @@ const router = createRouter({
           name:'album',
           meta: {
             title:'相册管理',
+            permission:'zdx:album'
           },
           component: () => import('@/views/zdx/album/index.vue')
         },
@@ -225,6 +256,7 @@ const router = createRouter({
           name:'photo',
           meta: {
             title:'图片管理',
+            permission:'zdx:photo'
           },
           component: () => import('@/views/zdx/photo/index.vue')
         },
@@ -233,6 +265,7 @@ const router = createRouter({
           name:'message',
           meta: {
             title:'留言管理',
+            permission:'zdx:message'
           },
           component: () => import('@/views/zdx/message/index.vue')
         },
@@ -241,6 +274,7 @@ const router = createRouter({
           name:'site',
           meta: {
             title:'配置管理',
+            permission:'zdx:site'
           },
           component: () => import('@/views/zdx/site/index.vue')
         }

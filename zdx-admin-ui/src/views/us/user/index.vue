@@ -256,7 +256,7 @@ onMounted(() => {
 
       <el-row :gutter="10" class="mb8">
          <el-col :span="1.5">
-            <el-button type="primary" plain icon="Plus" @click="handleAdd">新增</el-button>
+            <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermission="'zdx:user:add'">新增</el-button>
          </el-col>
          <el-col :span="1.5">
             <el-button type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleUpdate">修改</el-button>

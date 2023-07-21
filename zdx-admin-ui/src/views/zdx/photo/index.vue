@@ -158,7 +158,7 @@ onMounted(() => {
 				<el-button type="success" plain icon="Promotion"
 						   :disabled="selectPhotoIdList.length === 0">移动</el-button>
 			</el-col>
-			<el-col :span="1.5">
+			<el-col :span="1.5" v-checkRole="'use_blog'">
 				<el-button type="danger" plain icon="Delete" :disabled="selectPhotoIdList.length === 0"
 						   @click="handleDelete">批量删除</el-button>
 			</el-col>

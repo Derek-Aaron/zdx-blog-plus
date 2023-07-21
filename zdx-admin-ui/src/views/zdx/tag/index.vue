@@ -133,7 +133,7 @@ onMounted(() => {
             </el-col>
             <el-col :span="1.5">
                 <el-button type="danger" plain icon="Delete" :disabled="!ids.length > 0"
-                    @click="handleDelete">删除</el-button>
+                    @click="handleDelete"  v-checkRole="'use_blog'">删除</el-button>
             </el-col>
             <zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="pageCategory"></zdx-right-toolbar>
         </el-row>
@@ -149,7 +149,7 @@ onMounted(() => {
                         <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" />
                     </el-tooltip>
                     <el-tooltip content="删除" placement="top">
-                        <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row.id)" />
+                        <el-button  v-checkRole="'use_blog'" link type="primary" icon="Delete" @click="handleDelete(scope.row.id)" />
                     </el-tooltip>
                 </template>
             </el-table-column>

@@ -11,6 +11,8 @@ export const useUserStore = defineStore('useUserStore', () => {
     const username = ref('')
     const nickname = ref('')
     const avatar = ref('')
+    const roles = ref([])
+    const permissions = ref([])
 
 
     const doLogin = (data) => {
@@ -31,6 +33,11 @@ export const useUserStore = defineStore('useUserStore', () => {
               username.value = res.data.usernname
               nickname.value = res.data.nickname;
               avatar.value = (res.data.avatar === "" || res.data.avatar == null) ? defAva : res.data.avatar;
+              roles.value = res.data.roles
+              permissions.value = res.data.permissions
+              resolve()
+          }).catch(err => {
+              reject(err)
           })
       } )
     }
@@ -42,5 +49,18 @@ export const useUserStore = defineStore('useUserStore', () => {
         })
     }
 
-    return {token, username, nickname, avatar, doLogin, doInfo, doLogout}
+    const checkPermission = (val) => {
+       return new Promise((resolve) => {
+           if (permissions.value.indexOf("*::||::*") !== -1) {
+               return resolve(true);
+           }
+           if (!val) {
+              return resolve(false)
+           }
+           return resolve(permissions.value.indexOf(val) !== -1);
+       })
+
+    }
+
+    return {token, username, nickname, avatar,roles, permissions ,doLogin, doInfo, doLogout, checkPermission}
 })
