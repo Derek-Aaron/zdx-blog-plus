@@ -53,7 +53,7 @@ import Waves from "@/components/Waves/index.vue"
 import useStore from "@/stores";
 import {onMounted, ref} from "vue";
 const { blog } = useStore();
-const commentType = ref(2);
+const commentType = ref('FRIEND');
 const friendList = ref([]);
 onMounted(() => {
   getFriendList().then((res) => {
