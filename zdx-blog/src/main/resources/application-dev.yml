@@ -40,8 +40,8 @@ zdx:
   oss:
     oss-type: minio
   auth:
-    callbackAdminUrl: http://www.zhaodengxuan.top/admin/callback
-    callbackHomeUrl: http://www.zhaodengxuan.top/callback
+    callbackAdminUrl: https://admin.zhaodengxuan.top/callback
+    callbackHomeUrl: https://www.zhaodengxuan.top/callback
   es:
     open: true
     url: http://81.69.247.228:9200

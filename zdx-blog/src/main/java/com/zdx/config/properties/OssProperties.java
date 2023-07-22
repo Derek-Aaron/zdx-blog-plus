@@ -17,7 +17,7 @@ public class OssProperties {
     /**
      * 分布式文件地址
      */
-    private String url = "http://static.zhaodengxuan.top";
+    private String url = "https://static.zhaodengxuan.top";
 
     private String accessKey = "zhaodengxuan";
 
