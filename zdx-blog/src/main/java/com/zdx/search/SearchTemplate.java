@@ -1,6 +1,7 @@
 package com.zdx.search;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import org.elasticsearch.action.bulk.BulkRequest;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
 import org.elasticsearch.search.sort.SortBuilder;
 
@@ -76,7 +77,7 @@ public interface SearchTemplate {
      * @param index
      * @param objects
      */
-    void bulkDoc(String index, List<String> objects);
+    Boolean bulkDoc(String index, BulkRequest request);
 
     /**
      * 查询全部

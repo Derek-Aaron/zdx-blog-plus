@@ -25,7 +25,7 @@ public class ArticleAdminVo {
     private Long viewCount;
 
     @ApiModelProperty("点赞数")
-    private Long likesCount;
+    private Long likeCount;
 
     @ApiModelProperty("是否置顶")
     private Boolean isTop;

@@ -85,4 +85,11 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     List<ArticleSearchVo> searchArticle(String keyword);
+
+    /**
+     * 手动同步es服务器
+     * @param ids 文章id
+     * @return 返回
+     */
+    boolean syncArticle(List<String> ids);
 }

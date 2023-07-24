@@ -81,6 +81,12 @@ public class ArticleController {
         return articleService.adminSave(articleSave) ? Result.success() : Result.error();
     }
 
+    @PostMapping("/zdx.article/sync")
+    @ApiOperation("批量同步es服务器")
+    public Result<String> sync(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
+        return articleService.syncArticle(ids) ? Result.success() : Result.error();
+    }
+
     @GetMapping("/zdx.article/likeArticle/{id}")
     @ApiOperation("点赞文章")
     public Result<String> likeArticle(@PathVariable @NotBlank String id) {

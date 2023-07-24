@@ -165,14 +165,14 @@ public class EsSearchTemplateImpl implements SearchTemplate{
     }
 
     @Override
-    public void bulkDoc(String index, List<String> objects) {
-        BulkRequest request = new BulkRequest();
-        request.add(new IndexRequest(index).source(XContentType.JSON, objects.toArray()));
+    public Boolean bulkDoc(String index, BulkRequest request) {
         try {
             BulkResponse response = client.bulk(request, RequestOptions.DEFAULT);
-            log.info("批量插入数据：{}", response.status().getStatus());
+            log.info("批量数据：{}", response.status().getStatus());
+            return true;
         } catch (IOException e) {
-            log.error("批量炒作异常：{}", e.getMessage());
+            log.error("批量数据异常：{}", e.getMessage());
+            return false;
         }
     }
 
