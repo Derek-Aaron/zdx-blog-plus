@@ -5,7 +5,7 @@
     <n-input-group class="mt-11">
       <n-input placeholder="验证码" v-model:value="forgetForm.code" />
       <n-button color="#49b1f5" :disabled="flag" @click="sendCode">
-        {{ timer == 0 ? '发送' : `${timer}s` }}
+        {{ timer === 0 ? '发送' : `${timer}s` }}
       </n-button>
     </n-input-group>
     <n-input class="mt-11" type="password" show-password-on="click" placeholder="密码"

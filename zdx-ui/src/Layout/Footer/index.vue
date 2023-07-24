@@ -13,7 +13,6 @@
 
 <script setup>
 import useStore from "@/stores";
-import { formatDate } from "@/utils/date";
 import {useRoute} from "vue-router";
 import {computed} from "vue";
 const route = useRoute();
