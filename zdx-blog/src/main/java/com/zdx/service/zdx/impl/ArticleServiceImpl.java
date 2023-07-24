@@ -115,12 +115,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean adminSave(ArticleSaveVo articleSave) {
-        Article article = null;
-        if (ObjUtil.isNotNull(articleSave.getId())) {
-            article = getById(articleSave.getId());
-        } else {
-            article = BeanUtil.copyProperties(articleSave, Article.class);
-        }
+        Article article = BeanUtil.copyProperties(articleSave, Article.class);
         article.setUserId(UserSessionFactory.getUserId());
         Category category = categoryMapper.selectOne(new LambdaQueryWrapper<Category>().eq(Category::getName, articleSave.getCategoryName()));
         if (ObjUtil.isNull(category)) {
@@ -130,6 +125,9 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         }
         article.setCategoryId(category.getId());
         if (saveOrUpdate(article)) {
+            if (ObjUtil.isNotNull(articleSave.getId())) {
+                article = getById(article.getId());
+            }
             String content = articleSave.getContent();
             ArticleContent articleContent = articleContentMapper.selectOne(new LambdaQueryWrapper<ArticleContent>().select(ArticleContent::getId).eq(ArticleContent::getArticleId, article.getId()));
             if (ObjUtil.isNull(articleContent)) {

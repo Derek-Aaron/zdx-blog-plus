@@ -112,7 +112,7 @@ class ZdxBlogApplicationTests {
     private ArticleContentService articleContentService;
     @Test
     public void testEs() {
-      searchTemplate.createIndex("dev_articles");
+      searchTemplate.createIndex("articles");
     }
 
 }
