@@ -6,10 +6,12 @@ import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.Like;
 import com.zdx.event.EventHandle;
 import com.zdx.event.EventObject;
+import com.zdx.model.vo.ArticleEsVo;
 import com.zdx.security.vo.UserSession;
 import com.zdx.service.zdx.ArticleService;
 import com.zdx.service.zdx.LikeService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -21,6 +23,8 @@ public class InsertOrDeleteArticleLikeCountEvent implements EventHandle {
     private final LikeService likeService;
 
     private final ArticleService articleService;
+
+    private final ApplicationContext applicationContext;
     @Override
     public String getKey() {
         return EventObject.Attribute.INSERT_OR_REMOVE_ARTICLE_LIKE;
@@ -59,5 +63,10 @@ public class InsertOrDeleteArticleLikeCountEvent implements EventHandle {
             updateWrapper.eq(Article::getId, typeId);
             articleService.update(updateWrapper);
         }
+        //异步同步es点赞量
+        ArticleEsVo articleEsVo = new ArticleEsVo();
+        articleEsVo.setId(Long.valueOf(typeId));
+        articleEsVo.setLikeCount(likeCount);
+        applicationContext.publishEvent(new EventObject(articleEsVo, EventObject.Attribute.ES_CREATE_UPDATE));
     }
 }

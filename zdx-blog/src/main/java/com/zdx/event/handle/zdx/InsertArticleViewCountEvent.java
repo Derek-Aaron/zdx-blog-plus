@@ -5,8 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.zdx.entity.zdx.Article;
 import com.zdx.event.EventHandle;
 import com.zdx.event.EventObject;
+import com.zdx.model.vo.ArticleEsVo;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,6 +17,8 @@ public class InsertArticleViewCountEvent implements EventHandle {
 
 
     private final ArticleService articleService;
+
+    private final ApplicationContext applicationContext;
     @Override
     public String getKey() {
         return EventObject.Attribute.INSERT_VIEW_COUNT;
@@ -30,6 +34,11 @@ public class InsertArticleViewCountEvent implements EventHandle {
             updateWrapper.set(Article::getViewCount, viewCount);
             updateWrapper.eq(Article::getId, articleId);
             articleService.update(updateWrapper);
+            //异步更改es观看数
+            ArticleEsVo articleEsVo = new ArticleEsVo();
+            articleEsVo.setId(articleId);
+            articleEsVo.setViewCount(viewCount);
+            applicationContext.publishEvent(new EventObject(articleEsVo, EventObject.Attribute.ES_CREATE_UPDATE));
         }
     }
 }

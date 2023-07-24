@@ -91,10 +91,7 @@ public class EventObject extends ApplicationEvent {
 		public static final String SEND_EMAIL_KEY = "send_email_key";
 		public static final String SEND_EMAIL_TYPE = "send_email_type";
 
-		public static final String LOGOUT = "logout";
-		public static final String DELCONTENTCACHE = "delContent";
 		public static final String SAVEORUPDATETAGS = "saveOrUpdateTags";
-		public static final String CREATEDICTDATA = "createDictData";
 		public static final String ES_CREATE_UPDATE = "esCreateUpdate";
 		public static final String SENDMAIL = "sendMail";
 		/**

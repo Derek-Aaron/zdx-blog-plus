@@ -10,7 +10,6 @@ import com.zdx.enums.MenuTypeEnum;
 import com.zdx.enums.SendEmailEnum;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.MailDto;
-import com.zdx.model.vo.front.ArticleSearchVo;
 import com.zdx.search.SearchTemplate;
 import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
@@ -24,8 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ZdxBlogApplicationTests {
@@ -115,10 +112,7 @@ class ZdxBlogApplicationTests {
     private ArticleContentService articleContentService;
     @Test
     public void testEs() {
-        List<ArticleSearchVo> articleSearchVos = articleService.searchArticle("mysql");
-        for (ArticleSearchVo articleSearchVo : articleSearchVos) {
-            System.out.println(articleSearchVo.getHighlight());
-        }
+      searchTemplate.createIndex("dev_articles");
     }
 
 }

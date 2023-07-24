@@ -5,6 +5,8 @@ import com.zdx.entity.BaseTimeEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @TableName zdx_article
  */
@@ -37,5 +39,6 @@ public class Article extends BaseTimeEntity {
 
     private String status;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

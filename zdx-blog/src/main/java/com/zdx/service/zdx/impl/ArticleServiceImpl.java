@@ -23,6 +23,7 @@ import com.zdx.mapper.zdx.CategoryMapper;
 import com.zdx.mapper.zdx.TagMapper;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
+import com.zdx.model.vo.ArticleEsVo;
 import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.*;
 import com.zdx.search.SearchTemplate;
@@ -32,6 +33,9 @@ import lombok.RequiredArgsConstructor;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.elasticsearch.search.sort.FieldSortBuilder;
+import org.elasticsearch.search.sort.SortBuilder;
+import org.elasticsearch.search.sort.SortOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
@@ -105,9 +109,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     @Override
     @Transactional(rollbackFor = Exception.class)
     public boolean adminSave(ArticleSaveVo articleSave) {
-        Article article = BeanUtil.copyProperties(articleSave, Article.class);
+        Article article = null;
+        if (ObjUtil.isNotNull(articleSave.getId())) {
+            article = getById(articleSave.getId());
+        } else {
+            article = BeanUtil.copyProperties(articleSave, Article.class);
+        }
         article.setUserId(UserSessionFactory.getUserId());
-        Category category = categoryMapper.selectOne(new LambdaQueryWrapper<Category>().select(Category::getName).eq(Category::getName, articleSave.getCategoryName()));
+        Category category = categoryMapper.selectOne(new LambdaQueryWrapper<Category>().eq(Category::getName, articleSave.getCategoryName()));
         if (ObjUtil.isNull(category)) {
             category = new Category();
             category.setName(articleSave.getCategoryName());
@@ -124,14 +133,41 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             articleContent.setArticleId(article.getId());
             int count = ObjUtil.isNotNull(articleContent.getId()) ? articleContentMapper.updateById(articleContent) : articleContentMapper.insert(articleContent);
             if (count > 0) {
-                //扩展文章多端同步
-                EventObject event = new EventObject(articleSave.getTagNames(), EventObject.Attribute.SAVEORUPDATETAGS);
-                event.setAttribute(EventObject.Attribute.ARTICLE_ID, article.getId());
-                applicationContext.publishEvent(event);
+                List<Tag> tags = saveOrUpdateTag(articleSave.getTagNames(), article.getId());
+                //异步同步es服务器
+                ArticleEsVo articleEsVo = BeanUtil.copyProperties(article, ArticleEsVo.class);
+                articleEsVo.setCategory(category);
+                articleEsVo.setContent(articleContent.getContent());
+                articleEsVo.setTagVOList(tags);
+                applicationContext.publishEvent(new EventObject(articleEsVo, EventObject.Attribute.ES_CREATE_UPDATE));
                 return true;
             }
         }
         return false;
+    }
+
+    private List<Tag> saveOrUpdateTag(List<String> tagNames, Long articleId) {
+        List<Tag> tags = new ArrayList<>();
+        List<Long> tagIds = new ArrayList<>();
+        if (ObjUtil.isNotNull(articleId) && ObjUtil.isNotNull(tagNames)) {
+            for (String tagName : tagNames) {
+                Tag tag = tagMapper.selectOne(new LambdaQueryWrapper<Tag>().eq(Tag::getName, tagName));
+                if (ObjUtil.isNull(tag)) {
+                    tag = new Tag();
+                    tag.setName(tagName);
+                    tagMapper.insert(tag);
+                }
+                tags.add(tag);
+                Long count = tagMapper.selectCountTagIdAndArticleId(articleId, tag.getId());
+                if (!(ObjUtil.isNotNull(count) && count > 0)) {
+                    tagIds.add(tag.getId());
+                }
+            }
+        }
+        if (!tagIds.isEmpty()) {
+            tagMapper.insertTagAndArticleId(articleId, tagIds);
+        }
+        return tags;
     }
 
     @Override
@@ -174,8 +210,14 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     @Override
     public IPage<ArticleHomeVo> homePage(RequestParams params) {
+        if (ObjUtil.isNotNull(searchTemplate)) {
+            SearchSourceBuilder builder = new SearchSourceBuilder();
+            builder.query(QueryBuilders.matchAllQuery());
+            FieldSortBuilder createTime = new FieldSortBuilder("createTime").order(SortOrder.DESC);
+            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(),new SortBuilder[]{createTime},null,ArticleHomeVo.class);
+        }
         IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
-        IPage<Article> page = page(iPage);
+        IPage<Article> page = page(iPage, new LambdaQueryWrapper<Article>().orderByDesc(Article::getCreateTime));
         IPage<ArticleHomeVo> articleHomeVoIPage = new Page<>(params.getPage(), params.getLimit());
         List<ArticleHomeVo> articleHomeVos = new ArrayList<>();
         for (Article article : page.getRecords()) {
@@ -194,11 +236,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     @Override
     public ArticleHomeInfoVo getHomeById(String id) {
+        if (ObjUtil.isNotNull(searchTemplate)) {
+            ArticleHomeInfoVo homeInfoVo = searchTemplate.getDocById(esIndex, id, ArticleHomeInfoVo.class);
+            EventObject event = new EventObject(homeInfoVo.getId(), EventObject.Attribute.INSERT_VIEW_COUNT);
+            event.setAttribute(EventObject.Attribute.VIEW_COUNT, Optional.ofNullable(homeInfoVo.getViewCount()).orElse(0L));
+            applicationContext.publishEvent(event);
+            ArticlePaginationVO lastArticle = baseMapper.selectLastArticle(homeInfoVo.getId());
+            homeInfoVo.setLastArticle(lastArticle);
+            ArticlePaginationVO nextArticle = baseMapper.selectNextArticle(homeInfoVo.getId());
+            homeInfoVo.setNextArticle(nextArticle);
+            return homeInfoVo;
+        }
         Article article = getById(id);
         if (ObjUtil.isNull(article)) {
             return null;
         }
-
         EventObject event = new EventObject(article.getId(), EventObject.Attribute.INSERT_VIEW_COUNT);
         event.setAttribute(EventObject.Attribute.VIEW_COUNT, Optional.ofNullable(article.getViewCount()).orElse(0L));
         applicationContext.publishEvent(event);
@@ -219,9 +271,16 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     @Override
     public IPage<ArticleArchivesVo> archivesPage(RequestParams params) {
+        if (ObjUtil.isNotNull(searchTemplate)) {
+            SearchSourceBuilder builder = new SearchSourceBuilder();
+            builder.query(QueryBuilders.matchAllQuery());
+            FieldSortBuilder createTime = new FieldSortBuilder("createTime").order(SortOrder.DESC);
+            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(),new SortBuilder[]{createTime},null, ArticleArchivesVo.class);
+        }
         IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Article::getId, Article::getTitle, Article::getCreateTime, Article::getCover);
+        queryWrapper.orderByDesc(Article::getCreateTime);
         IPage<Article> page = page(iPage, queryWrapper);
         List<ArticleArchivesVo> articleArchivesVos = new ArrayList<>();
         for (Article article : page.getRecords()) {
@@ -241,6 +300,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     public List<ArticleRecommendVo> homeRecommend() {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Article::getId, Article::getTitle, Article::getCreateTime, Article::getCover);
+        queryWrapper.orderByDesc(Article::getCreateTime);
         queryWrapper.last(" limit 5");
         List<Article> articles = list(queryWrapper);
         return articles.stream().map(article -> BeanUtil.copyProperties(article, ArticleRecommendVo.class)).toList();
