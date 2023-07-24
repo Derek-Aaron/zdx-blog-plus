@@ -3,6 +3,7 @@ package com.zdx.security.service;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.RandomUtil;
+import cn.hutool.core.util.StrUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
 import com.zdx.entity.tk.Menu;
@@ -11,14 +12,17 @@ import com.zdx.entity.us.Auth;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
 import com.zdx.enums.MenuTypeEnum;
+import com.zdx.enums.SendEmailEnum;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.AclDto;
+import com.zdx.model.dto.MailDto;
 import com.zdx.model.dto.UserLogin;
 import com.zdx.model.vo.Router;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.security.vo.UserAgent;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.service.tk.MenuService;
+import com.zdx.service.tk.RedisService;
 import com.zdx.service.us.AclService;
 import com.zdx.service.us.AuthService;
 import com.zdx.service.us.RoleService;
@@ -40,6 +44,7 @@ import org.springframework.stereotype.Component;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Component
 @Slf4j
@@ -54,6 +59,8 @@ public class LoginService {
 
 
     private final ApplicationContext applicationContext;
+
+    private final RedisService redisService;
 
 
     private final MenuService menuService;
@@ -195,5 +202,18 @@ public class LoginService {
             aclVo.setResources(List.of(Role.BLOG_USE_ID));
             roleService.addOrDelResources(aclVo);
         }
+    }
+
+    public void sendCode(String email) {
+        int code = RandomUtil.randomInt(8);
+        MailDto mailDto = MailDto.builder()
+                .toEmail(email)
+                .subject("验证吗")
+                .content(StrUtil.format("您的验证码为：{} 有效期为：{}分钟", code, Constants.CODE_EXPIRE_TIME))
+                .build();
+        EventObject event = new EventObject(mailDto, EventObject.Attribute.SEND_EMAIL_KEY);
+        event.setAttribute(EventObject.Attribute.SEND_EMAIL_TYPE, SendEmailEnum.SIMPLE);
+        applicationContext.publishEvent(event);
+        redisService.setObject(Constants.CODE_KEY + email, code, Constants.CODE_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 }

@@ -88,6 +88,9 @@ public class EventObject extends ApplicationEvent {
 		public static final String INSERT_OR_REMOVE_TALK_LIKE = "insert_or_remove_talk_like";
 		public static final String LIKE_COUNT_TYPE = "like_count_type";
 
+		public static final String SEND_EMAIL_KEY = "send_email_key";
+		public static final String SEND_EMAIL_TYPE = "send_email_type";
+
 		public static final String LOGOUT = "logout";
 		public static final String DELCONTENTCACHE = "delContent";
 		public static final String SAVEORUPDATETAGS = "saveOrUpdateTags";

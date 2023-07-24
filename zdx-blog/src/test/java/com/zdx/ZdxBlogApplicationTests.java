@@ -1,6 +1,5 @@
 package com.zdx;
 
-import com.alibaba.fastjson.JSON;
 import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
@@ -8,19 +7,27 @@ import com.zdx.entity.us.User;
 import com.zdx.enums.DictTypeEnum;
 import com.zdx.enums.GenderEnum;
 import com.zdx.enums.MenuTypeEnum;
-import com.zdx.model.vo.front.SiteConfig;
-import com.zdx.service.tk.ConfigService;
+import com.zdx.enums.SendEmailEnum;
+import com.zdx.event.EventObject;
+import com.zdx.model.dto.MailDto;
+import com.zdx.model.vo.front.ArticleSearchVo;
+import com.zdx.search.SearchTemplate;
 import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
+import com.zdx.service.zdx.ArticleContentService;
+import com.zdx.service.zdx.ArticleService;
 import com.zdx.utils.RsaUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-@SpringBootTest
+import java.util.List;
+
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ZdxBlogApplicationTests {
 
 
@@ -86,36 +93,32 @@ class ZdxBlogApplicationTests {
     }
 
     @Autowired
-    private ConfigService  configService;
+    private ApplicationContext applicationContext;
 
     @Test
     public void minioClientTest() throws Exception{
-        SiteConfig siteConfig = new SiteConfig();
-        siteConfig.setUserAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
-        siteConfig.setTouristAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
-        siteConfig.setSiteName("小赵博客");
-        siteConfig.setSiteAddress("www.zhaodengxuan.top");
-        siteConfig.setSiteIntro("暂无");
-        siteConfig.setSiteNotice("hahaahaha");
-        siteConfig.setCreateSiteTime("2023-07-01");
-        siteConfig.setRecordNumber("aaaaa");
-        siteConfig.setAuthorAvatar("http://static.zhaodengxuan.top/image/defalutAvatar.jpg");
-        siteConfig.setSiteAuthor("小赵");
-        siteConfig.setAboutMe("hahahaaha");
-        siteConfig.setGithub("aaa");
-        siteConfig.setGitee("bbbb");
-        siteConfig.setBilibili("ccccc");
-        siteConfig.setQq("aaaa");
-        siteConfig.setCommentCheck(true);
-        siteConfig.setMessageCheck(true);
-        siteConfig.setIsReward(true);
-        siteConfig.setEmailNotice(true);
-        siteConfig.setIsMusic(true);
-        siteConfig.setMusicId("aaaa");
-        siteConfig.setIsChat(true);
-        siteConfig.setWebsocketUrl("aaaa");
-        String json = JSON.toJSONString(siteConfig);
-        configService.setConfig(Constants.BLOG_SITE_CONFIG, json);
+        MailDto mailDto = MailDto.builder().toEmail("2488288090@qq.com")
+                .content("测试发送")
+                .subject("验证码").build();
+        EventObject event = new EventObject(mailDto, EventObject.Attribute.SEND_EMAIL_KEY);
+        event.setAttribute(EventObject.Attribute.SEND_EMAIL_TYPE, SendEmailEnum.SIMPLE);
+        applicationContext.publishEvent(event);
+    }
+
+    @Autowired
+    private SearchTemplate searchTemplate;
+
+    @Autowired
+    private ArticleService articleService;
+
+    @Autowired
+    private ArticleContentService articleContentService;
+    @Test
+    public void testEs() {
+        List<ArticleSearchVo> articleSearchVos = articleService.searchArticle("mysql");
+        for (ArticleSearchVo articleSearchVo : articleSearchVos) {
+            System.out.println(articleSearchVo.getHighlight());
+        }
     }
 
 }

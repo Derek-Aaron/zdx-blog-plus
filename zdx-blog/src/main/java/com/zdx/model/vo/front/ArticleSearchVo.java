@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
+import java.util.Map;
+
 @Data
 @ApiModel("文章搜索实体")
 public class ArticleSearchVo {
@@ -17,4 +19,7 @@ public class ArticleSearchVo {
 
     @ApiModelProperty("文章描述")
     private String description;
+
+    @ApiModelProperty("展示高亮的字段")
+    private Map<String, Object> highlight;
 }

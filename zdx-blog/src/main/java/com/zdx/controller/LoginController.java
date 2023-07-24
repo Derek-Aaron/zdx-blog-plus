@@ -35,6 +35,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.List;
@@ -66,8 +67,9 @@ public class LoginController {
     }
 
     @GetMapping("/email/code/{email}")
-    public Result<String> emailCode(@PathVariable @NotBlank String email) {
-        return Result.success("功能开发中");
+    public Result<String> emailCode(@PathVariable @Email String email) {
+        loginService.sendCode(email);
+        return Result.success();
     }
 
 

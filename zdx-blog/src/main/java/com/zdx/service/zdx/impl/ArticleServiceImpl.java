@@ -2,11 +2,15 @@ package com.zdx.service.zdx.impl;
 
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.util.ObjUtil;
+import cn.hutool.extra.tokenizer.Result;
+import cn.hutool.extra.tokenizer.TokenizerUtil;
+import cn.hutool.extra.tokenizer.Word;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.google.common.collect.Lists;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
@@ -21,10 +25,15 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.*;
+import com.zdx.search.SearchTemplate;
 import com.zdx.security.UserSessionFactory;
-import com.zdx.service.tk.RedisService;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.index.query.BoolQueryBuilder;
+import org.elasticsearch.index.query.QueryBuilders;
+import org.elasticsearch.search.builder.SearchSourceBuilder;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -51,7 +60,12 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     private final ApplicationContext applicationContext;
 
-    private final RedisService redisService;
+    @Autowired(required = false)
+    private SearchTemplate searchTemplate;
+
+    @Value("${zdx.es.index}")
+    private String esIndex;
+
 
     @Override
     public IPage<ArticleAdminVo> adminPage(RequestParams params) {
@@ -234,6 +248,22 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
 
     @Override
     public List<ArticleSearchVo> searchArticle(String keyword) {
+        if (ObjUtil.isNotNull(searchTemplate)) {
+            SearchSourceBuilder builder = new SearchSourceBuilder();
+            Result parse = TokenizerUtil.createEngine().parse(keyword);
+            List<String> wordsList = Lists.newArrayList();
+            while (parse.hasNext()) {
+                Word next = parse.next();
+                wordsList.add(next.getText());
+                parse.remove();
+            }
+            BoolQueryBuilder boolQuery = QueryBuilders.boolQuery();
+            boolQuery.should(QueryBuilders.termsQuery("content", wordsList));
+            boolQuery.should(QueryBuilders.termsQuery("description", wordsList));
+            boolQuery.should(QueryBuilders.termsQuery("title", wordsList));
+            builder.query(boolQuery);
+            return searchTemplate.searchQuery(esIndex, builder, ArticleSearchVo.class, "title", "description");
+        }
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(Article::getTitle, keyword);
         queryWrapper.or();
