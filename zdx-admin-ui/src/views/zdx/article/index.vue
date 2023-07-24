@@ -6,7 +6,7 @@ import {batchDel, list, page, save} from "@/api/base";
 import {useDict} from "@/utils/dict";
 import {ElMessage, ElMessageBox} from "element-plus";
 import router from "@/router";
-import {batchTrash, batchRecover } from "@/api/zdx/article";
+import {batchTrash, batchRecover, batchSync} from "@/api/zdx/article";
 
 const { zdx_article_type } = useDict('zdx_article_type')
 
@@ -146,6 +146,16 @@ const handleTrash = (id) => {
 		})
 	})
 }
+const handleSync = () => {
+	let array = []
+	if (ids.value.length !== 0) {
+		array = ids.value
+	}
+	batchSync(array).then((res) => {
+		ElMessage.success(res.message);
+		pageArticle()
+	})
+}
 const handleRecover = () => {
 	ElMessageBox.confirm('确定批量恢复数据吗？', '删除', {
 		confirmButtonText: '确定',
@@ -232,8 +242,12 @@ onMounted(() => {
 				<el-button type="success"  plain icon="Edit" :disabled="!ids.length > 0" @click="handleUpdate">修改
 				</el-button>
 			</el-col>
+			<el-col :span="1.5" v-if="status !== 'delete'">
+				<el-button type="success"  plain icon="Position" :disabled="!ids.length > 0" @click="handleSync">批量同步es
+				</el-button>
+			</el-col>
 			<el-col :span="1.5" v-if="status === 'delete'">
-				<el-button type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleRecover">批量恢复
+				<el-button v-checkRole="'use_blog'" type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleRecover">批量恢复
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status !== 'delete'">
@@ -256,7 +270,7 @@ onMounted(() => {
 			<el-table-column label="标题" align="center" key="title" prop="title" show-overflow-tooltip/>
 			<el-table-column label="分类" align="center" key="categoryName" prop="categoryName" show-overflow-tooltip />
 			<el-table-column label="浏览量" align="center" key="viewCount" prop="viewCount" show-overflow-tooltip />
-			<el-table-column label="点赞量" align="center" key="likesCount" prop="likesCount" show-overflow-tooltip />
+			<el-table-column label="点赞量" align="center" key="likeCount" prop="likeCount" show-overflow-tooltip />
 			<el-table-column label="置顶" align="center" key="isTop" prop="isTop" >
 				<template #default="scope">
 					<el-switch v-model="scope.row.isTop" class="ml-2" :active-value="true" :inactive-value="false"

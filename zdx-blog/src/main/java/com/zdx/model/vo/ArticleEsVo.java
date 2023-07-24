@@ -43,9 +43,6 @@ public class ArticleEsVo {
     @ApiModelProperty("标签")
     private List<Tag> tagVOList;
 
-    @ApiModelProperty(value = "文章标签名称")
-    private List<String> tagNames;
-
     @ApiModelProperty("观看数")
     private Long viewCount;
 

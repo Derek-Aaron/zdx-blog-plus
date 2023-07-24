@@ -18,10 +18,10 @@
         <li class="search-result" v-for="article in articleList" :key="article.id">
           <!-- 文章标题 -->
           <router-link class="search-title" :to="`/article/${article.id}`">
-            <span @click="dialogVisible = false" v-html="article.title"></span>
+            <span @click="dialogVisible = false" v-html="article.highlight.title ? article.highlight.title : article.title"></span>
           </router-link>
           <!-- 文章内容 -->
-          <p class="search-content" v-html="article.description"></p>
+          <p class="search-content" v-html="article.highlight.description ? article.highlight.description : article.description"></p>
         </li>
       </ul>
       <!-- 搜索结果不存在提示 -->

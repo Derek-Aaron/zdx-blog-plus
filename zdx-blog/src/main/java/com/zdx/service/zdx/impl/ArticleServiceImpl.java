@@ -5,6 +5,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.extra.tokenizer.Result;
 import cn.hutool.extra.tokenizer.TokenizerUtil;
 import cn.hutool.extra.tokenizer.Word;
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -30,6 +31,11 @@ import com.zdx.search.SearchTemplate;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
+import org.elasticsearch.action.bulk.BulkRequest;
+import org.elasticsearch.action.delete.DeleteRequest;
+import org.elasticsearch.action.index.IndexRequest;
+import org.elasticsearch.action.update.UpdateRequest;
+import org.elasticsearch.common.xcontent.XContentType;
 import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.builder.SearchSourceBuilder;
@@ -197,7 +203,15 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Article::getTrash, Boolean.TRUE);
         updateWrapper.in(Article::getId, ids);
-        return update(updateWrapper);
+        boolean flag = update(updateWrapper);
+        if (flag && ObjUtil.isNotNull(searchTemplate)) {
+            BulkRequest request = new BulkRequest();
+            for (String id : ids) {
+                request.add(new DeleteRequest().index(esIndex).id(id));
+            }
+            return searchTemplate.bulkDoc(esIndex, request);
+        }
+        return flag;
     }
 
     @Override
@@ -205,7 +219,11 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         LambdaUpdateWrapper<Article> updateWrapper = new LambdaUpdateWrapper<>();
         updateWrapper.set(Article::getTrash, Boolean.FALSE);
         updateWrapper.in(Article::getId, ids);
-        return update(updateWrapper);
+        boolean flag = update(updateWrapper);
+        if (flag) {
+            return syncArticle(ids);
+        }
+        return false;
     }
 
     @Override
@@ -214,7 +232,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             SearchSourceBuilder builder = new SearchSourceBuilder();
             builder.query(QueryBuilders.matchAllQuery());
             FieldSortBuilder createTime = new FieldSortBuilder("createTime").order(SortOrder.DESC);
-            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(),new SortBuilder[]{createTime},null,ArticleHomeVo.class);
+            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(), new SortBuilder[]{createTime}, null, ArticleHomeVo.class);
         }
         IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
         IPage<Article> page = page(iPage, new LambdaQueryWrapper<Article>().orderByDesc(Article::getCreateTime));
@@ -275,7 +293,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             SearchSourceBuilder builder = new SearchSourceBuilder();
             builder.query(QueryBuilders.matchAllQuery());
             FieldSortBuilder createTime = new FieldSortBuilder("createTime").order(SortOrder.DESC);
-            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(),new SortBuilder[]{createTime},null, ArticleArchivesVo.class);
+            return searchTemplate.searchDoc(esIndex, builder, params.getLimit(), params.getPage(), new SortBuilder[]{createTime}, null, ArticleArchivesVo.class);
         }
         IPage<Article> iPage = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
@@ -333,6 +351,35 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         queryWrapper.or();
         queryWrapper.in(Article::getId, articleIds);
         return list(queryWrapper).stream().map(article -> BeanUtil.copyProperties(article, ArticleSearchVo.class)).toList();
+    }
+
+    @Override
+    public boolean syncArticle(List<String> ids) {
+        List<Article> articles = listByIds(ids);
+        List<ArticleEsVo> articleEsVos = new ArrayList<>();
+        for (Article article : articles) {
+            ArticleEsVo articleEsVo = BeanUtil.copyProperties(article, ArticleEsVo.class);
+            articleEsVo.setCategory(categoryMapper.selectById(article.getCategoryId()));
+            articleEsVo.setTagVOList(tagMapper.getTagByArticleId(article.getId()));
+            ArticleContent articleContent = articleContentMapper.selectOne(new LambdaQueryWrapper<ArticleContent>().eq(ArticleContent::getArticleId, article.getId()));
+            if (ObjUtil.isNotNull(articleContent)) {
+                articleEsVo.setContent(articleContent.getContent());
+            }
+            articleEsVos.add(articleEsVo);
+        }
+        if (ObjUtil.isNotNull(searchTemplate)) {
+            BulkRequest request = new BulkRequest();
+            for (ArticleEsVo articleEsVo : articleEsVos) {
+                String id = String.valueOf(articleEsVo.getId());
+                if (searchTemplate.existsDocById(esIndex, id)) {
+                    request.add(new UpdateRequest().index(esIndex).id(id).doc(JSON.toJSONString(articleEsVo), XContentType.JSON));
+                } else {
+                    request.add(new IndexRequest().index(esIndex).id(id).source(JSON.toJSONString(articleEsVo), XContentType.JSON));
+                }
+            }
+            return searchTemplate.bulkDoc(esIndex, request);
+        }
+        return false;
     }
 }
 

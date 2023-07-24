@@ -10,6 +10,14 @@ export const batchTrash = (ids) => {
 	})
 }
 
+export const batchSync = (ids) => {
+	return request({
+		url:'/zdx.article/sync',
+		method:"POST",
+		data: ids
+	})
+}
+
 export const batchRecover = (ids) => {
 	return request({
 		url:"/zdx.article/batchRecover",
