@@ -1,6 +1,7 @@
 package com.zdx.controller.us;
 
 
+import cn.hutool.core.bean.BeanUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.annotation.Log;
@@ -8,17 +9,16 @@ import com.zdx.entity.us.Auth;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.front.AuthVo;
 import com.zdx.service.us.AuthService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -31,10 +31,13 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/home/zdx.auth/list")
+    @GetMapping("/home/zdx.auth/list/{type}")
     @ApiOperation("前台查询登录项列表")
-    public Result<List<Auth>> homeList() {
-        return Result.success(authService.list(new LambdaQueryWrapper<Auth>().eq(Auth::getIsEnabled, Boolean.FALSE)));
+    public Result<List<AuthVo>> homeList(@PathVariable @NotBlank String type) {
+        return Result.success(authService.list(new LambdaQueryWrapper<Auth>()
+                .eq(Auth::getIsEnabled, Boolean.FALSE)
+                .eq(Auth::getType, type)
+        ).stream().map(auth -> BeanUtil.copyProperties(auth, AuthVo.class)).toList());
     }
     @GetMapping("/zdx.auth/page")
     @ApiOperation("后台分页查询登录项")

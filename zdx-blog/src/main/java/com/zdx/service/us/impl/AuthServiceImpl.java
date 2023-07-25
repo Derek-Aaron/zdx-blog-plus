@@ -31,6 +31,14 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth>
     public Auth getAuthBySource(String source) {
         return getOne(new LambdaQueryWrapper<Auth>().eq(Auth::getSource, source).eq(Auth::getIsEnabled, Boolean.FALSE));
     }
+
+    @Override
+    public Auth getAuthBySourceAndType(String source, String type) {
+        return getOne(new LambdaQueryWrapper<Auth>()
+                .eq(Auth::getSource, source)
+                .eq(Auth::getType, type)
+        );
+    }
 }
 
 

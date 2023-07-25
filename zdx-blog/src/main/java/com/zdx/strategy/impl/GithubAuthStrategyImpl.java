@@ -2,10 +2,8 @@ package com.zdx.strategy.impl;
 
 import cn.hutool.core.lang.Assert;
 import cn.hutool.core.util.ObjUtil;
-import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
-import com.zdx.service.us.AuthService;
 import com.zdx.strategy.AuthStrategy;
 import com.zdx.utils.MessageUtil;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class GithubAuthStrategyImpl implements AuthStrategy {
 
-    private final AuthService authService;
 
     @Override
     public AuthSourceEnum source() {
@@ -26,15 +23,12 @@ public class GithubAuthStrategyImpl implements AuthStrategy {
     }
 
     @Override
-    public AuthRequest execute(String source, String callbackUrl) {
-        Auth auth = authService.getOne(new LambdaQueryWrapper<Auth>()
-                .eq(Auth::getIsEnabled, Boolean.FALSE)
-                .eq(Auth::getSource, source));
+    public AuthRequest execute(Auth auth) {
         Assert.isFalse(ObjUtil.isNull(auth), MessageUtil.getLocaleMessage("zdx.auth.null"));
         return new AuthGithubRequest(AuthConfig.builder()
                 .clientId(auth.getClientId())
                 .clientSecret(auth.getSecret())
-                .redirectUri(callbackUrl)
+                .redirectUri(auth.getCallback())
                 .build());
     }
 }

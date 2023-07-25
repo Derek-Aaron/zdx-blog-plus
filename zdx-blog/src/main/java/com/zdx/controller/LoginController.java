@@ -7,6 +7,7 @@ import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
 import com.zdx.annotation.Encrypt;
+import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.UserLogin;
@@ -18,6 +19,7 @@ import com.zdx.security.service.LoginService;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
 import com.zdx.service.tk.FileService;
+import com.zdx.service.us.AuthService;
 import com.zdx.strategy.AuthStrategy;
 import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.MessageUtil;
@@ -30,7 +32,6 @@ import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -53,11 +54,7 @@ public class LoginController {
 
     private final StrategyContext strategyContext;
 
-    @Value("${zdx.auth.callbackAdminUrl}")
-    private String callbackAdminUrl;
-
-    @Value("${zdx.auth.callbackHomeUrl}")
-    private String callbackHomeUrl;
+    private final AuthService authService;
     @PostMapping("/login")
     @ApiOperation(value = "登录", notes = "登录")
     @Encrypt
@@ -98,14 +95,8 @@ public class LoginController {
 
     @GetMapping("/oauth/render/{source}/{type}")
     public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, @PathVariable @NotBlank String type) throws IOException {
-        String callbackUrl = null;
-        if ("admin".equals(type)) {
-            callbackUrl = callbackAdminUrl;
-        }
-        if ("home".equals(type)) {
-            callbackUrl = callbackHomeUrl;
-        }
-        AuthRequest authRequest = strategyContext.executeAuth(AuthSourceEnum.valueOf(source), source, callbackUrl);
+        Auth auth = authService.getAuthBySourceAndType(source, type);
+        AuthRequest authRequest = strategyContext.executeAuth(AuthSourceEnum.valueOf(source), auth);
         if (ObjUtil.isNull(authRequest)) {
             return Result.error(MessageUtil.getLocaleMessage("zdx.auth.error"));
         }
@@ -118,8 +109,8 @@ public class LoginController {
         return Result.success(authRenderVo);
     }
 
-    @GetMapping("/oauth/callback")
-    public Result<Map<String, String>> login(AuthCallback callback, HttpServletRequest request) throws IOException {
+    @GetMapping("/oauth/callback/{type}")
+    public Result<Map<String, String>> login(AuthCallback callback, HttpServletRequest request, @PathVariable @NotBlank String type) throws IOException {
         AuthRequest authRequest = AuthStrategy.AUTH_REQUEST_MAP.get(callback.getState());
         if (ObjUtil.isNull(authRequest)) {
             return Result.error();
@@ -127,7 +118,7 @@ public class LoginController {
         AuthResponse authResponse = authRequest.login(callback);
         if (authResponse.getCode() == 2000) {
             if (authResponse.getData() instanceof AuthUser authUser) {
-                String token = loginService.authLogin(authUser, authUser.getSource(), request);
+                String token = loginService.authLogin(authUser, type, request);
                 Map<String, String> map = Maps.newHashMap();
                 map.put("token", token);
                 AuthStrategy.AUTH_REQUEST_MAP.remove(callback.getState());

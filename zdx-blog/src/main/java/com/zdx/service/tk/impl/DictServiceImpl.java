@@ -7,19 +7,18 @@ import com.alibaba.fastjson.JSONArray;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.Constants;
-import com.zdx.dict.DictHandle;
 import com.zdx.entity.tk.Dict;
+import com.zdx.enums.DictTypeEnum;
 import com.zdx.mapper.tk.DictMapper;
 import com.zdx.service.tk.DictService;
+import com.zdx.strategy.context.StrategyContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
-import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -33,7 +32,8 @@ import java.util.Map;
 public class DictServiceImpl extends ServiceImpl<DictMapper, Dict>
     implements DictService{
 
-    private final ApplicationContext applicationContext;
+
+    private final StrategyContext strategyContext;
 
     @Override
     @Cacheable(cacheNames = Constants.DICT_KEY, key = "#a0")
@@ -59,15 +59,11 @@ public class DictServiceImpl extends ServiceImpl<DictMapper, Dict>
 
 
     public List<Map<String, String>> getProperties(Dict dict) {
-        Collection<DictHandle> dictHandles = applicationContext.getBeansOfType(DictHandle.class).values();
-        if (!dictHandles.isEmpty()) {
-            for (DictHandle dictHandle : dictHandles) {
-                if (dictHandle.type().equals(dict.getType())) {
-                    return dictHandle.getDictProperties(dict);
-                }
-            }
+        List<Map<String, String>> properties = strategyContext.executeDict(DictTypeEnum.valueOf(dict.getType()), dict);
+        if (ObjUtil.isNull(properties)) {
+            properties = new ArrayList<>();
         }
-        return new ArrayList<>();
+        return properties;
     }
 }
 

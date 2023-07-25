@@ -12,12 +12,12 @@
 <script setup>
 
 const imageList = [
-  "http://static.zhaodengxuan.top/image/exwgmr.jpg",
-  "http://static.zhaodengxuan.top/image/x6p9ez.jpg",
-  "http://static.zhaodengxuan.top/image/rrjvyq.jpg",
-  "http://static.zhaodengxuan.top/image/kxl39q.jpg",
-  "http://static.zhaodengxuan.top/image/jxv6jm.jpg",
-  "http://static.zhaodengxuan.top/image/exw528.jpg"
+  "https://static.zhaodengxuan.top/image/exwgmr.jpg",
+  "https://static.zhaodengxuan.top/image/x6p9ez.jpg",
+  "https://static.zhaodengxuan.top/image/rrjvyq.jpg",
+  "https://static.zhaodengxuan.top/image/kxl39q.jpg",
+  "https://static.zhaodengxuan.top/image/jxv6jm.jpg",
+  "https://static.zhaodengxuan.top/image/exw528.jpg"
 ]
 </script>
 

@@ -78,9 +78,9 @@ public interface FileTemplate {
 
     default byte[] getCompression(MultipartFile file, String bucketName) throws IOException {
         ByteArrayOutputStream bos = null;
-        if (FileTypeEnum.IMAGE.name().equals(bucketName) && file.getSize() >= 1024 * 1024) {
+        if (FileTypeEnum.IMAGE.name().equals(bucketName) && file.getSize() >= (1024 * 1024 * 2)) {
             bos = new ByteArrayOutputStream();
-            ImgUtil.scale(file.getInputStream(), bos, 0.5F);
+            ImgUtil.scale(file.getInputStream(), bos, 0.8F);
         } else {
             bos = new ByteArrayOutputStream();
             FastByteArrayOutputStream stream = IoUtil.read(file.getInputStream());

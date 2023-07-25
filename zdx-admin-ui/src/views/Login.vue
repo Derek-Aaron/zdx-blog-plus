@@ -69,8 +69,8 @@ const router = useRouter();
 const auths = ref([])
 
 const loginForm = ref({
-  username: "admin",
-  password: "123456",
+  username: "",
+  password: "",
   rememberMe: false,
 });
 

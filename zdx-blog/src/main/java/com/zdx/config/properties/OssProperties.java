@@ -17,13 +17,13 @@ public class OssProperties {
     /**
      * 分布式文件地址
      */
-    private String url = "https://static.zhaodengxuan.top";
+    private String url;
 
-    private String accessKey = "zhaodengxuan";
+    private String accessKey;
 
-    private String secretKey = "zhaodengxuan";
+    private String secretKey;
 
-    private String username = "admin";
+    private String username;
 
-    private String password = "123456789";
+    private String password;
 }

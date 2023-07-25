@@ -11,6 +11,8 @@
             <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
             <result property="secret" column="secret" jdbcType="VARCHAR"/>
+            <result property="callback" column="callback" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="icon" column="icon" jdbcType="VARCHAR"/>
             <result property="isEnabled" column="is_enabled" jdbcType="BIT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
@@ -18,7 +20,7 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,source,
+        id,username,source,callback,type,
         user_id,client_id,secret,
         icon,is_enabled,create_time,
         update_time

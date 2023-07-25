@@ -37,7 +37,7 @@ export const logout = () => {
 
 export const authList = () => {
 	return request({
-		url:'/home/zdx.auth/list',
+		url:'/home/zdx.auth/list/home',
 		method:'GET'
 	})
 }
@@ -51,7 +51,7 @@ export const loginType = (source) => {
 
 export function callback(params) {
 	return request({
-		url:'/oauth/callback',
+		url:'/oauth/callback/home',
 		method:'GET',
 		params: params
 	})

@@ -25,6 +25,10 @@ public class Auth extends BaseTimeEntity {
 
     private String secret;
 
+    private String callback;
+
+    private String type;
+
     private String icon;
 
     private Boolean isEnabled;

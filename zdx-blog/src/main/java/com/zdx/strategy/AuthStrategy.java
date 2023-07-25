@@ -1,6 +1,7 @@
 package com.zdx.strategy;
 
 import com.google.common.collect.Maps;
+import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
 import me.zhyd.oauth.request.AuthRequest;
 
@@ -14,5 +15,5 @@ public interface AuthStrategy {
     AuthSourceEnum source();
 
 
-    AuthRequest execute(String source, String callbackUrl);
+    AuthRequest execute(Auth auth);
 }

@@ -41,10 +41,12 @@ const columns = reactive([
 ])
 
 const rules = reactive({
-	clientId: [{ required: true, message: "key不能为空", trigger: "blur" }, { min: 2, max: 20, message: "key长度必须介于 2 和 20 之间", trigger: "blur" }],
+	clientId: [{ required: true, message: "key不能为空", trigger: "blur" }],
 	source: [{ required: true, message: "来源不能为空", trigger: "blur" }],
 	secret: [{ required: true, message: "密匙不能为空", trigger: "blur" }],
 	icon: [{ required: true, message: "图标不能为空", trigger: "blur" }],
+	callback: [{ required: true, message: "回调地址不能为空", trigger: "blur" }],
+	type: [{ required: true, message: "类型不能为空", trigger: "blur" }]
 })
 
 
@@ -185,6 +187,11 @@ onMounted(() => {
 			<el-table-column type="selection" width="50" align="center" />
 			<el-table-column label="编号" align="center" key="id" prop="id" show-overflow-tooltip v-if="columns[0].visible" />
 			<el-table-column label="用户名" align="center" key="username" prop="username" show-overflow-tooltip v-if="columns[1].visible" />
+			<el-table-column label="用户名" align="center" key="username" prop="username" show-overflow-tooltip>
+				<template #default="scope">
+					{{scope.row.type === 'home' ? '前台':'后台'}}
+				</template>
+			</el-table-column>
 			<el-table-column label="来源" align="center" key="source" prop="source" show-overflow-tooltip v-if="columns[2].visible">
 				<template #default="scope">
 					<zdx-dict-tag :options="zdx_auth_source" :value="scope.row.source" />
@@ -225,12 +232,25 @@ onMounted(() => {
 					<el-row>
 						<el-col :span="24">
 							<el-form-item label="key" prop="clientId">
-								<el-input v-model="entity.clientId" placeholder="请输入角色" maxlength="30" clearable />
+								<el-input v-model="entity.clientId" placeholder="请输入key" clearable />
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">
 							<el-form-item label="密匙" prop="secret">
-								<el-input v-model="entity.secret" placeholder="请输入角色名" maxlength="30" clearable />
+								<el-input v-model="entity.secret" placeholder="请输入密匙" clearable />
+							</el-form-item>
+						</el-col>
+						<el-col :span="24">
+							<el-form-item label="回调地址" prop="callback">
+								<el-input v-model="entity.callback" placeholder="请输入回调地址" clearable />
+							</el-form-item>
+						</el-col>
+						<el-col :span="24">
+							<el-form-item label="类型" prop="type">
+								<el-select v-model="entity.type" class="m-2" placeholder="请选择" clearable>
+									<el-option label="前台" value="home"></el-option>
+									<el-option label="后台" value="admin"></el-option>
+								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">

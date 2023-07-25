@@ -162,8 +162,8 @@ public class LoginService {
         return menus.stream().map(menu -> BeanUtil.copyProperties(menu, Router.class)).toList();
     }
 
-    public String authLogin(AuthUser authUser, String source, HttpServletRequest request) {
-        Auth auth = authService.getAuthBySource(source);
+    public String authLogin(AuthUser authUser, String type, HttpServletRequest request) {
+        Auth auth = authService.getAuthBySourceAndType(authUser.getSource(), type);
         User user = null;
         if (ObjUtil.isNull(auth.getUserId())) {
             user = userService.getUserByUserName(authUser.getUsername());
