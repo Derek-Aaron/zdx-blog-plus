@@ -10,13 +10,11 @@ import com.zdx.enums.MenuTypeEnum;
 import com.zdx.enums.SendEmailEnum;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.MailDto;
-import com.zdx.search.SearchTemplate;
+import com.zdx.security.service.LoginService;
 import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
-import com.zdx.service.zdx.ArticleContentService;
-import com.zdx.service.zdx.ArticleService;
 import com.zdx.utils.RsaUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,27 +90,23 @@ class ZdxBlogApplicationTests {
     @Autowired
     private ApplicationContext applicationContext;
 
+
     @Test
-    public void minioClientTest() throws Exception{
-        MailDto mailDto = MailDto.builder().toEmail("2488288090@qq.com")
-                .content("测试发送")
-                .subject("验证码").build();
+    public void testEs() {
+        MailDto mailDto = MailDto.builder().build();
+        mailDto.setSubject("测试");
+        mailDto.setToEmail("2488288090@qq.com");
+        mailDto.setContent("测试");
         EventObject event = new EventObject(mailDto, EventObject.Attribute.SEND_EMAIL_KEY);
         event.setAttribute(EventObject.Attribute.SEND_EMAIL_TYPE, SendEmailEnum.SIMPLE);
         applicationContext.publishEvent(event);
     }
 
     @Autowired
-    private SearchTemplate searchTemplate;
-
-    @Autowired
-    private ArticleService articleService;
-
-    @Autowired
-    private ArticleContentService articleContentService;
+    private LoginService  loginService;
     @Test
-    public void testEs() {
-      searchTemplate.createIndex("articles");
+    public void sendEmail() {
+       loginService.sendCode("2488288090@qq.com");
     }
 
 }

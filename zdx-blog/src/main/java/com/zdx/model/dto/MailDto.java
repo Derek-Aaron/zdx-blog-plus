@@ -8,8 +8,8 @@ import lombok.Data;
 import java.util.Map;
 
 @Data
-@Builder
 @ApiModel(description = "邮箱DTO")
+@Builder
 public class MailDto {
 
     /**

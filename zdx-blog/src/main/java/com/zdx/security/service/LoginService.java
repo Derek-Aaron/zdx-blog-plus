@@ -12,7 +12,6 @@ import com.zdx.entity.us.Auth;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
 import com.zdx.enums.MenuTypeEnum;
-import com.zdx.enums.SendEmailEnum;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.AclDto;
 import com.zdx.model.dto.MailDto;
@@ -21,6 +20,7 @@ import com.zdx.model.vo.Router;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.security.vo.UserAgent;
 import com.zdx.security.vo.UserPrincipal;
+import com.zdx.service.tk.EmailService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.tk.RedisService;
 import com.zdx.service.us.AclService;
@@ -78,6 +78,8 @@ public class LoginService {
 
 
     private final PasswordEncoder passwordEncoder;
+
+    private final EmailService emailService;
 
     /**
      * 登录
@@ -205,15 +207,13 @@ public class LoginService {
     }
 
     public void sendCode(String email) {
-        int code = RandomUtil.randomInt(8);
+        String code = RandomUtil.randomNumbers(8);
         MailDto mailDto = MailDto.builder()
                 .toEmail(email)
                 .subject("验证吗")
                 .content(StrUtil.format("您的验证码为：{} 有效期为：{}分钟", code, Constants.CODE_EXPIRE_TIME))
                 .build();
-        EventObject event = new EventObject(mailDto, EventObject.Attribute.SEND_EMAIL_KEY);
-        event.setAttribute(EventObject.Attribute.SEND_EMAIL_TYPE, SendEmailEnum.SIMPLE);
-        applicationContext.publishEvent(event);
+        emailService.sendSimple(mailDto);
         redisService.setObject(Constants.CODE_KEY + email, code, Constants.CODE_EXPIRE_TIME, TimeUnit.MINUTES);
     }
 }
