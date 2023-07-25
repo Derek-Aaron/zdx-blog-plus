@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @TableName zdx_tag
  */
@@ -20,5 +22,6 @@ public class Tag extends BaseTimeEntity {
     private String name;
 
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

@@ -3,7 +3,6 @@ package com.zdx.security.service;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
 import com.zdx.security.vo.UserPrincipal;
-import com.zdx.service.us.AccountService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,9 +15,6 @@ import java.util.List;
 
 @Service
 public class UserDetailServiceImpl implements UserDetailsService {
-
-    @Autowired
-    private AccountService accountService;
 
     @Autowired
     private UserService userService;

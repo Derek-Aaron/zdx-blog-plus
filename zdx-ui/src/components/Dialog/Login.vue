@@ -47,44 +47,6 @@ const handleForget = () => {
   app.setLoginFlag(false);
   app.setForgetFlag(true);
 };
-const qqLogin = () => {
-  //保留当前路径
-  user.savePath(route.path);
-  app.setLoginFlag(false);
-  window.open(
-    "https://graph.qq.com/oauth2.0/authorize?response_type=code&client_id=" +
-    config.QQ_APP_ID +
-    "&redirect_uri=" +
-    config.QQ_REDIRECT_URL +
-    "&scope=scope&display=display",
-    "_self"
-  );
-};
-const giteeLogin = () => {
-  //保留当前路径
-  user.savePath(route.path);
-  app.setLoginFlag(false);
-  window.open(
-    "https://gitee.com/oauth/authorize?client_id=" +
-    config.GITEE_APP_ID +
-    "&response_type=code&redirect_uri=" +
-    config.GITEE_REDIRECT_URL,
-    "_self"
-  );
-};
-const githubLogin = () => {
-  //保留当前路径
-  user.savePath(route.path);
-  app.setLoginFlag(false);
-  window.open(
-    "https://github.com/login/oauth/authorize?client_id=" +
-    config.GITHUB_APP_ID +
-    "&redirect_uri=" +
-    config.GITHUB_REDIRECT_URL +
-    "&scope=user",
-    "_self"
-  );
-};
 
 const getLoginType = (source) => {
 	user.savePath(route.path);

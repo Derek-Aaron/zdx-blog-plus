@@ -51,6 +51,7 @@ public class MenuController extends BaseController<Menu> {
     @PostMapping("/updateMenuStatic")
     @Log(type = LogEventEnum.SAVE, desc = "更改菜单状态")
     @ApiOperation("更改菜单状态")
+    @CacheEvict(cacheNames = Constants.ROUTER_KEY, key = "T(com.zdx.security.UserSessionFactory).personId")
     public Result<String> updateMenuStatic(@RequestBody @Validated MenuStatic menuStatic) {
         return menuService.updateMenuStatic(menuStatic) ? Result.success() : Result.error();
     }

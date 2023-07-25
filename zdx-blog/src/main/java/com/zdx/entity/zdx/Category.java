@@ -7,6 +7,8 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
+
 /**
  * @TableName zdx_category
  */
@@ -19,5 +21,6 @@ public class Category extends BaseTimeEntity {
     @ApiModelProperty("分类名")
     private String name;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }
