@@ -53,7 +53,7 @@ public class RedisConfig {
 
 	@Bean
 	public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory,
-									 RedisSerializer fastJson2JsonRedisSerialize
+									 RedisSerializer Jackson2JsonRedisSerialize
 	) {
 		// 生成一个默认配置，通过config对象即可对缓存进行自定义配置
 		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
@@ -63,7 +63,7 @@ public class RedisConfig {
 				// 设置 key为string序列化
 				.serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(new StringRedisSerializer()))
 				// 设置value为fastJson序列化
-				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(fastJson2JsonRedisSerialize))
+				.serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(Jackson2JsonRedisSerialize))
 				// 不缓存空值
 				.disableCachingNullValues();
 		// 使用自定义的缓存配置初始化一个cacheManager

@@ -3,9 +3,6 @@ package com.zdx.filter.xss;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import org.apache.commons.io.IOUtils;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
 
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
@@ -20,13 +17,10 @@ import java.nio.charset.StandardCharsets;
 
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
-	private final byte[] body;
 
 	public XssHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
 		super(request);
-		//防止getParameter失效
-		getRequest().getParameterMap();
-		body = getRequest().getInputStream().readAllBytes();
+
 	}
 
 	@Override
@@ -50,33 +44,12 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 	@Override
 	public ServletInputStream getInputStream() throws IOException {
-		// 非json类型，直接返回
-		if (!isJsonRequest()) {
-			return getServletInputStream(body);
+		String json = IOUtils.toString(super.getInputStream(), StandardCharsets.UTF_8);
+		json = new HTMLFilter().filter(json);
+		if (StrUtil.isBlank(json)) {
+			return super.getInputStream();
 		}
-		ByteArrayInputStream bis = new ByteArrayInputStream(body);
-		// 为空，直接返回
-		String json = IOUtils.toString(bis, StandardCharsets.UTF_8);
-		if (StrUtil.isEmpty(json)) {
-			return getServletInputStream(body);
-		}
-		//数据xss过滤
-//		json = new HTMLFilter().filter(json).trim();
-//		byte[] bytes = json.getBytes(StandardCharsets.UTF_8);
-		return getServletInputStream(body);
-	}
-	/**
-	 * 是否是Json请求
-	 *
-	 */
-	public boolean isJsonRequest() {
-		String header = super.getHeader(HttpHeaders.CONTENT_TYPE);
-		return StringUtils.startsWithIgnoreCase(header, MediaType.APPLICATION_JSON_VALUE);
-	}
-
-
-	public ServletInputStream getServletInputStream(byte[] body) {
-		ByteArrayInputStream bis = new ByteArrayInputStream(body);
+		ByteArrayInputStream bis = new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
 		return new ServletInputStream() {
 			@Override
 			public boolean isFinished() {
@@ -86,11 +59,6 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 			@Override
 			public boolean isReady() {
 				return true;
-			}
-
-			@Override
-			public int available() throws IOException {
-				return body.length;
 			}
 
 			@Override
@@ -104,4 +72,9 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 			}
 		};
 	}
+	/**
+	 * 是否是Json请求
+	 *
+	 */
+
 }

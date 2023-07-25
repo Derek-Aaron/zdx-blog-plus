@@ -38,7 +38,6 @@ public class CaptchaConfig {
 	@Bean
 	@ConditionalOnMissingBean
 	public CaptchaService captchaService() {
-		log.info("自定义配置项：{}", prop.toString());
 		Properties config = new Properties();
 		config.put(Const.CAPTCHA_CACHETYPE, prop.getCacheType().name());
 		config.put(Const.CAPTCHA_WATER_MARK, prop.getWaterMark());

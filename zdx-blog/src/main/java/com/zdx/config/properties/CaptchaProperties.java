@@ -33,7 +33,7 @@ public class CaptchaProperties {
 	/**
 	 * 右下角水印文字(我的水印).
 	 */
-	private String waterMark = "沐沐博客";
+	private String waterMark = "小赵博客";
 
 	/**
 	 * 右下角水印字体(文泉驿正黑).

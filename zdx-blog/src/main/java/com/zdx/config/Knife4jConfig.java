@@ -24,8 +24,8 @@ public class Knife4jConfig {
     @Bean
     public Docket createRestApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .protocols(Collections.singleton("http"))
-                .host("http://www.zhaodengxuan.top")
+                .protocols(Collections.singleton("https"))
+                .host("https://www.zhaodengxuan.top")
                 .apiInfo(apiInfo())
                 .select()
                 .apis(RequestHandlerSelectors.basePackage("com.zdx.controller"))
@@ -38,7 +38,7 @@ public class Knife4jConfig {
                 .title("博客API文档")
                 .description("基于SpringBoot + Vue开发的博客项目")
                 .termsOfServiceUrl("http://localhost:8080")
-                .contact(new Contact("阿冬", "https://gitee.com/zhaodengxuan", "2488288090@qq.com"))
+                .contact(new Contact("小赵", "https://gitee.com/zhaodengxuan", "2488288090@qq.com"))
                 .version("2.0")
                 .build();
     }
