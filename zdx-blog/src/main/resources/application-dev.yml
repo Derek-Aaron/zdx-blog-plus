@@ -50,9 +50,11 @@ zdx:
     sensitive-excludes: false
   oss:
     oss-type: minio
-  auth:
-    callbackAdminUrl: 后台登录回调地址
-    callbackHomeUrl: 前台登录回调地址
+    url: oss地址
+    access-key: 申请的key
+    secret-key: 密匙
+    username: 账号（可不写）
+    password: 密码（可不写）
   es:
     open: true
     url: es服务地址
