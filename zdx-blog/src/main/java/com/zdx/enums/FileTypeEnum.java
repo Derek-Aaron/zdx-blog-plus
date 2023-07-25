@@ -24,5 +24,9 @@ public enum FileTypeEnum {
     /**
      * 其他
      */
-    OTHER
+    OTHER,
+    /**
+     * 配置
+     */
+    CONFIG,
 }
