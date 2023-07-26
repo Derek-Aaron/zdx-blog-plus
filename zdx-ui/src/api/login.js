@@ -23,8 +23,20 @@ export const homeInfo = () => {
 
 export const getEmailCode = (email) => {
 	return request({
-		url:`/email/code/${email}`,
+		url:`/home/email/code/${email}`,
 		method:'GET',
+	})
+}
+
+export const register = (data) => {
+	return request({
+		url:'/home/register',
+		method:'POST',
+		headers:{
+			isToken: false,
+			isEncrypt: true
+		},
+		data: data
 	})
 }
 

@@ -13,6 +13,7 @@ import com.zdx.annotation.Log;
 import com.zdx.controller.BaseController;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.model.dto.ResetPwd;
+import com.zdx.model.dto.UserEmailDto;
 import com.zdx.model.dto.UserStatus;
 import com.zdx.model.vo.UserProfile;
 import com.zdx.entity.us.Role;
@@ -23,6 +24,7 @@ import com.zdx.handle.Result;
 import com.zdx.security.UserSessionFactory;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
+import com.zdx.service.tk.EmailService;
 import com.zdx.service.us.UserService;
 import com.zdx.utils.MessageUtil;
 import io.swagger.annotations.Api;
@@ -49,6 +51,8 @@ public class UserController extends BaseController<User> {
     private final ApplicationContext applicationContext;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final EmailService emailService;
 
     @Override
     public IService<User> getService() {
@@ -97,6 +101,25 @@ public class UserController extends BaseController<User> {
         }
         return Result.error();
     }
+
+    @PostMapping("/updateEmail")
+    @ApiOperation("更改个人邮箱信息")
+    @Log(type = LogEventEnum.SAVE, desc = "更改个人邮箱信息")
+    public Result<String> updateEmail(@RequestBody @Validated UserEmailDto userEmail) {
+        if (!emailService.checkCode(userEmail.getEmail(), userEmail.getCode())) {
+            return Result.error(MessageUtil.getLocaleMessage("zdx.email.check.error"));
+        }
+        User user = BeanUtil.copyProperties(userEmail, User.class);
+        user.setId(UserSessionFactory.getUserId());
+        if (userService.saveOrUpdate(user)) {
+            EventObject event = new EventObject(BeanUtil.copyProperties(user, UserProfile.class), EventObject.Attribute.REFRESH_LOGIN_TOKEN_CACHE);
+            event.setAttribute(EventObject.Attribute.USER_SESSION, UserSessionFactory.userDetails());
+            applicationContext.publishEvent(event);
+            return Result.success();
+        }
+        return Result.error();
+    }
+
 
     @PostMapping("/resetPwd")
     @ApiOperation("重置密码")

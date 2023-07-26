@@ -1,6 +1,7 @@
 package com.zdx.service.us;
 
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.model.dto.RegisterDto;
 import com.zdx.model.dto.ResetPwd;
 import com.zdx.model.dto.UserStatus;
 import com.zdx.entity.us.User;
@@ -43,4 +44,11 @@ public interface UserService extends IService<User> {
      * @return 返回
      */
     User getUserByUserName(String username);
+
+    /**
+     * 注册用户
+     * @param register 注册实体
+     * @return 返回
+     */
+    boolean register(RegisterDto register);
 }

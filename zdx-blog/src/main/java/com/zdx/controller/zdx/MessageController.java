@@ -7,6 +7,7 @@ import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.service.zdx.MessageService;
+import com.zdx.utils.IpAddressUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -46,8 +48,11 @@ public class MessageController {
     @PostMapping("/zdx.message/save")
     @ApiOperation("保存留言数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存留言数据")
-    public Result<String> save(@RequestBody @Validated Message friend) {
-        return messageService.saveOrUpdate(friend) ? Result.success() : Result.error();
+    public Result<String> save(@RequestBody @Validated Message message, HttpServletRequest request) {
+        String ip = IpAddressUtil.getIp(request);
+        message.setIp(ip);
+        message.setSource(IpAddressUtil.getCityInfo(ip));
+        return messageService.saveOrUpdate(message) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.message/batchDelete")

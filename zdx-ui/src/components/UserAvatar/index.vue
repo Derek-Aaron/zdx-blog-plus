@@ -24,7 +24,7 @@
 </template>
 
 <script setup >
-// import { updateUserAvatar } from "@/api/user";
+import { updateUserAvatar } from "@/api/user";
 import useStore from "@/stores";
 import { VueCropper } from 'vue-cropper';
 import 'vue-cropper/dist/index.css';
@@ -44,7 +44,7 @@ const options = reactive({
   outputType: "png", // 默认生成截图为PNG格式
 });
 const customUpload = ({ file }) => {
-	filename.value = file.filename
+	filename.value = file.name
   const reader = new FileReader();
   reader.readAsDataURL(file.file);
   reader.onload = () => {
@@ -59,9 +59,13 @@ const hanleUpload = () => {
 	  let file = transToFile(data, filename.value, data.type)
 	  uploadFile(file).then((res) => {
 		  options.img = res.data.fileUrl;
+		  updateUserAvatar({avatar:  res.data.fileUrl}).then(res => {
+			  window.$message.success(res.message)
+		  })
 		  user.avatar = options.img
 		  dialogVisible.value = false
 	  })
+
   });
 };
 </script>

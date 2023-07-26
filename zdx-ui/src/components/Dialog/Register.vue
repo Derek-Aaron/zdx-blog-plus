@@ -20,11 +20,11 @@
 </template>
 
 <script setup>
-// import { getCode, login, register } from "@/api/login";
 import useStore from "@/stores";
 import { setToken } from "@/utils/token";
 import { useIntervalFn } from '@vueuse/core';
 import {computed, reactive, ref, toRefs} from "vue";
+import {getEmailCode, login, register} from "@/api/login";
 const { app, user } = useStore();
 const registerRef = ref();
 const data = reactive({
@@ -59,11 +59,9 @@ const sendCode = () => {
     return;
   }
   start(60);
-  // getCode(registerForm.value.username).then(({ data }) => {
-  //   if (data.flag) {
-  //     window.$message?.success("发送成功");
-  //   }
-  // });
+	getEmailCode(registerForm.value.username).then((res) => {
+		window.$message?.success(res.message);
+	})
 };
 const handleRegister = () => {
   if (registerForm.value.code.trim().length !== 6) {
@@ -74,30 +72,26 @@ const handleRegister = () => {
     window.$message?.warning("密码不能少于6位");
     return;
   }
-  // loading.value = true;
-  // register(registerForm.value).then(({ data }) => {
-  //   if (data.flag) {
-  //     let loginForm = {
-  //       username: registerForm.value.username,
-  //       password: registerForm.value.password,
-  //     }
-  //     login(loginForm).then(({ data }) => {
-  //       if (data.flag) {
-  //         registerForm.value = {
-  //           username: "",
-  //           password: "",
-  //           code: "",
-  //         }
-  //         setToken(data.data);
-  //         user.doUserInfo();
-  //         window.$message?.success("登录成功");
-  //         app.setRegisterFlag(false);
-  //       }
-  //     });
-  //   }
-  //   loading.value = false;
-  // });
-};
+  loading.value = true;
+  register(registerForm.value).then(() => {
+      let loginForm = {
+        username: registerForm.value.username,
+        password: registerForm.value.password,
+      }
+      login(loginForm).then((res) => {
+          registerForm.value = {
+			  username: "",
+			  password: "",
+			  code: "",
+		  }
+          setToken(res.data.token);
+          user.doUserInfo();
+          window.$message?.success("登录成功");
+          app.setRegisterFlag(false);
+      })
+    loading.value = false;
+  })
+}
 const dialogVisible = computed({
   get: () => app.registerFlag,
   set: (value) => app.registerFlag = value,

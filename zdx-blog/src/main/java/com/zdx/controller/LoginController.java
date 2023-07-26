@@ -10,6 +10,7 @@ import com.zdx.annotation.Encrypt;
 import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
 import com.zdx.handle.Result;
+import com.zdx.model.dto.RegisterDto;
 import com.zdx.model.dto.UserLogin;
 import com.zdx.model.vo.Router;
 import com.zdx.model.vo.UserInfo;
@@ -18,8 +19,10 @@ import com.zdx.security.UserSessionFactory;
 import com.zdx.security.service.LoginService;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
+import com.zdx.service.tk.EmailService;
 import com.zdx.service.tk.FileService;
 import com.zdx.service.us.AuthService;
+import com.zdx.service.us.UserService;
 import com.zdx.strategy.AuthStrategy;
 import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.MessageUtil;
@@ -32,6 +35,7 @@ import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
 import me.zhyd.oauth.request.AuthRequest;
 import me.zhyd.oauth.utils.AuthStateUtils;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -55,6 +59,13 @@ public class LoginController {
     private final StrategyContext strategyContext;
 
     private final AuthService authService;
+
+    private final UserService userService;
+
+    private final PasswordEncoder passwordEncoder;
+
+    private final EmailService emailService;
+
     @PostMapping("/login")
     @ApiOperation(value = "登录", notes = "登录")
     @Encrypt
@@ -63,10 +74,22 @@ public class LoginController {
         return Result.success(Map.of("token", token));
     }
 
-    @GetMapping("/email/code/{email}")
+    @GetMapping("/home/email/code/{email}")
+    @ApiOperation("通过邮箱发送验证码")
     public Result<String> emailCode(@PathVariable @Email String email) {
         loginService.sendCode(email);
         return Result.success();
+    }
+
+    @PostMapping("/home/register")
+    @Encrypt
+    @ApiOperation("注册用户")
+    public Result<String> register(@RequestBody @Validated @Encrypt RegisterDto register) {
+        if (!emailService.checkCode(register.getUsername(), register.getCode())) {
+            return Result.error(MessageUtil.getLocaleMessage("zdx.email.check.error"));
+        }
+        register.setPassword(passwordEncoder.encode(register.getPassword()));
+        return userService.register(register) ? Result.success() : Result.error();
     }
 
 

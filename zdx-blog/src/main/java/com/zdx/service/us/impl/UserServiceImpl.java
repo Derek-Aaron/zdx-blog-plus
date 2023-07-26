@@ -6,9 +6,13 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.entity.us.Account;
+import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
+import com.zdx.exception.BaseException;
 import com.zdx.mapper.us.AccountMapper;
+import com.zdx.mapper.us.RoleMapper;
 import com.zdx.mapper.us.UserMapper;
+import com.zdx.model.dto.RegisterDto;
 import com.zdx.model.dto.ResetPwd;
 import com.zdx.model.dto.UserStatus;
 import com.zdx.security.UserSessionFactory;
@@ -19,6 +23,7 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.LockedException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -34,6 +39,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
     implements UserService{
 
     private final AccountMapper accountMapper;
+
+    private final RoleMapper roleMapper;
+
 
     @Override
     public Boolean resetPwd(ResetPwd resetPwd) {
@@ -104,6 +112,33 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
             throw new DisabledException(MessageUtil.message("zdx.user.disable"));
         }
         return user;
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public boolean register(RegisterDto register) {
+        LambdaQueryWrapper<Account> accountQueryWrapper = new LambdaQueryWrapper<>();
+        accountQueryWrapper.eq(Account::getUsername, register.getUsername());
+        Account account = accountMapper.selectOne(accountQueryWrapper);
+        if (ObjUtil.isNotNull(account)) {
+            throw new BaseException("zdx.user.register");
+        }
+        LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<User>()
+                .eq(User::getUsername, register.getUsername());
+        User user = getOne(queryWrapper);
+        if (ObjUtil.isNotNull(user)) {
+            throw new BaseException("zdx.user.register");
+        }
+        user = new User();
+        user.setUsername(register.getUsername());
+        user.setNickname(register.getUsername());
+        user.setEmail(register.getUsername());
+        user.setPassword(register.getPassword());
+        if (saveOrUpdate(user)) {
+            roleMapper.addResources(String.valueOf(user.getId()), List.of(Role.BLOG_USE_ID));
+            return true;
+        }
+        return false;
     }
 }
 

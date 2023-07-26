@@ -22,7 +22,6 @@
 
 <script setup >
 import {login, authList, loginType} from "@/api/login.js";
-import config from "@/assets/js/config";
 import useStore from "@/stores";
 import { setToken } from "@/utils/token";
 import {useRoute} from "vue-router";
