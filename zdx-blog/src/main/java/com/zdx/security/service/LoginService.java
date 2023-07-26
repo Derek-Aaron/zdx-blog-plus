@@ -168,7 +168,7 @@ public class LoginService {
         Auth auth = authService.getAuthBySourceAndType(authUser.getSource(), type);
         User user = null;
         if (ObjUtil.isNull(auth.getUserId())) {
-            user = userService.getUserByUserName(authUser.getUsername());
+            user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authUser.getUsername()));
             if (ObjUtil.isNull(user)) {
                 user = new User();
             }
