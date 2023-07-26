@@ -18,14 +18,8 @@ import java.io.Serial;
 @ApiModel("登录项实体")
 public class Auth extends BaseTimeEntity {
 
-    @ApiModelProperty("用户名")
-    private String username;
-
     @ApiModelProperty("来源")
     private String source;
-
-    @ApiModelProperty("用户id")
-    private Long userId;
 
     @ApiModelProperty("用户key")
     private String clientId;

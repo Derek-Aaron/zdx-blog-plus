@@ -8,7 +8,6 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Acl;
-import com.zdx.entity.us.Auth;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
 import com.zdx.enums.MenuTypeEnum;
@@ -165,30 +164,19 @@ public class LoginService {
     }
 
     public String authLogin(AuthUser authUser, String type, HttpServletRequest request) {
-        Auth auth = authService.getAuthBySourceAndType(authUser.getSource(), type);
-        User user = null;
-        if (ObjUtil.isNull(auth.getUserId())) {
-            user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authUser.getUsername()));
-            if (ObjUtil.isNull(user)) {
-                user = new User();
-            }
+        User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authUser.getUsername()));
+        if (ObjUtil.isNull(user)) {
+            user = new User();
             user.setUsername(authUser.getUsername());
             user.setEmail(authUser.getEmail());
             user.setPassword(passwordEncoder.encode(RandomUtil.randomString(8)));
             user.setNickname(authUser.getNickname());
             user.setAvatar(authUser.getAvatar());
             userService.saveOrUpdate(user);
-            addRoleByUser(user);
-            auth.setUsername(user.getUsername());
-            auth.setSource(authUser.getSource());
-            auth.setUserId(user.getId());
-            authService.saveOrUpdate(auth);
-        } else {
-            user = userService.getById(auth.getUserId());
-            addRoleByUser(user);
         }
-        List<Role> roles = roleService.getRolesByUserId(auth.getUserId());
-        List<String> aclList = permissionService.getPermissions(auth.getUserId());
+        addRoleByUser(user);
+        List<Role> roles = roleService.getRolesByUserId(user.getId());
+        List<String> aclList = permissionService.getPermissions(user.getId());
         UserPrincipal userPrincipal = new UserPrincipal(user, roles, aclList);
         loginEvent(request, userPrincipal);
         return permissionService.createToken(userPrincipal);

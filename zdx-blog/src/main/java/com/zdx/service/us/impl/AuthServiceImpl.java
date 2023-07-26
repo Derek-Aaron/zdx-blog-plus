@@ -22,7 +22,6 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth>
     @Override
     public IPage<Auth> adminPage(RequestParams params) {
         LambdaQueryWrapper<Auth> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.like(params.hasParam("username"), Auth::getUsername, params.getParam("username"));
         queryWrapper.eq(params.hasParam("source"), Auth::getSource, params.getParam("source"));
         return page(new Page<>(params.getPage(), params.getLimit()), queryWrapper);
     }

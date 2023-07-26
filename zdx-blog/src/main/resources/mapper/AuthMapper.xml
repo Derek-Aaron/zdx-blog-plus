@@ -6,9 +6,7 @@
 
     <resultMap id="BaseResultMap" type="com.zdx.entity.us.Auth">
             <result property="id" column="id" jdbcType="BIGINT"/>
-            <result property="username" column="username" jdbcType="VARCHAR"/>
             <result property="source" column="source" jdbcType="VARCHAR"/>
-            <result property="userId" column="user_id" jdbcType="BIGINT"/>
             <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
             <result property="secret" column="secret" jdbcType="VARCHAR"/>
             <result property="callback" column="callback" jdbcType="VARCHAR"/>
@@ -20,8 +18,8 @@
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,username,source,callback,type,
-        user_id,client_id,secret,
+        id,source,callback,type,
+        client_id,secret,
         icon,is_enabled,create_time,
         update_time
     </sql>
