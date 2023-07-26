@@ -243,7 +243,7 @@ onMounted(() => {
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status !== 'delete'">
-				<el-button type="success"  plain icon="Position" :disabled="!ids.length > 0" @click="handleSync">批量同步es
+				<el-button v-checkRole="'use_blog'" type="success"  plain icon="Position" :disabled="!ids.length > 0" @click="handleSync">批量同步es
 				</el-button>
 			</el-col>
 			<el-col :span="1.5" v-if="status === 'delete'">
