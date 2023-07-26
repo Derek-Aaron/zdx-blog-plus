@@ -1,7 +1,9 @@
 package com.zdx.service.tk.impl;
 
+import com.zdx.Constants;
 import com.zdx.model.dto.MailDto;
 import com.zdx.service.tk.EmailService;
+import com.zdx.service.tk.RedisService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
@@ -29,6 +31,9 @@ public class EmailServiceImpl implements EmailService {
 
     @Autowired
     private TemplateEngine templateEngine;
+
+    @Autowired
+    private RedisService redisService;
     @Override
     public Boolean sendSimple(MailDto mailDto) {
         SimpleMailMessage simpleMail = new SimpleMailMessage();
@@ -63,5 +68,14 @@ public class EmailServiceImpl implements EmailService {
             log.error("发送html邮件异常：{}", e.getMessage(), e);
             return false;
         }
+    }
+
+    @Override
+    public Boolean checkCode(String email, String code) {
+        if (!redisService.hasKey(Constants.CODE_KEY + email)) {
+           return false;
+        }
+        String val = redisService.getObject(Constants.CODE_KEY + email);
+        return val.equalsIgnoreCase(code);
     }
 }

@@ -18,4 +18,13 @@ public interface EmailService {
      * @return 返回
      */
     Boolean sendHtml(MailDto mailDto);
+
+
+    /**
+     * 校验邮箱验证码code
+     * @param email 邮箱
+     * @param code 验证码
+     * @return 返回
+     */
+    Boolean checkCode(String email, String code);
 }

@@ -207,7 +207,7 @@ public class LoginService {
     }
 
     public void sendCode(String email) {
-        String code = RandomUtil.randomNumbers(8);
+        String code = RandomUtil.randomNumbers(6);
         MailDto mailDto = MailDto.builder()
                 .toEmail(email)
                 .subject("验证吗")
