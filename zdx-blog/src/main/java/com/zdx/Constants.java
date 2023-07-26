@@ -46,6 +46,22 @@ public class Constants {
 
     public static final String CODE_KEY = "code:";
     public static final Integer CODE_EXPIRE_TIME = 2;
+    public static final Long BLOGGER_ID = 1676767825482121217L;
+
+    /**
+     * 评论提醒
+     */
+    public static final String COMMENT_REMIND = "评论提醒";
+
+    /**
+     * 作者邮件HTML模板
+     */
+    public static final String AUTHOR_TEMPLATE = "author.html";
+
+    /**
+     * 用户邮件HTMl模板
+     */
+    public static final String USER_TEMPLATE = "user.html";
 
 
 
