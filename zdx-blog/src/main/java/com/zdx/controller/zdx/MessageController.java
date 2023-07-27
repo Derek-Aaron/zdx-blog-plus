@@ -37,7 +37,10 @@ public class MessageController {
     }
     @PostMapping("/home/zdx.message/add")
     @ApiOperation("前台添加评论")
-    public Result<String> homeAddMessage(@RequestBody @Validated Message message) {
+    public Result<String> homeAddMessage(@RequestBody @Validated Message message, HttpServletRequest request) {
+        String ip = IpAddressUtil.getIp(request);
+        message.setIp(ip);
+        message.setSource(IpAddressUtil.getCityInfo(ip));
         return messageService.saveOrUpdate(message) ? Result.success() : Result.error();
     }
     @GetMapping("/zdx.message/page")

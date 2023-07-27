@@ -1,5 +1,6 @@
 package com.zdx.filter.sensitive;
 
+import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zdx.utils.SensitiveUtil;
 import org.apache.commons.io.IOUtils;
@@ -20,6 +21,20 @@ public class SensitiveHttpServletRequestWrapper extends HttpServletRequestWrappe
         super(request);
     }
 
+
+    @Override
+    public String[] getParameterValues(String name) {
+        String[] values = super.getParameterValues(name);
+        if (ObjUtil.isNotNull(values)) {
+            String[] str = new String[values.length];
+            for (int i = 0; i < values.length; i++) {
+                String val = SensitiveUtil.filter(values[i]);
+                str[i]  = val;
+            }
+            return str;
+        }
+        return super.getParameterValues(name);
+    }
 
     @Override
     public BufferedReader getReader() throws IOException {

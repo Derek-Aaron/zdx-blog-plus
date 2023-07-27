@@ -24,18 +24,18 @@ public class CommonProperties {
 	/**
 	 * xss要过滤的路径
 	 */
-	private String xssUrlPatterns = "/captcha/**,/zdx.talk/save,/zdx.comment/add";
+	private String xssUrlPatterns = "";
 
 
 	/**
 	 * 是否开启敏感词过滤
 	 */
-	private Boolean sensitiveExcludes = false;
+	private Boolean sensitiveExcludes = true;
 
 	/**
 	 * 敏感词过滤要过滤的请求
 	 */
-	private String sensitiveUrlPatterns = "/captcha/**,/login";
+	private String sensitiveUrlPatterns = "";
 
 	private String[] openPath = {"/login", "/logout","/zdx.auth/all", "/captcha/**", "/home/**", "/druid/**", "/oauth/**","/ws/**", "/register"};
 }
