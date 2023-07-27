@@ -101,3 +101,10 @@ export const baseApi = (module, name) => {
         method:'GET'
     })
 }
+
+export const getBlogInfo = () => {
+    return request({
+        url:'/zdx.blog/info',
+        method:'GET'
+    })
+}

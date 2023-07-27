@@ -102,7 +102,7 @@ const handleLogin =  async (formEl) => {
 
 const handleSuccess = async () => {
   await useStore().useUser.doLogin(loginForm.value).then(() => {
-    router.push("/index")
+    router.push("/home")
     loading.value = false
   }).catch(() => {
     loading.value = false
