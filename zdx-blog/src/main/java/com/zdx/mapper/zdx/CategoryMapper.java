@@ -2,6 +2,9 @@ package com.zdx.mapper.zdx;
 
 import com.zdx.entity.zdx.Category;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zdx.model.vo.front.CategoryCountVo;
+
+import java.util.List;
 
 /**
 * @author zhaodengxuan
@@ -11,6 +14,11 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 */
 public interface CategoryMapper extends BaseMapper<Category> {
 
+    /**
+     * 查询每个分类下买呢文章的数量
+     * @return 返回
+     */
+    List<CategoryCountVo> selectCategoryCountVo();
 }
 
 

@@ -6,13 +6,16 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.Constants;
 import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.Like;
+import com.zdx.entity.zdx.Message;
 import com.zdx.enums.ArticleStatusEnum;
 import com.zdx.enums.LikeTypeEnum;
-import com.zdx.mapper.zdx.ArticleMapper;
-import com.zdx.mapper.zdx.CategoryMapper;
-import com.zdx.mapper.zdx.LikeMapper;
-import com.zdx.mapper.zdx.TagMapper;
+import com.zdx.mapper.us.UserMapper;
+import com.zdx.mapper.zdx.*;
+import com.zdx.model.vo.ArticleRankVO;
+import com.zdx.model.vo.ArticleStatisticsVO;
+import com.zdx.model.vo.BlogBackInfoVO;
 import com.zdx.model.vo.front.BlogInfoVO;
+import com.zdx.model.vo.front.CategoryCountVo;
 import com.zdx.model.vo.front.SiteConfig;
 import com.zdx.model.vo.front.UserInfoVo;
 import com.zdx.security.UserSessionFactory;
@@ -30,6 +33,7 @@ import org.springframework.util.DigestUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -50,6 +54,10 @@ public class BlogServiceImpl implements BlogService {
     private final ConfigService configService;
 
     private final LikeMapper likeMapper;
+
+    private final MessageMapper messageMapper;
+
+    private final UserMapper userMapper;
     @Override
     public void result() {
         HttpServletRequest request = ServletUtils.getRequest();
@@ -115,5 +123,27 @@ public class BlogServiceImpl implements BlogService {
         userInfoVo.setCommentLikeSet(commentLikeSet);
         userInfoVo.setTalkLikeSet(talkLikeSet);
         return userInfoVo;
+    }
+
+    @Override
+    public BlogBackInfoVO adminBlogInfo() {
+        BlogBackInfoVO blogBackInfoVO = new BlogBackInfoVO();
+        Integer count = redisService.getObject(Constants.BLOG_VIEW_COUNT);
+        String viewCount = Optional.ofNullable(count).orElse(0).toString();
+        blogBackInfoVO.setViewCount(Long.parseLong(viewCount));
+        Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>().eq(Article::getTrash, Boolean.FALSE).eq(Article::getStatus, ArticleStatusEnum.PUBLICITY.name()));
+        blogBackInfoVO.setArticleCount(articleCount);
+        Long messageCount = messageMapper.selectCount(new LambdaQueryWrapper<Message>().eq(Message::getIsCheck, Boolean.TRUE));
+        blogBackInfoVO.setMessageCount(messageCount);
+        Long userCount = userMapper.selectCount(null);
+        blogBackInfoVO.setUserCount(userCount);
+        List<CategoryCountVo> categoryCountVos = categoryMapper.selectCategoryCountVo();
+        blogBackInfoVO.setCategoryVOList(categoryCountVos);
+        blogBackInfoVO.setTagVOList(tagMapper.selectList(null));
+        List<ArticleStatisticsVO> articleStatisticsVOS = articleMapper.selectArticleStatistics();
+        blogBackInfoVO.setArticleStatisticsList(articleStatisticsVOS);
+        List<ArticleRankVO> articleRankVOS = articleMapper.selectArticleRank();
+        blogBackInfoVO.setArticleRankVOList(articleRankVOS);
+        return blogBackInfoVO;
     }
 }

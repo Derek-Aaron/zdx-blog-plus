@@ -2,8 +2,12 @@ package com.zdx.mapper.zdx;
 
 import com.zdx.entity.zdx.Article;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.zdx.model.vo.ArticleRankVO;
+import com.zdx.model.vo.ArticleStatisticsVO;
 import com.zdx.model.vo.front.ArticlePaginationVO;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
 * @author zhaodengxuan
@@ -26,6 +30,18 @@ public interface ArticleMapper extends BaseMapper<Article> {
      * @return 返回
      */
     ArticlePaginationVO selectNextArticle(@Param("articleId") Long articleId);
+
+    /**
+     * 通过文章发布
+     * @return 返回
+     */
+    List<ArticleStatisticsVO> selectArticleStatistics();
+
+    /**
+     * 文章浏览量排行
+     * @return 返回
+     */
+    List<ArticleRankVO> selectArticleRank();
 }
 
 

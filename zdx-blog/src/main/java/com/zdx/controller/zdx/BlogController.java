@@ -3,6 +3,7 @@ package com.zdx.controller.zdx;
 import com.zdx.annotation.Log;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
+import com.zdx.model.vo.BlogBackInfoVO;
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
 import com.zdx.model.vo.front.UserInfoVo;
@@ -40,6 +41,11 @@ public class BlogController {
     @ApiOperation("获取博客信息")
     public Result<BlogInfoVO> blogInfo() {
         return Result.success(blogService.getBlogInfo());
+    }
+
+    @GetMapping("/zdx.blog/info")
+    public Result<BlogBackInfoVO> adminBlogInfo() {
+        return Result.success(blogService.adminBlogInfo());
     }
 
     @PostMapping("/zdx.site/save")

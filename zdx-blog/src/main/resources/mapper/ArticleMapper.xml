@@ -46,4 +46,14 @@
           and id &gt; #{articleId}
         order by id desc limit 1
     </select>
+    <select id="selectArticleStatistics" resultType="com.zdx.model.vo.ArticleStatisticsVO">
+        SELECT create_time AS date,
+               COUNT(*)                             AS count
+        FROM zdx_article
+        GROUP BY date
+        ORDER BY date DESC
+    </select>
+    <select id="selectArticleRank" resultType="com.zdx.model.vo.ArticleRankVO">
+        SELECT title,view_count from zdx_article ORDER BY view_count DESC
+    </select>
 </mapper>

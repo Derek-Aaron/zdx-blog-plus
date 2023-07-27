@@ -45,14 +45,7 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
 
     @Override
     public List<CategoryCountVo> homeList() {
-        List<CategoryCountVo> categoryCountVos = new ArrayList<>();
-        for (Category category : list()) {
-            CategoryCountVo categoryCountVo = BeanUtil.copyProperties(category, CategoryCountVo.class);
-            Long articleCount = articleMapper.selectCount(new LambdaQueryWrapper<Article>().eq(Article::getCategoryId, category.getId()));
-            categoryCountVo.setArticleCount(articleCount);
-            categoryCountVos.add(categoryCountVo);
-        }
-        return categoryCountVos;
+        return baseMapper.selectCategoryCountVo();
     }
 
     @Override

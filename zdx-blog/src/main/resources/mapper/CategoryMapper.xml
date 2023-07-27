@@ -15,4 +15,13 @@
         id,name,create_time,
         update_time
     </sql>
+    <select id="selectCategoryCountVo" resultType="com.zdx.model.vo.front.CategoryCountVo">
+        SELECT c.id,
+               c.name,
+               COUNT(a.id) AS article_count
+        FROM zdx_category c
+                 LEFT JOIN (SELECT id, category_id FROM zdx_article WHERE trash = 0 AND `status` = 'PUBLICITY') a
+                           ON c.id = a.category_id
+        GROUP BY c.id
+    </select>
 </mapper>

@@ -1,5 +1,6 @@
 package com.zdx.service.zdx;
 
+import com.zdx.model.vo.BlogBackInfoVO;
 import com.zdx.model.vo.front.BlogInfoVO;
 import com.zdx.model.vo.front.SiteConfig;
 import com.zdx.model.vo.front.UserInfoVo;
@@ -34,4 +35,10 @@ public interface BlogService {
      * @return 返回
      */
     UserInfoVo getUserInfo();
+
+    /**
+     * 后台首页获取博客信息
+     * @return 返回
+     */
+    BlogBackInfoVO adminBlogInfo();
 }
