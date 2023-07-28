@@ -2,8 +2,6 @@ import defaultSettings from '@/settings'
 import {useDynamicTitle} from '@/utils/dynamicTitle'
 import {defineStore} from 'pinia'
 import {ref} from "vue";
-import {useDark} from "@vueuse/core";
-import {dart} from "~/dist/assets/clike-3f6f5c72";
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 
@@ -47,4 +45,9 @@ export const useSettingsStore = defineStore('useSettingsStore', () => {
     }
 
     return {title, theme, sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle,useDark, changeSetting, setTitle}
+}, {
+    persist:{
+        key:'setting',
+        storage: sessionStorage
+    }
 })

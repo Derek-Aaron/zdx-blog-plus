@@ -5,12 +5,12 @@ export const useDictStore = defineStore('useDictStore', () => {
     const dicts = ref([])
 
     const getDict = (key) => {
-        if (key == null && key == "") {
+        if (key == null && key === "") {
             return null;
         }
         try {
             for (let i = 0; i < dicts.value.length; i++) {
-                if (dicts.value[i].key == key) {
+                if (dicts.value[i].key === key) {
                     return dicts.value[i].value;
                 }
             }
@@ -29,10 +29,10 @@ export const useDictStore = defineStore('useDictStore', () => {
     }
 
     const removeDict = (key) => {
-        var bln = false;
+        let bln = false;
         try {
           for (let i = 0; i < dicts.value.length; i++) {
-            if (dicts.value[i].key == _key) {
+            if (dicts.value[i].key === key) {
               dicts.value.splice(i, 1);
               return true;
             }

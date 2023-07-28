@@ -51,5 +51,8 @@ export const useBlogStore = defineStore('useBlogStore', () => {
 
 	return {blogInfo, setBlogInfo}
 }, {
-	persist: sessionStorage
+	persist: {
+		key:'blog',
+		storage: sessionStorage
+	}
 })

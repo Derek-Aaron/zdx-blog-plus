@@ -3,7 +3,6 @@ import {ref} from "vue";
 import {getToken, removeToken, setToken} from "@/utils/auth";
 import defAva from '@/assets/images/profile.jpg'
 import {info, login, logout} from "@/api/login";
-import router from "@/router";
 
 
 export const useUserStore = defineStore('useUserStore', () => {
@@ -45,7 +44,7 @@ export const useUserStore = defineStore('useUserStore', () => {
     const doLogout = () => {
         logout().then((res ) => {
             removeToken()
-            router.push("/").then(r => {})
+            location.href = "/"
         })
     }
 

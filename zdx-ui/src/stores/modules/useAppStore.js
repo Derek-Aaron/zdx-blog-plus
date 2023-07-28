@@ -27,5 +27,8 @@ export const useAppStore = defineStore('useAppStore', () => {
 	}
 	return {isCollapse, searchFlag, loginFlag, registerFlag, forgetFlag, emailFlag, sideFlag, setCollapse, setLoginFlag, setRegisterFlag, setForgetFlag}
 }, {
-	persist: sessionStorage
+	persist: {
+		key:'app',
+		storage: localStorage
+	}
 })

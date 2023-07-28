@@ -10,6 +10,7 @@ import hljs from 'highlight.js';
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import piniaPluginPersistedstate from "pinia-plugin-persistedstate";
 import 'virtual:svg-icons-register'
 import SvgIcon from '@/components/SvgIcon/index.vue'
 import elementIcons from '@/components/SvgIcon/svgicon'
@@ -29,7 +30,9 @@ VMdEditor.use(githubTheme, {
     Hljs: hljs,
 });
 
-app.use(createPinia())
+let pinia = createPinia();
+pinia.use(piniaPluginPersistedstate)
+app.use(pinia)
 app.use(router)
 app.use(VMdEditor);
 app.use(plugins)

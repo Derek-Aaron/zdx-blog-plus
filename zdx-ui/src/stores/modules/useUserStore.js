@@ -121,5 +121,8 @@ export const useUserStore = defineStore('useUserStore', () => {
 		updateUserInfo
 	}
 }, {
-	persist: sessionStorage
+	persist: {
+		key:'user',
+		storage: sessionStorage
+	}
 })
