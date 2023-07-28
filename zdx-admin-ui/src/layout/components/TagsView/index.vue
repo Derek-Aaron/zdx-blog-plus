@@ -94,7 +94,7 @@ function isAffix(tag) {
 }
 function isFirstView() {
   try {
-    return selectedTag.value.fullPath === '/index' || selectedTag.value.fullPath === visitedViews.value[1].fullPath
+    return selectedTag.value.fullPath === '/home' || selectedTag.value.fullPath === visitedViews.value[1].fullPath
   } catch (err) {
     return false
   }
@@ -212,7 +212,7 @@ function toLastView(visitedViews, view) {
       // to reload home page
       router.replace({ path: '/redirect' + view.fullPath })
     } else {
-      router.push('/')
+      router.push('/home')
     }
   }
 }

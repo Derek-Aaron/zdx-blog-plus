@@ -25,14 +25,14 @@ $panGreen: #30B08F;
 
 $base-menu-color:hsla(0,0%,100%,.65);
 $base-menu-color-active:#fff;
-$base-menu-background:#001529;
+$base-menu-background:var(--el-bg-color);
 $base-logo-title-color: #ffffff;
 
 $base-menu-light-color:rgba(0,0,0,.70);
 $base-menu-light-background:#ffffff;
-$base-logo-light-title-color: #001529;
+$base-logo-light-title-color: var(--el-bg-color);
 
-$base-sub-menu-background:#000c17;
+$base-sub-menu-background:var(--el-bg-color);
 $base-sub-menu-hover:#001528;
 
 
