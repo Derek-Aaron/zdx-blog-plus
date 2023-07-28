@@ -101,12 +101,12 @@ import {useDark, useToggle} from '@vueuse/core'
 const isDark = useDark()
 
 const changeDark = () => {
-	console.log(isDark)
 	if (isDark.value) {
 		handleTheme('theme-dark')
  	} else {
 		handleTheme('theme-light')
 	}
+	useStore().useSetting.changeSetting({key:'dark', value: isDark.value})
 	useToggle(isDark)
 }
 const {proxy} = getCurrentInstance();
@@ -180,7 +180,8 @@ function saveSetting() {
 		"sidebarLogo": storeSettings.value.sidebarLogo,
 		"dynamicTitle": storeSettings.value.dynamicTitle,
 		"sideTheme": storeSettings.value.sideTheme,
-		"theme": storeSettings.value.theme
+		"theme": storeSettings.value.theme,
+		"useDark": storeSettings.value.useDark
 	};
 	localStorage.setItem("layout-setting", JSON.stringify(layoutSetting));
 	setTimeout(proxy.$modal.closeLoading(), 1000)

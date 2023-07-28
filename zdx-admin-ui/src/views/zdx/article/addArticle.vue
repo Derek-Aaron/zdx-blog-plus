@@ -11,13 +11,13 @@ import {getById, list, save} from "@/api/base";
 import {ElMessage} from "element-plus";
 import {useDict} from "@/utils/dict";
 import {useRoute} from "vue-router";
+import {useStore} from "@/stores";
 
 const { zdx_article_type, zdx_article_status } = useDict('zdx_article_type', 'zdx_article_status')
 
 const module = ref('article')
 const editorRef = ref()
 const formRef = ref()
-const isDark = ref(false)
 const dialog = ref(false)
 const title = ref('')
 const entity = ref({})
@@ -206,7 +206,7 @@ onMounted(() => {
 				<el-col :span="24">
 					<el-form-item label="文章内容" prop="content">
 						<md-editor ref="editorRef" v-model="entity.content" class="md-container"
-								   :toolbars="toolbars" :theme="isDark ? 'dark' : 'light'"
+								   :toolbars="toolbars" :theme="useStore().useSetting.useDark ? 'dark' : 'light'"
 								   placeholder="请输入文章内容..."
 								   @on-upload-img="uploadImg"
 						>
@@ -363,7 +363,6 @@ onMounted(() => {
 	min-height: 300px;
 	height: calc(100vh - 200px);
 }
-
 .popover-title {
 	margin-bottom: 1rem;
 	text-align: center;

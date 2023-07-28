@@ -15,6 +15,22 @@ html.dark {
   .el-button{
     background-color: var(--el-bg-color);
     color: var(--el-color-primary);
+    border: var(--el-text-color-regular);
+  }
+  .v-md-editor{
+    background-color: var(--el-bg-color);
+    color: var(--el-text-color-regular);
+  }
+  .v-md-textarea-editor textarea{
+    background-color: var(--el-bg-color);
+    color: var(--el-text-color-regular);
+  }
+  .v-md-editor__toolbar-item--active, .v-md-editor__toolbar-item--active:hover {
+    background-color: var(--el-bg-color);
+  }
+  .el-tag {
+    background-color: var(--el-bg-color);
     border: var(--el-border);
+    color: var(--el-color-primary);
   }
 }

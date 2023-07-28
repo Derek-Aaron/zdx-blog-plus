@@ -3,6 +3,7 @@ import {useDynamicTitle} from '@/utils/dynamicTitle'
 import {defineStore} from 'pinia'
 import {ref} from "vue";
 import {useDark} from "@vueuse/core";
+import {dart} from "~/dist/assets/clike-3f6f5c72";
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 
@@ -35,6 +36,8 @@ export const useSettingsStore = defineStore('useSettingsStore', () => {
             sidebarLogo.value = value
         } else if (key === 'dynamicTitle') {
             dynamicTitle.value = value
+        } else if (key === 'dark') {
+            useDark.value = value
         }
     }
 
@@ -43,5 +46,5 @@ export const useSettingsStore = defineStore('useSettingsStore', () => {
         useDynamicTitle();
     }
 
-    return {title, theme, sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle, changeSetting, setTitle}
+    return {title, theme, sideTheme, showSettings, topNav, tagsView, fixedHeader, sidebarLogo, dynamicTitle,useDark, changeSetting, setTitle}
 })
