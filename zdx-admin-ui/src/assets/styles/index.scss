@@ -1,10 +1,10 @@
-@import './variables.module.scss';
-@import './mixin.scss';
-@import './transition.scss';
-@import './element-ui.scss';
-@import './sidebar.scss';
-@import './btn.scss';
-@import './ruoyi.scss';
+@import 'variables.module';
+@import 'mixin';
+@import 'transition';
+@import 'sidebar';
+@import 'btn';
+@import 'ruoyi';
+@import "dark";
 
 body {
   height: 100%;

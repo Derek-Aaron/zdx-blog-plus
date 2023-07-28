@@ -36,6 +36,10 @@ export default {
    * 是否显示动态标题
    */
   dynamicTitle: true,
+  /**
+   * 是够开启暗黑模式
+   */
+  useDark: false,
 
   /**
    * @type {string | array} 'production' | ['production', 'development']

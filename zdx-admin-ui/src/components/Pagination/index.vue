@@ -97,7 +97,7 @@
   
   <style scoped>
   .pagination-container {
-    background: #fff;
+    background: var(--el-bg-color);
     padding: 32px 16px;
   }
   .pagination-container.hidden {

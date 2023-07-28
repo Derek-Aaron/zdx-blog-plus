@@ -2,6 +2,7 @@ import defaultSettings from '@/settings'
 import {useDynamicTitle} from '@/utils/dynamicTitle'
 import {defineStore} from 'pinia'
 import {ref} from "vue";
+import {useDark} from "@vueuse/core";
 
 const storageSetting = JSON.parse(localStorage.getItem('layout-setting')) || ''
 
@@ -15,7 +16,7 @@ export const useSettingsStore = defineStore('useSettingsStore', () => {
     const fixedHeader = ref(storageSetting.fixedHeader === undefined ? defaultSettings.fixedHeader : storageSetting.fixedHeader)
     const sidebarLogo = ref(storageSetting.sidebarLogo === undefined ? defaultSettings.sidebarLogo : storageSetting.sidebarLogo)
     const dynamicTitle = ref(storageSetting.dynamicTitle === undefined ? defaultSettings.dynamicTitle : storageSetting.dynamicTitle)
-
+    const useDark = ref(defaultSettings.useDark)
     const changeSetting = (data) => {
         const { key, value } = data
         if (key === 'theme') {
