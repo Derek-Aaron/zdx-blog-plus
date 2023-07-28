@@ -25,6 +25,7 @@ const categoryList = ref([])
 const categoryName = ref()
 const tagList = ref([])
 const tagName = ref()
+const entryType = ref()
 
 const rules = reactive({
 	title: [{required: true, message: "标题不能为空", trigger: "blur"}],
@@ -87,6 +88,14 @@ const searchCategory = (keyword, cb) => {
 		? categoryList.value.filter(createCategoryFilter(keyword))
 		: categoryList.value
 	cb(results);
+}
+const handleImportSuccess = (file) => {
+	let reader = new FileReader();
+	reader.readAsText(file.raw)
+	reader.onload =  () => {
+		entity.value.content = reader.result
+		entryType.value = ''
+	}
 }
 
 const createCategoryFilter = (queryString) => {
@@ -202,6 +211,14 @@ onMounted(() => {
 						</el-form-item>
 						<el-button type="danger" style="margin-left: 10px" @click="openDialog">发布文章</el-button>
 					</div>
+				</el-col>
+				<el-col :span="24">
+					<el-form-item label="录入类型">
+						<el-radio-group v-model="entryType">
+							<el-radio label="online">在线</el-radio>
+							<el-radio label="import">导入</el-radio>
+						</el-radio-group>
+					</el-form-item>
 				</el-col>
 				<el-col :span="24">
 					<el-form-item label="文章内容" prop="content">
@@ -346,6 +363,19 @@ onMounted(() => {
 					<el-button type="primary" @click="successHandle(formRef)">
 						保存
 					</el-button>
+				</template>
+			</zdx-dialog>
+			<zdx-dialog title="文章导入" :dialog="entryType === 'import'" :is-open-close="false" @close="entryType === ''">
+				<template #content>
+					<el-upload drag :show-file-list="false" :auto-upload="false"
+							   accept=".md" :on-change="handleImportSuccess">
+						<el-icon class="el-icon--upload">
+							<upload-filled/>
+						</el-icon>
+						<div class="el-upload__text">
+							将文件拖到此处，或<em>点击上传</em>
+						</div>
+					</el-upload>
 				</template>
 			</zdx-dialog>
 		</el-form>
