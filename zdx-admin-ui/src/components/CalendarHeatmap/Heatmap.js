@@ -5,13 +5,13 @@ export class Heatmap {
 	static  DEFAULT_RANGE_COLOR_LIGHT = [ '#ebedf0', '#dae2ef', '#c0ddf9', '#73b3f3', '#3886e1', '#17459e' ];
 	static  DEFAULT_RANGE_COLOR_DARK  = [ '#1f1f22', '#1e334a', '#1d466c', '#1d5689', '#1d69ac', '#1B95D1' ];
 	static  DEFAULT_LOCALE = {
-		months: [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec' ],
-		days  : [ 'Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat' ],
-		on    : 'on',
-		less  : 'Less',
-		more  : 'More'
+		months: [ '一', '二', '三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二' ],
+		days  : [ '日', '一', '二', '三', '四', '五', '六' ],
+		on    : '发布于',
+		less  : '少',
+		more  : '多'
 	};
-	static DEFAULT_TOOLTIP_UNIT   = 'contributions';
+	static DEFAULT_TOOLTIP_UNIT   = '篇文章';
 	static  DAYS_IN_ONE_YEAR       = 365;
 	static  DAYS_IN_WEEK           = 7;
 	static  SQUARE_SIZE            = 10;

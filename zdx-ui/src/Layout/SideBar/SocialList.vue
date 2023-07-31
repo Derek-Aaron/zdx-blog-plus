@@ -27,9 +27,8 @@ const showSocialList = [
     href: blog.blogInfo.siteConfig.bilibili,
   },
   {
-    type: "qq",
+    type: "QQ",
     href: 'http://wpa.qq.com/msgrd?v=3&uin=' + blog.blogInfo.siteConfig.qq + '&site=qq&menu=yes',
-    color: "#00a1d6"
   }
 ];
 </script>

@@ -122,7 +122,7 @@
 						</el-form-item>
 						<el-form-item label="QQ">
 							<el-input v-model="siteEntity.qq" style="width: 400px; margin-right: 1rem"></el-input>
-							<el-checkbox label="qq">是否展示</el-checkbox>
+							<el-checkbox label="QQ">是否展示</el-checkbox>
 						</el-form-item>
 						<el-form-item>
 							<el-button type="primary" @click="handleUpdate">保 存</el-button>
