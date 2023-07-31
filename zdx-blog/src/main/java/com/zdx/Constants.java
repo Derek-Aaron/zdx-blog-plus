@@ -30,6 +30,8 @@ public class Constants {
     public static final String TASK_PROPERTIES = "TASK_PROPERTIES";
 
     public static final String TASK_CLASS_NAME = "TASK_CLASS_NAME";
+    public static final String MUSIC_CACHE = "music_cache";
+    public static final String ZDX_KEY_GENERATOR = "zdx-key-generator";
 
     public static final List<String> IMAGETYPE = Arrays.asList(".jpg",".png",".gif",".bmp",".eps",".jpeg");
     public static final List<String> DOCUMENTTYPE = Arrays.asList(".xls",".xlsx",".doc",".md",".docx",".pdf");

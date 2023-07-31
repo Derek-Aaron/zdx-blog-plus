@@ -7,7 +7,7 @@ function clickEffect() {
 	let origin;
 	let normal;
 	let ctx;
-	const colours = ["#F73859", "#14FFEC", "#00E0FF", "#FF99FE", "#FAF15D"];
+	const colours = ["rgba(255,182,185,.9)", "rgba(250,227,217,.9)", "rgba(187,222,214,.9)", "rgba(138,198,209,.9)",];
 	const canvas = document.createElement("canvas");
 	document.body.appendChild(canvas);
 	canvas.setAttribute("style", "width: 100%; height: 100%; top: 0; left: 0; z-index: 99999; position: fixed; pointer-events: none;");
@@ -23,7 +23,7 @@ function clickEffect() {
 		window.addEventListener("mousedown", function(e) {
 			pushBalls(randBetween(10, 20), e.clientX, e.clientY);
 			document.body.classList.add("is-pressed");
-			longPress = setTimeout(function() {
+			longPress = setTimeout(function(){
 				document.body.classList.add("is-longpress");
 				longPressed = true;
 			}, 500);
@@ -70,7 +70,7 @@ function clickEffect() {
 			this.x = x;
 			this.y = y;
 			this.angle = Math.PI * 2 * Math.random();
-			if (longPressed == true) {
+			if (longPressed === true) {
 				this.multiplier = randBetween(14 + multiplier, 15 + multiplier);
 			} else {
 				this.multiplier = randBetween(6, 12);
@@ -131,5 +131,4 @@ function clickEffect() {
 		}
 	}
 }
-clickEffect();//调用
-
+clickEffect();//调用特效函数

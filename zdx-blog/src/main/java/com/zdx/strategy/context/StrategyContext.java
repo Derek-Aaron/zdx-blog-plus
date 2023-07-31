@@ -1,16 +1,21 @@
 package com.zdx.strategy.context;
 
 
+import com.zdx.Constants;
 import com.zdx.entity.tk.Dict;
 import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
 import com.zdx.enums.DictTypeEnum;
 import com.zdx.enums.LikeTypeEnum;
+import com.zdx.enums.MusicTypeEnum;
+import com.zdx.model.vo.front.MusicVo;
 import com.zdx.strategy.AuthStrategy;
 import com.zdx.strategy.DictStrategy;
 import com.zdx.strategy.LikeStrategy;
+import com.zdx.strategy.MusicStrategy;
 import lombok.RequiredArgsConstructor;
 import me.zhyd.oauth.request.AuthRequest;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -25,6 +30,8 @@ public class StrategyContext {
     private final List<AuthStrategy> authStrategies;
 
     private final List<DictStrategy> dictStrategies;
+
+    private final List<MusicStrategy> musicStrategies;
 
 
     /**
@@ -66,6 +73,22 @@ public class StrategyContext {
         for (DictStrategy dictStrategy : dictStrategies) {
             if (dictStrategy.type().equals(typeEnum)) {
                 return dictStrategy.execute(dict);
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取加载的音乐
+     * @param typeEnum 类型
+     * @param musicId 音乐id
+     * @return 返回
+     */
+    @Cacheable(cacheNames = Constants.MUSIC_CACHE, keyGenerator = "zdx-key-generator")
+    public List<MusicVo> executeMusic(MusicTypeEnum typeEnum, String musicId) {
+        for (MusicStrategy musicStrategy : musicStrategies) {
+            if (musicStrategy.musicType().equals(typeEnum)) {
+                return musicStrategy.execute(musicId);
             }
         }
         return null;

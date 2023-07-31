@@ -4,23 +4,24 @@ import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
-import com.zdx.enums.DictTypeEnum;
-import com.zdx.enums.GenderEnum;
-import com.zdx.enums.MenuTypeEnum;
-import com.zdx.enums.SendEmailEnum;
+import com.zdx.enums.*;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.MailDto;
+import com.zdx.model.vo.front.MusicVo;
 import com.zdx.security.service.LoginService;
 import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
+import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.RsaUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ZdxBlogApplicationTests {
@@ -107,6 +108,14 @@ class ZdxBlogApplicationTests {
     @Test
     public void sendEmail() {
        loginService.sendCode("2488288090@qq.com");
+    }
+
+    @Autowired
+    private StrategyContext strategyContext;
+    @Test
+    public void testMusic() {
+        List<MusicVo> musicVos = strategyContext.executeMusic(MusicTypeEnum.QQ, "");
+        System.out.println(musicVos);
     }
 
 }

@@ -2,20 +2,22 @@ package com.zdx.controller.zdx;
 
 import com.zdx.annotation.Log;
 import com.zdx.enums.LogEventEnum;
+import com.zdx.enums.MusicTypeEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.vo.BlogBackInfoVO;
 import com.zdx.model.vo.front.BlogInfoVO;
+import com.zdx.model.vo.front.MusicVo;
 import com.zdx.model.vo.front.SiteConfig;
 import com.zdx.model.vo.front.UserInfoVo;
 import com.zdx.service.zdx.BlogService;
+import com.zdx.strategy.context.StrategyContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -24,11 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
 public class BlogController {
 
     private final BlogService blogService;
+
+    private final StrategyContext strategyContext;
     @GetMapping("/home/report")
     @ApiOperation("记录博客访问")
     public Result<String> result() {
         blogService.result();
         return Result.success();
+    }
+
+    @GetMapping("/home/music")
+    @ApiOperation("获取音乐")
+    public Result<List<MusicVo>> music(String id) {
+        return Result.success(strategyContext.executeMusic(MusicTypeEnum.QQ, id));
     }
 
     @GetMapping("/user/info")

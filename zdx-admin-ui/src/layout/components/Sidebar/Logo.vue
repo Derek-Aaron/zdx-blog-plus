@@ -1,11 +1,11 @@
 <template>
   <div class="sidebar-logo-container" :class="{ 'collapse': collapse }" :style="{ backgroundColor: sideTheme === 'theme-dark' ? variables.menuBackground : variables.menuLightBackground }">
     <transition name="sidebarLogoFade">
-      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
+      <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/home">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1 v-else class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }}</h1>
       </router-link>
-      <router-link v-else key="expand" class="sidebar-logo-link" to="/">
+      <router-link v-else key="expand" class="sidebar-logo-link" to="/home">
         <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1 class="sidebar-title" :style="{ color: sideTheme === 'theme-dark' ? variables.logoTitleColor : variables.logoLightTitleColor }">{{ title }}</h1>
       </router-link>
@@ -17,7 +17,7 @@
 import variables from '@/assets/styles/variables.module.scss'
 import logo from '@/assets/logo/logo.png'
 import {useStore} from "@/stores";
-import {computed} from "vue";
+import {computed, ref} from "vue";
 
 defineProps({
   collapse: {
@@ -26,7 +26,7 @@ defineProps({
   }
 })
 
-const title = import.meta.env.VITE_APP_TITLE;
+const title = ref('小赵博客后台');
 const settingsStore = useStore().useSetting
 const sideTheme = computed(() => settingsStore.sideTheme);
 </script>

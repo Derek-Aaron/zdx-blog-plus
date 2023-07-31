@@ -1,5 +1,7 @@
 import "@/assets/fonts/font.css";
 import "@/assets/styles/index.scss";
+import "@/assets/katex/katex.min.css"
+import "@/assets/katex/katex.min"
 import SvgIcon from "@/components/SvgIcon/index.vue";
 import * as directive from "@/directive";
 import "@/permission";
@@ -13,7 +15,6 @@ import router from './router'
 import error from "./assets/images/404.gif";
 import loading from "./assets/images/loading.gif";
 import { VueMasonryPlugin } from "vue-masonry";
-import "@/utils/click"
 import Prism from "prismjs";
 import createKatexPlugin from "@kangc/v-md-editor/lib/plugins/katex/cdn";
 import createTodoListPlugin from "@kangc/v-md-editor/lib/plugins/todo-list/index";

@@ -13,3 +13,10 @@ export const blogInfo = () => {
 		method:'GET'
 	})
 }
+
+export const music = () => {
+	return request({
+		url:'/home/music',
+		method:'GET',
+	})
+}

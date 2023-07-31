@@ -11,6 +11,7 @@
     "@kangc/v-md-editor": "^2.3.15",
     "@vueuse/core": "^10.2.1",
     "@vueuse/shared": "^10.2.1",
+    "aplayer": "^1.10.1",
     "axios": "^1.4.0",
     "dayjs": "^1.11.9",
     "easy-typer-js": "^2.1.0",
