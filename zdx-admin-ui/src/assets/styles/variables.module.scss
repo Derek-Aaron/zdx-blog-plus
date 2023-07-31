@@ -26,11 +26,11 @@ $panGreen: #30B08F;
 $base-menu-color:hsla(0,0%,100%,.65);
 $base-menu-color-active:#fff;
 $base-menu-background:var(--el-bg-color);
-$base-logo-title-color: #ffffff;
+$base-logo-title-color: var(--el-text-color-regular);
 
 $base-menu-light-color:rgba(0,0,0,.70);
-$base-menu-light-background:#ffffff;
-$base-logo-light-title-color: var(--el-bg-color);
+$base-menu-light-background:var(--el-bg-color);
+$base-logo-light-title-color: var(--el-text-color-regular);
 
 $base-sub-menu-background:var(--el-bg-color);
 $base-sub-menu-hover:#001528;
