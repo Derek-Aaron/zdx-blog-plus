@@ -4,7 +4,6 @@ import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.zdx.entity.zdx.ChatRecord;
-import com.zdx.filter.xss.HTMLFilter;
 import com.zdx.model.vo.front.ChatRecordVo;
 import com.zdx.model.vo.front.WebsocketMessageVo;
 import com.zdx.service.zdx.ChatRecordService;
@@ -90,7 +89,7 @@ public class WebSocketServer {
                 // 发送消息
                 ChatRecord chatRecord = JSON.parseObject(JSON.toJSONString(messageDTO.getData()), ChatRecord.class);
                 // 过滤html标签
-                chatRecord.setContent(new HTMLFilter().filter((chatRecord.getContent())));
+                chatRecord.setContent(chatRecord.getContent());
                 chatRecordService.save(chatRecord);
                 messageDTO.setData(chatRecord);
                 // 广播消息
