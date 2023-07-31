@@ -47,7 +47,7 @@
         order by id desc limit 1
     </select>
     <select id="selectArticleStatistics" resultType="com.zdx.model.vo.ArticleStatisticsVO">
-        SELECT create_time AS date,
+        SELECT DATE_FORMAT(create_time, "%Y-%m-%d") AS date,
                COUNT(*)                             AS count
         FROM zdx_article
         GROUP BY date
