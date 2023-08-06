@@ -21,6 +21,11 @@ import java.io.Serial;
 @EqualsAndHashCode(callSuper = true)
 @ApiModel("用户实体")
 public class User extends BaseTimeEntity {
+
+    /**
+     * 演示用户id
+     */
+    public static  final String PRESENTATION_USER_ID  = "1688074869341224962";
     @Serial
     private static final long serialVersionUID = 1L;
 

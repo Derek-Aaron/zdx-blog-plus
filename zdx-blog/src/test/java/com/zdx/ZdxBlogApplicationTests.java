@@ -52,8 +52,8 @@ class ZdxBlogApplicationTests {
     @Test
     public void addRole() {
         Role role = new Role();
-        role.setName("admin");
-        role.setDisplay("超级管理员");
+        role.setName("demonstration");
+        role.setDisplay("演示角色");
         roleService.saveOrUpdate(role);
     }
 
