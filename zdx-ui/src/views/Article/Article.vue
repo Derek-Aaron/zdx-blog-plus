@@ -193,7 +193,7 @@ const like = () => {
 onMounted(() => {
   getHomeById(route.params.id).then((res) => {
     article.value = res.data
-    document.title = article.value.articleTitle
+    document.title = article.value.title
     wordNum.value = deleteHTMLTag(article.value.content).length
     readTime.value = Math.round(wordNum.value / 400)
     articleLoaded.value = true
