@@ -20,6 +20,7 @@ public interface ConfigService extends IService<Config> {
     Boolean setConfig(String key, Object val);
 
 
+    @SuppressWarnings("all")
     default <T> T getConfig(String key, Class<T> clazz, Object defaultValue) {
         T val = getConfig(key, clazz);
         return ObjUtil.isNotNull(val) ? val : (T) defaultValue;

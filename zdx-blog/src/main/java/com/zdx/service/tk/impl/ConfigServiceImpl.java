@@ -26,6 +26,7 @@ public class ConfigServiceImpl extends ServiceImpl<ConfigMapper, Config>
     implements ConfigService{
 
     @Override
+    @SuppressWarnings("all")
     public <T> T getConfig(String key, Class<T> clazz) {
         Object value = getConfig(key);
         if (ObjUtil.isNull(value)) {

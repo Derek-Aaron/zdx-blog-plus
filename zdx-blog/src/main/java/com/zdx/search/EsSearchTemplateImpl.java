@@ -202,36 +202,10 @@ public class EsSearchTemplateImpl implements SearchTemplate{
     public <T> List<T> searchQuery(String index, SearchSourceBuilder query, Class<T> clazz, String... highlightField) {
         SearchRequest request = new SearchRequest();
         request.indices(index);
-        if (ObjUtil.isNotNull(highlightField) && highlightField.length != 0) {
-            HighlightBuilder highlightBuilder = new HighlightBuilder();
-            for (String s : highlightField) {
-                highlightBuilder.requireFieldMatch(false)
-                        .field(new HighlightBuilder.Field(s))
-                        .preTags("<span style='color:red;'>")
-                        .postTags("</span>");
-            }
-            query.highlighter(highlightBuilder);
-        }
-        request.source(query);
+        request.source(getSearchRequest(query,0, 0, null, highlightField, null));
         try {
             SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-            SearchHits hits = response.getHits();
-            List<T> objs = new ArrayList<>();
-            for (SearchHit hit : hits) {
-                Map<String, Object> source = hit.getSourceAsMap();
-                if (ObjUtil.isNotNull(highlightField) && highlightField.length != 0) {
-                    Map<String, Object> highlightMap = Maps.newHashMap();
-                    for (String s : highlightField) {
-                        if (hit.getHighlightFields().containsKey(s)) {
-                            highlightMap.put(s, hit.getHighlightFields().get(s).fragments()[0].string());
-                        }
-                    }
-                    source.put("highlight", highlightMap);
-                }
-                T obj = JSON.parseObject(JSON.toJSONString(source), clazz);
-                objs.add(obj);
-            }
-            return objs;
+            return getResponseList(response, highlightField, clazz);
         } catch (IOException e) {
             log.error("查询文档异常：{}", e.getMessage(), e);
             return null;
@@ -242,6 +216,23 @@ public class EsSearchTemplateImpl implements SearchTemplate{
     public <T> IPage<T> searchDoc(String index, SearchSourceBuilder query, Integer limit, Integer page, SortBuilder[] sortField, String[] highlightField,Class<T> clazz,String... fields) {
         SearchRequest request = new SearchRequest();
         request.indices(index);
+        request.source(getSearchRequest(query, limit, page, sortField, highlightField, fields));
+        try {
+            IPage<T> iPage = new Page<>(page, limit);
+            SearchResponse response = client.search(request, RequestOptions.DEFAULT);
+            List<T> objs = getResponseList(response, highlightField, clazz);
+            SearchHits hits = response.getHits();
+            iPage.setRecords(objs);
+            iPage.setSize(hits.getTotalHits().value);
+            iPage.setTotal(hits.getTotalHits().value);
+            return iPage;
+        } catch (IOException e) {
+            log.error("查询文档异常：{}", e.getMessage(), e);
+            return null;
+        }
+    }
+
+    private SearchSourceBuilder getSearchRequest(SearchSourceBuilder query, Integer limit, Integer page, SortBuilder[] sortField, String[] highlightField, String[] fields) {
         if (ObjUtil.isNotNull(sortField)) {
             for (SortBuilder sortBuilder : sortField) {
                 query.sort(sortBuilder);
@@ -263,37 +254,31 @@ public class EsSearchTemplateImpl implements SearchTemplate{
                 query.fetchField(field);
             }
         }
-        query.size(limit);
-        query.from((page -1) * limit);
-        request.source(query);
-        try {
-            IPage<T> iPage = new Page<>(page, limit);
-            SearchResponse response = client.search(request, RequestOptions.DEFAULT);
-            SearchHits hits = response.getHits();
-            List<T> objs = Lists.newArrayList();
-            for (SearchHit hit : hits) {
-                Map<String, Object> source = hit.getSourceAsMap();
-                if (ObjUtil.isNotNull(highlightField) && highlightField.length != 0) {
-                    Map<String, Object> highlightMap = Maps.newHashMap();
-                    for (String s : highlightField) {
-                        if (hit.getHighlightFields().containsKey(s)) {
-                            highlightMap.put(s, hit.getHighlightFields().get(s).fragments()[0].string());
-                        }
-                    }
-                    source.put("highlight", highlightMap);
-                }
-                String json = JSON.toJSONString(source);
-                T obj = JSON.parseObject(json, clazz);
-                objs.add(obj);
-
-            }
-            iPage.setRecords(objs);
-            iPage.setSize(hits.getTotalHits().value);
-            iPage.setTotal(hits.getTotalHits().value);
-            return iPage;
-        } catch (IOException e) {
-            log.error("查询文档异常：{}", e.getMessage(), e);
-            return null;
+        if (limit != 0 && page != 0) {
+            query.size(limit);
+            query.from((page -1) * limit);
         }
+        return query;
+    }
+
+    private <T> List<T> getResponseList(SearchResponse response, String[] highlightField, Class<T> clazz) {
+        List<T> objs = new ArrayList<>();
+        SearchHits hits = response.getHits();
+        for (SearchHit hit : hits) {
+            Map<String, Object> source = hit.getSourceAsMap();
+            if (ObjUtil.isNotNull(highlightField) && highlightField.length != 0) {
+                Map<String, Object> highlightMap = Maps.newHashMap();
+                for (String s : highlightField) {
+                    if (hit.getHighlightFields().containsKey(s)) {
+                        highlightMap.put(s, hit.getHighlightFields().get(s).fragments()[0].string());
+                    }
+                }
+                source.put("highlight", highlightMap);
+            }
+            String json = JSON.toJSONString(source);
+            T obj = JSON.parseObject(json, clazz);
+            objs.add(obj);
+        }
+        return objs;
     }
 }

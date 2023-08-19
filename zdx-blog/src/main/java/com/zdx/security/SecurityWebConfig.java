@@ -69,6 +69,7 @@ public class SecurityWebConfig {
         registry.antMatchers("/webjars/**").permitAll();
         registry.antMatchers("/swagger-resources").permitAll();
         registry.antMatchers("/v2/api-docs").permitAll();
+        registry.antMatchers("/wx/**").permitAll();
         registry.anyRequest().authenticated()
                 .and()
                 .headers().frameOptions().disable();
