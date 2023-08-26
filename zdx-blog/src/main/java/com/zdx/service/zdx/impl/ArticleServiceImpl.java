@@ -316,6 +316,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     public List<ArticleRecommendVo> homeRecommend() {
         LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Article::getId, Article::getTitle, Article::getCreateTime, Article::getCover);
+        queryWrapper.eq(Article::getTrash, Boolean.FALSE);
         queryWrapper.orderByDesc(Article::getCreateTime);
         queryWrapper.last(" limit 5");
         List<Article> articles = list(queryWrapper);
