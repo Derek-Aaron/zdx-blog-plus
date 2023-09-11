@@ -46,7 +46,8 @@ const columns = reactive([
 ])
 
 const rules = reactive({
-
+	username: [{ required: true, message: "用户名称不能为空", trigger: "blur" }, { min: 2, max: 20, message: "用户名称长度必须介于 2 和 20 之间", trigger: "blur" }],
+	password: [{ required: true, message: "密码不能为空", trigger: "blur" }],
 })
 
 watch(() => props.dialog, (value) => {
@@ -102,7 +103,7 @@ const handleUpdate = (row) => {
 	title.value = '编辑账号【' + entity.value.username + '】'
 }
 
-const handleDelete = () => {
+const handleDelete = (id) => {
 	ElMessageBox.confirm('确定删除所选数据吗？', '删除', {
 		confirmButtonText: '确定',
 		cancelButtonText: '取消',
@@ -130,7 +131,7 @@ const successHandle = (formEl) => {
 				entity.value.userId = props.entity.id
 				saveEncrypt(module.value, entity.value).then(res => {
 					ElMessage.success(res.message)
-					dialog.value = false
+					saveDialog.value = false
 					pageAccount()
 				})
 			}
