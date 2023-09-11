@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -41,6 +42,7 @@ public class FriendController {
     @PostMapping("/zdx.friend/save")
     @ApiOperation("保存友链数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存友链数据")
+    @PreAuthorize("hasAnyAuthority('zdx:friend:add', 'zdx:friend:delete')")
     public Result<String> save(@RequestBody @Validated Friend friend) {
         return friendService.saveOrUpdate(friend) ? Result.success() : Result.error();
     }
@@ -48,6 +50,7 @@ public class FriendController {
     @PostMapping("/zdx.friend/batchDelete")
     @ApiOperation("批量删除友链数据")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除友链数据")
+    @PreAuthorize("hasAuthority('zdx:friend:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("分类id") @NotEmpty List<String> ids) {
         return friendService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

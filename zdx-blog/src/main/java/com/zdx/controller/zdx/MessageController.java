@@ -12,6 +12,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,6 +62,7 @@ public class MessageController {
     @PostMapping("/zdx.message/batchDelete")
     @ApiOperation("批量删除留言数据")
     @Log(type = LogEventEnum.SAVE, desc = "批量删除留言数据")
+    @PreAuthorize("hasAuthority('zdx:message:examine')")
     public Result<String> batchDelete(@RequestBody @ApiParam("留言id") @NotEmpty List<String> ids) {
         return messageService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
@@ -68,6 +70,7 @@ public class MessageController {
     @PostMapping("/zdx.message/through")
     @ApiOperation("批量审核通过留言")
     @Log(type = LogEventEnum.OTHER, desc = "批量审核通过留言")
+    @PreAuthorize("hasAuthority('zdx:message:examine')")
     public Result<String> through(@RequestBody @ApiParam("留言id") @NotEmpty List<String> ids) {
         return messageService.through(ids) ? Result.success() : Result.error();
     }

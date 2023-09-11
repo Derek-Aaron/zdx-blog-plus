@@ -16,6 +16,7 @@ import com.zdx.service.tk.RedisService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -84,6 +85,7 @@ public class OnlineController {
     @GetMapping("/out/{id}")
     @Log(type = LogEventEnum.DELETE, desc = "退出用户登录")
     @ApiOperation("退出用户登录状态")
+    @PreAuthorize("hasAuthority('zdx:online:exit')")
     public Result<String> out(@PathVariable @NotBlank String id) {
         return Boolean.TRUE.equals(redisService.deleteObject(Constants.LOGIN_TOKEN_KEY + id)) ? Result.success() : Result.error();
     }

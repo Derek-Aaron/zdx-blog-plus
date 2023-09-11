@@ -9,8 +9,9 @@ import { onMounted, reactive, ref, nextTick } from "vue";
 import { useDict } from "@/utils/dict";
 import { tree, updateMenuStatic } from "@/api/tk/menu"
 import { ElMessage, ElMessageBox } from "element-plus";
-import { save, batchDel } from "@/api/base"
+import {save, batchDel, exportData} from "@/api/base"
 import { subject } from "@/api/us/acl"
+import {download} from "@/utils/download";
 
 
 const { zdx_dict_menu_type } = useDict('zdx_dict_menu_type')
@@ -211,6 +212,12 @@ const handleAuth = (id) => {
 		})
 	}
 }
+
+const exportMenu = () => {
+	exportData(module.value, 'JSON').then((res) => {
+		download(res, undefined)
+	})
+}
 onMounted(() => {
     listMenu()
 })
@@ -250,6 +257,9 @@ onMounted(() => {
             <el-col :span="1.5">
                 <el-button type="info" plain icon="Sort" @click="toggleExpandAll">展开/折叠</el-button>
             </el-col>
+			<el-col :span="1.5">
+				<el-button plain icon="Download" @click="exportMenu">导出</el-button>
+			</el-col>
             <zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="listMenu"></zdx-right-toolbar>
         </el-row>
 

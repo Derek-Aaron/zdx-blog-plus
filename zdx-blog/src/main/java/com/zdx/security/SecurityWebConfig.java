@@ -2,9 +2,13 @@ package com.zdx.security;
 
 
 import com.zdx.config.properties.CommonProperties;
+import com.zdx.security.service.ZdxSecurityExpressionRoot;
+import org.aopalliance.intercept.MethodInvocation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
+import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -12,6 +16,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -22,7 +27,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 public class SecurityWebConfig {
     /**
      * 跨域过滤器
@@ -92,5 +97,21 @@ public class SecurityWebConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+
+    @Bean
+    public DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
+        return new DefaultMethodSecurityExpressionHandler(){
+            @Override
+            protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
+                ZdxSecurityExpressionRoot root = new ZdxSecurityExpressionRoot(authentication);
+                root.setThis(invocation.getThis());
+                root.setTrustResolver(getTrustResolver());
+                root.setPermissionEvaluator(getPermissionEvaluator());
+                root.setRoleHierarchy(getRoleHierarchy());
+                return root;
+            }
+        };
     }
 }

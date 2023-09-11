@@ -14,6 +14,7 @@ import com.zdx.strategy.context.StrategyContext;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +62,7 @@ public class BlogController {
     @PostMapping("/zdx.site/save")
     @ApiOperation("保存博客配置信息")
     @Log(type = LogEventEnum.SAVE, desc = "保存博客配置信息")
+    @PreAuthorize("hasAuthority('zdx:site:save')")
     public Result<String> save(@RequestBody @Validated SiteConfig siteConfig) {
         return blogService.saveSiteConfig(siteConfig) ? Result.success() : Result.error();
     }

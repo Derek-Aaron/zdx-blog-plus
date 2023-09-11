@@ -19,6 +19,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -65,6 +66,7 @@ public class FileController extends BaseController<File> {
     @PostMapping("/upload")
     @Log(type = LogEventEnum.UPLOAD, desc = "上传文件")
     @ApiOperation("上传文件")
+    @PreAuthorize("hasAuthority('zdx:file:upload')")
     public Result<Object> upload(@ApiParam("文件") MultipartFile[] file, @ApiParam("文件类型") String type) throws IOException {
         List<Map<String, String>> list = new ArrayList<>();
         for (MultipartFile multipartFile : file) {
@@ -126,6 +128,7 @@ public class FileController extends BaseController<File> {
     @PostMapping("/batchDelete")
     @ApiOperation("批量删除文件")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除文件")
+    @PreAuthorize("hasAuthority('zdx:upload:delete')")
     public Result<String> batchDelete(@RequestBody List<String> ids) {
         return fileService.batchFileDelete(ids) ? Result.success() : Result.error();
     }
@@ -134,6 +137,7 @@ public class FileController extends BaseController<File> {
     @GetMapping("/{id}/download")
     @Log(type = LogEventEnum.DOWNLOAD, desc = "下载文件")
     @ApiOperation("文件下载")
+    @PreAuthorize("hasAuthority('zdx:file:download')")
     public void download(@PathVariable @NotBlank String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
        fileService.download(id, request, response);
     }

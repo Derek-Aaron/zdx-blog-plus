@@ -12,6 +12,7 @@ import com.zdx.service.us.RoleService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -49,6 +50,7 @@ public class RoleController extends BaseController<Role> {
 
     @PostMapping("/addOrDelResources")
     @ApiOperation("新增或移除角色")
+    @PreAuthorize("hasAuthority('zdx:user:auth')")
     public Result<String> addOrDelResources(@RequestBody @Validated AclDto aclDto) {
         return roleService.addOrDelResources(aclDto) ? Result.success() : Result.error();
     }

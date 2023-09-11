@@ -1,7 +1,6 @@
 package com.zdx.entity.us;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zdx.entity.BaseEntity;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -25,7 +24,6 @@ public class Account extends BaseEntity {
     private String username;
 
     @ApiModelProperty("密码")
-    @JsonIgnore
     private String password;
 
     @ApiModelProperty("是否禁用")

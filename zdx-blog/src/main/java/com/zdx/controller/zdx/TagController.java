@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -60,6 +61,7 @@ public class TagController {
     @PostMapping("/zdx.tag/save")
     @ApiOperation("保存标签数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存标签数据")
+    @PreAuthorize("hasAnyAuthority('zdx:tag:add', 'zdx:tag:save')")
     public Result<String> save(@RequestBody @Validated Tag tag) {
         return tagService.saveOrUpdate(tag) ? Result.success() : Result.error();
     }
@@ -67,6 +69,7 @@ public class TagController {
     @PostMapping("/zdx.tag/batchDelete")
     @ApiOperation("批量删除标签")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除标签")
+    @PreAuthorize("hasAuthority('zdx:tag:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("标签id") @NotEmpty List<String> ids) {
         return tagService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

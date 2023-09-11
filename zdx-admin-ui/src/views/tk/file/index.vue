@@ -132,7 +132,7 @@ onMounted(() => {
 		<el-form :model="queryParams.params" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
 			<el-form-item label="角色名" prop="name">
 				<el-input v-model="queryParams.params.name" placeholder="请输入角色名" clearable style="width: 240px"
-						  @keyup.enter="pageRole" @clear="pageRole"/>
+						  @keyup.enter="pageFile" @clear="pageFile"/>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="Search" @click="pageFile">搜索</el-button>

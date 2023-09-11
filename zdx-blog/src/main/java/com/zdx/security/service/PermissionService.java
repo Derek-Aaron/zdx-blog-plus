@@ -59,9 +59,9 @@ public class PermissionService {
             aclList = new ArrayList<>();
         }
         if (roleIds.contains(Constants.ACL_ROLE_PREFIX + Role.ADMIN_ROLE_ID)) {
-            aclList.add("*::||::*");
+            aclList.add(Constants.ADMIN_AUTH);
         }
-        aclList.addAll(roles.stream().map(role -> "ROLE_" + role.getId()).toList());
+        aclList.addAll(roles.stream().map(role -> "ROLE_" + role.getName()).toList());
         return aclList;
     }
 

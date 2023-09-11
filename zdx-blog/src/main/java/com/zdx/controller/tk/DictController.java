@@ -11,6 +11,7 @@ import com.zdx.service.tk.DictService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -50,6 +51,7 @@ public class DictController extends BaseController<Dict> {
     @Override
     @PostMapping("/save")
     @ApiOperation("保存字典")
+    @PreAuthorize("hasAnyAuthority('zdx:dict:add','zdx:dict:save','zdx:dict:disable')")
     public Result<String> save(@RequestBody @Validated Dict data) {
         return dictService.saveDict(data) ? Result.success() : Result.error();
     }

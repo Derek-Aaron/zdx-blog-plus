@@ -11,6 +11,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,6 +37,7 @@ public class AclController {
     @PostMapping("/save")
     @ApiOperation("保存权限")
     @Log(type = LogEventEnum.SAVE, desc = "保存权限")
+    @PreAuthorize("hasAnyAuthority('zdx:user:auth', 'zdx:menu:auth')")
     public Result<String> save(@RequestBody @Validated AclDto aclDto) {
         return aclService.saveAcl(aclDto) ? Result.success() : Result.error();
     }

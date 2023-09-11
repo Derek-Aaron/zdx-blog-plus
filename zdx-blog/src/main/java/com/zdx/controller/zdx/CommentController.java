@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,6 +78,7 @@ public class CommentController {
     @PostMapping("/zdx.comment/through")
     @ApiOperation("批量审核通过评论")
     @Log(type = LogEventEnum.OTHER, desc = "批量审核通过评论")
+    @PreAuthorize("hasAuthority('zdx:comment:examine')")
     public Result<String> through(@RequestBody @NotEmpty @ApiParam("评论id") List<String> ids) {
         return commentService.through(ids) ?  Result.success() : Result.error() ;
     }
@@ -84,6 +86,7 @@ public class CommentController {
     @PostMapping("/zdx.comment/batchDelete")
     @ApiOperation("批量删除评论")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除评论")
+    @PreAuthorize("hasAuthority('zdx:comment:delete')")
     public Result<String> batchDelete(@RequestBody @NotEmpty @ApiParam("评论id") List<String> ids) {
         return commentService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

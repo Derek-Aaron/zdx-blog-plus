@@ -31,6 +31,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -125,6 +126,7 @@ public class UserController extends BaseController<User> {
     @ApiOperation("重置密码")
     @Log(type = LogEventEnum.PASSWORD, desc = "重置密码")
     @Encrypt
+    @PreAuthorize("hasAuthority('zdx:user:reset')")
     public Result<String> resetPwd(@RequestBody @Encrypt ResetPwd resetPwd) {
         if (StrUtil.isNotBlank(resetPwd.getOldPassword())) {
             LambdaQueryWrapper<User> queryWrapper = new LambdaQueryWrapper<>();
@@ -147,6 +149,7 @@ public class UserController extends BaseController<User> {
     @PostMapping("/updateUserStatus")
     @ApiOperation("更改用户状态")
     @Log(type = LogEventEnum.SAVE, desc = "更改用户状态")
+    @PreAuthorize("hasAuthority('zdx:user:status')")
     public Result<String> updateUserStatus(@RequestBody @Validated UserStatus userStatus) {
         return userService.updateUserStatus(userStatus) ? Result.success() : Result.error();
     }
@@ -155,6 +158,7 @@ public class UserController extends BaseController<User> {
     @PostMapping("/save")
     @ApiOperation("保存用户数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存用户数据")
+    @PreAuthorize("hasAnyAuthority('zdx:user:save', 'zdx:user:add')")
     public Result<String> save(@RequestBody @Validated User data) {
         if (ObjUtil.isNull(data.getId())) {
             data.setPassword(passwordEncoder.encode(RandomUtil.randomString(8)));

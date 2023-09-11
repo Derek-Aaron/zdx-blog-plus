@@ -16,6 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,12 +78,14 @@ public class ArticleController {
     @PostMapping("/zdx.article/save")
     @ApiOperation("保存文章")
     @Log(type = LogEventEnum.SAVE, desc = "保存文章")
+    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:add:article')")
     public Result<String> save(@RequestBody @Validated ArticleSaveVo articleSave) {
         return articleService.adminSave(articleSave) ? Result.success() : Result.error();
     }
 
     @PostMapping("/zdx.article/sync")
     @ApiOperation("批量同步es服务器")
+    @PreAuthorize("hasAuthority('zdx:article:es')")
     public Result<String> sync(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
         return articleService.syncArticle(ids) ? Result.success() : Result.error();
     }
@@ -97,6 +100,7 @@ public class ArticleController {
     @PostMapping("/zdx.article/batchTrash")
     @ApiOperation("批量回收文章")
     @Log(type = LogEventEnum.DELETE, desc = "批量回收文章")
+    @PreAuthorize("hasAuthority('zdx:article:trash')")
     public Result<String> batchTrash(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
         return articleService.batchTrash(ids) ? Result.success() : Result.error();
     }
@@ -104,6 +108,7 @@ public class ArticleController {
     @PostMapping("/zdx.article/batchDelete")
     @ApiOperation("彻底删除文章")
     @Log(type = LogEventEnum.DELETE, desc = "彻底删除文章")
+    @PreAuthorize("hasAuthority('zdx:article:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
         return articleService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

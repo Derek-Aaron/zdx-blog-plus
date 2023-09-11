@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -67,6 +68,7 @@ public class TalkController {
     @PostMapping("/zdx.talk/save")
     @ApiOperation("保存说说")
     @Log(type = LogEventEnum.SAVE, desc = "保存说说")
+    @PreAuthorize("hasAnyAuthority('zdx:talk:push','zdx:talk:save')")
     public Result<String> save(@RequestBody @Validated Talk talk) {
         talk.setUserId(UserSessionFactory.getUserId());
         return talkService.saveOrUpdate(talk) ? Result.success() : Result.error();
@@ -75,6 +77,7 @@ public class TalkController {
     @PostMapping("/zdx.talk/batchDelete")
     @ApiOperation("批量删除说说")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除说说")
+    @PreAuthorize("hasAuthority('zdx:talk:delete')")
     public Result<String> batchDelete(@RequestBody @Validated @ApiParam("说说id") List<String> ids) {
         return talkService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

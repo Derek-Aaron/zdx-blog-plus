@@ -120,7 +120,7 @@ public class MinioTemplateImpl implements FileTemplate {
 
     @Override
     public void downloadFile(String bucketName, String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception {
-//设置编码
+        //设置编码
         response.setCharacterEncoding("UTF-8");
         //设置Content-Type头
         response.setContentType("application/octet-stream;charset=UTF-8");

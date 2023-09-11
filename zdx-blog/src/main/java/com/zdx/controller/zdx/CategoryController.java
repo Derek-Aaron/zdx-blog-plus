@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -57,6 +58,7 @@ public class CategoryController {
     @PostMapping("/zdx.category/save")
     @ApiOperation("保存分类数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存分类数据")
+    @PreAuthorize("hasAnyAuthority('zdx:category:add','zdx:category:save')")
     public Result<String> save(@RequestBody @Validated Category category) {
         return categoryService.saveOrUpdate(category) ? Result.success() : Result.error();
     }
@@ -64,6 +66,7 @@ public class CategoryController {
     @PostMapping("/zdx.category/batchDelete")
     @ApiOperation("批量删除分类")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除分类")
+    @PreAuthorize("hasAuthority('zdx:category:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("分类id") @NotEmpty List<String> ids) {
         return categoryService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

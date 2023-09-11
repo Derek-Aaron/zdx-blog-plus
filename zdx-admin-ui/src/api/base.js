@@ -50,6 +50,17 @@ export const save = (module, data) => {
     })
 }
 
+export const saveEncrypt = (module, data) => {
+    return request({
+        url:`/zdx.${module}/save`,
+        headers: {
+            isEncrypt: true
+        },
+        method: 'POST',
+        data: data
+    })
+}
+
 /**
  * 删除数据
  */
@@ -69,6 +80,17 @@ export const batchDel = (module, data) => {
         url:`/zdx.${module}/batchDelete`,
         method:'POST',
         data: data,
+    })
+}
+
+export const exportData = (module, type) => {
+    return request({
+        url:`/zdx.${module}/export`,
+        method:'get',
+        responseType:'blob',
+        params:{
+            type: type
+        }
     })
 }
 

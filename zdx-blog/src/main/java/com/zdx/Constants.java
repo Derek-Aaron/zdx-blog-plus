@@ -7,6 +7,8 @@ public class Constants {
 
     public final static Integer REDIS_TIME = 5;
 
+    public final static String ADMIN_AUTH = "*::||::*";
+
     public static final Integer DEFAULT_EXPIRE_DAY = 10;
 
     public static final String JWT_USER_INFO_KEY = "zdx-user";

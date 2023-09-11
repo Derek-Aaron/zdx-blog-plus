@@ -3,6 +3,7 @@ import zdxRightToolbar from "@/components/RightToolbar/index.vue";
 import zdxPagination from "@/components/Pagination/index.vue";
 import zdxDictTag from "@/components/DictTag/index.vue"
 import zdxDialog from "@/components/Dialog/index.vue"
+import zdxAccount from "./components/Account.vue"
 import { onMounted, reactive, ref } from "vue";
 import { page, batchDel, save, list } from '@/api/base'
 import { useDict } from "@/utils/dict";
@@ -30,6 +31,7 @@ const entityPwd = ref({})
 const entityId = ref('')
 const roleData = ref([])
 const roleIds = ref([])
+const accountDialog = ref(false)
 
 
 const queryParams = reactive({
@@ -258,6 +260,9 @@ onMounted(() => {
          <el-col :span="1.5">
             <el-button type="primary" plain icon="Plus" @click="handleAdd" v-hasPermission="'zdx:user:add'">新增</el-button>
          </el-col>
+		  <el-col :span="1.5">
+			  <el-button plain icon="User" :disabled="!ids.length > 0" @click="accountDialog = true">账号</el-button>
+		  </el-col>
          <el-col :span="1.5">
             <el-button type="success" plain icon="Edit" :disabled="!ids.length > 0" @click="handleUpdate">修改</el-button>
          </el-col>
@@ -266,6 +271,8 @@ onMounted(() => {
          </el-col>
          <zdx-right-toolbar v-model:showSearch="showSearch" @queryTable="pageUser" :columns="columns"></zdx-right-toolbar>
       </el-row>
+
+	   <zdx-account :dialog="accountDialog" @close="accountDialog = false" :entity="entity"></zdx-account>
 
       <el-table v-loading="loading" :data="userList" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="50" align="center" />

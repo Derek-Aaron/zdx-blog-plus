@@ -5,6 +5,7 @@ public enum LogEventEnum {
     SAVE,
     UPLOAD,
     DOWNLOAD,
+    IMPORT,
     DELETE,
     PASSWORD,
     OTHER

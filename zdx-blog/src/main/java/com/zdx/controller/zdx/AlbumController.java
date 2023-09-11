@@ -14,6 +14,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -58,6 +59,7 @@ public class AlbumController {
     @PostMapping("/zdx.album/save")
     @ApiOperation("保存相册")
     @Log(type = LogEventEnum.SAVE, desc = "保存相册")
+    @PreAuthorize("hasAnyAuthority('zdx:album:add', 'zdx:album:save')")
     public Result<String> save(@RequestBody @Validated Album album) {
         return albumService.saveOrUpdate(album) ? Result.success() : Result.error();
     }
@@ -65,6 +67,7 @@ public class AlbumController {
     @PostMapping("/zdx.album/batchDelete")
     @ApiOperation("批量删除相册")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除相册")
+    @PreAuthorize("hasAuthority('zdx:album:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("标签id") @NotEmpty List<String> ids) {
         return albumService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

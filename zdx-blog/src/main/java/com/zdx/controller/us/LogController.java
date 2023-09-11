@@ -11,6 +11,7 @@ import com.zdx.service.us.LogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,6 +41,7 @@ public class LogController extends BaseController<Log> {
 
     @GetMapping("/clear")
     @ApiOperation("清除日志")
+    @PreAuthorize("hasAnyAuthority('zdx:log-login:clear', 'zdx:log-operate:clear')")
     public Result<String> clear(String event) {
         return logService.clear(event) ? Result.success() : Result.error();
     }

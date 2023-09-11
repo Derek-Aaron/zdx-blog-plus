@@ -15,6 +15,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,7 @@ public class AuthController {
     @PostMapping("/zdx.auth/save")
     @ApiOperation("保存登录项")
     @Log(type = LogEventEnum.SAVE, desc = "保存登录项")
+    @PreAuthorize("hasAnyAuthority('zdx:auth:add', 'zdx:auth:save', 'zdx:auth:disable')")
     public Result<String> save(@RequestBody @Validated Auth auth) {
         return authService.saveOrUpdate(auth) ? Result.success() : Result.error();
     }
@@ -55,6 +57,7 @@ public class AuthController {
     @PostMapping("/zdx.auth/batchDelete")
     @ApiOperation("批量删除登录项")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除登录项")
+    @PreAuthorize("hasAuthority('zdx:auth:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("ids") @NotEmpty List<String> ids) {
         return authService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
