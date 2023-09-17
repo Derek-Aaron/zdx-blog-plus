@@ -59,7 +59,7 @@ onMounted(() => {
 .app-wrapper {
 	position: relative;
 	min-height: 100vh;
-
+	z-index: 0;
 }
 
 .main-wrapper {
