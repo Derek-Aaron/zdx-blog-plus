@@ -2,7 +2,7 @@
   <div v-if="blog.blogInfo.siteConfig && blog.blogInfo.siteConfig.isChat">
     <div class="chat-container" v-show="show">
       <div class="chat-header">
-        <img width="32" height="32" src="https://static.ttkwsd.top/config/room.png" />
+        <img width="32" height="32" src="@/assets/images/room.png" />
         <div style="margin-left:12px">
           <div>聊天室</div>
           <div style="font-size:12px">当前{{ onlineCount }}人在线</div>
@@ -38,7 +38,7 @@
     </div>
     <div class="chat-btn" @click="handleOpen">
       <span class="unread" v-if="unreadCount > 0">{{ unreadCount }}</span>
-      <img src="https://static.ttkwsd.top/config/chat.png" alt="">
+      <img style="width: 64px" src="@/assets/images/chat.png" alt="">
     </div>
   </div>
 </template>
@@ -372,7 +372,7 @@ onUpdated(() => {
   position: fixed;
   bottom: 15px;
   right: 5px;
-  width: 60px;
+  //width: 60px;
   height: 60px;
   border-radius: 100px;
   cursor: pointer;
