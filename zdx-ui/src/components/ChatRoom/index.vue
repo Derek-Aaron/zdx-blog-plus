@@ -38,7 +38,7 @@
     </div>
     <div class="chat-btn" @click="handleOpen">
       <span class="unread" v-if="unreadCount > 0">{{ unreadCount }}</span>
-      <img style="width: 64px" src="@/assets/images/chat.png" alt="">
+      <img src="@/assets/images/chat.png" alt="">
     </div>
   </div>
 </template>
@@ -372,7 +372,6 @@ onUpdated(() => {
   position: fixed;
   bottom: 15px;
   right: 5px;
-  //width: 60px;
   height: 60px;
   border-radius: 100px;
   cursor: pointer;
