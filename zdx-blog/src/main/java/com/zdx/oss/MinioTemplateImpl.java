@@ -137,4 +137,12 @@ public class MinioTemplateImpl implements FileTemplate {
         IoUtil.copy(is, stream);
         is.close();
     }
+
+    @Override
+    public InputStream getInputStream(String bucketName, String fileName) throws Exception {
+        return minioClient.getObject(GetObjectArgs.builder()
+                .bucket(bucketName.toLowerCase(Locale.ROOT))
+                .object(fileName)
+                .build());
+    }
 }

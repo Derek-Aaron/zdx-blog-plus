@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
@@ -57,6 +58,15 @@ public interface FileTemplate {
      * @param request
      */
     void downloadFile(String bucketName, String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception;
+
+
+    /**
+     * 获取文件流
+     * @param bucketName 文件夹
+     * @param fileName 文件名
+     * @return 返回
+     */
+    InputStream getInputStream(String bucketName, String fileName) throws Exception;
 
     default String getEncodedFilename(HttpServletRequest request, String fileName) {
         String encodedFilename = null;

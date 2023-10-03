@@ -10,10 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayInputStream;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 
 public class FileTemplateImpl implements FileTemplate{
@@ -62,5 +59,11 @@ public class FileTemplateImpl implements FileTemplate{
         ServletOutputStream stream = response.getOutputStream();
         IoUtil.copy(fis, stream);
         fis.close();
+    }
+
+    @Override
+    public InputStream getInputStream(String bucketName, String fileName) throws Exception {
+        String path = environment.getProperty("HOME") + "/zdx/file/" + bucketName  + "/" + fileName;
+        return new FileInputStream(path);
     }
 }
