@@ -24,6 +24,7 @@ import "@kangc/v-md-editor/lib/theme/style/vuepress.css";
 import vuepressTheme from "@kangc/v-md-editor/lib/theme/vuepress.js";
 import createCopyCodePlugin from '@kangc/v-md-editor/lib/plugins/copy-code/index';
 import '@kangc/v-md-editor/lib/plugins/copy-code/copy-code.css';
+import '@/utils/fireworks'
 
 import "swiper/css";
 import "swiper/css/autoplay";
