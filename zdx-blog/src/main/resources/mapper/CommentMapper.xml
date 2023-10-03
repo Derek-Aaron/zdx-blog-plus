@@ -30,7 +30,7 @@
             c.id,u.nickname,u.avatar,c.content,c.create_time
         from zdx_comment c
                  inner join us_user u on u.id = c.from_uid
-        where c.is_check = 1 and c.parent_id is not null
+        where c.is_check = 1 and c.parent_id is null
         order by c.create_time desc limit 5
     </select>
     <select id="selectReplyByParentIdList" resultType="com.zdx.model.vo.front.ReplyVo">
