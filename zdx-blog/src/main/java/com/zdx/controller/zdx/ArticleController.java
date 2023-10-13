@@ -1,6 +1,7 @@
 package com.zdx.controller.zdx;
 
 
+import cn.hutool.core.codec.Base64Decoder;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.annotation.Log;
 import com.zdx.enums.LikeTypeEnum;
@@ -19,10 +20,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @Api(tags = "博客管理")
@@ -118,5 +122,13 @@ public class ArticleController {
     @Log(type = LogEventEnum.OTHER, desc = "批量恢复文章")
     public Result<String> batchRecover(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
         return articleService.batchRecover(ids) ? Result.success() : Result.error();
+    }
+
+    @PostMapping("/zdx.article/upload")
+    @ApiOperation("文章导入")
+    @Log(type = LogEventEnum.IMPORT, desc = "文章导入")
+    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:add:article')")
+    public Result<Map<String, String>> articleImport(MultipartFile[] files, String content) throws IOException {
+        return Result.success(Map.of("content", articleService.articleUpload(files, Base64Decoder.decodeStr(content))));
     }
 }

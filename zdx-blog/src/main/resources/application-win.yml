@@ -4,7 +4,7 @@ spring:
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
     password: 123456789
-    url: jdbc:mysql://localhost:3306/zdx-blog-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
+    url: jdbc:mysql://192.168.0.104:3306/zdx-blog-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
     druid:
       stat-view-servlet:
         enabled: true
@@ -42,6 +42,7 @@ spring:
     multipart:
       max-file-size: 30MB
       max-request-size: 20MB
+
   mvc:
     path match:
       matching-strategy: ant_path_matcher
@@ -49,7 +50,7 @@ spring:
     lettuce:
       pool:
         enabled: true
-    host: localhost
+    host: 192.168.0.104
 mybatis-plus:
   global-config:
     banner: false

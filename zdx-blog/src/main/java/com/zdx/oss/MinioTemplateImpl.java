@@ -34,17 +34,7 @@ public class MinioTemplateImpl implements FileTemplate {
                     .bucket(bucketName.toLowerCase(Locale.ROOT))
                     .contentType(file.getContentType())
                     .stream(new ByteArrayInputStream(bytes), bytes.length, -1).build());
-            String url = minioClient.getPresignedObjectUrl(
-                    GetPresignedObjectUrlArgs.builder()
-                            .method(Method.GET)
-                            .bucket(bucketName.toLowerCase(Locale.ROOT))
-                            .object(file.getOriginalFilename())
-                            .build()
-            );
-            if (isPublic(bucketName) && url.contains("?")) {
-                url = url.substring(0, url.indexOf("?"));
-            }
-            return url;
+            return getFileUrl(bucketName, file.getOriginalFilename());
         } catch (Exception e) {
             log.error("上传文件出现异常：{}", e.getMessage(), e);
             return null;

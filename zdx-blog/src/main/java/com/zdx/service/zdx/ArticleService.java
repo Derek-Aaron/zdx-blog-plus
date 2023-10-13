@@ -7,7 +7,9 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.ArticleAdminVo;
 import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -92,4 +94,12 @@ public interface ArticleService extends IService<Article> {
      * @return 返回
      */
     boolean syncArticle(List<String> ids);
+
+    /**
+     * 文章导入
+     * @param file 导入图片
+     * @param context 内容
+     * @return 返回文章内容
+     */
+    String articleUpload(MultipartFile[] files, String content) throws IOException;
 }

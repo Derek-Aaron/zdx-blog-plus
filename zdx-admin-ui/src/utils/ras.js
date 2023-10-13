@@ -1,4 +1,5 @@
 import JSEncrypt from 'jsencrypt/bin/jsencrypt'
+import CryptoJS from 'crypto-js'
 const publicKey = `MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvrECm3a3O3FM83STPxTD
 zWPx3E++Jls3h0BM314s1SZvEx1E90wqerBzN320UCljafd7rOOsaX6DsbjdOPpT
 pvhLAbjt2e7i56XXAlDgHd81hbyd1apX1I23tyPPImtaAiCzQLsLf8qp0d4MYbG0
@@ -11,4 +12,10 @@ export function encrypt(pass) {
     const encrypted = new JSEncrypt()
     encrypted.setPublicKey(publicKey)
     return encrypted.encrypt(pass)
+}
+
+
+export function base64(str) {
+    return CryptoJS.enc.Base64.stringify(CryptoJS.enc.Utf8.parse(str));
+
 }

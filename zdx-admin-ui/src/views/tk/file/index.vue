@@ -130,9 +130,14 @@ onMounted(() => {
 	<div class="app-container">
 		<!--用户数据-->
 		<el-form :model="queryParams.params" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-			<el-form-item label="角色名" prop="name">
-				<el-input v-model="queryParams.params.name" placeholder="请输入角色名" clearable style="width: 240px"
+			<el-form-item label="文件名" prop="name">
+				<el-input v-model="queryParams.params.name" placeholder="请输入文件名" clearable style="width: 240px"
 						  @keyup.enter="pageFile" @clear="pageFile"/>
+			</el-form-item>
+			<el-form-item label="文件类型" prop="name">
+				<el-select v-model="queryParams.params.bucketName" class="m-2" placeholder="请选择" clearable>
+					<el-option v-for="item in zdx_file_type" :key="item.value" :label="item.value" :value="item.key" />
+				</el-select>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="Search" @click="pageFile">搜索</el-button>

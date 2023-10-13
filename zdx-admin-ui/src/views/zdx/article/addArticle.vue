@@ -8,15 +8,19 @@ import 'md-editor-v3/lib/style.css';
 import {uploadFile} from "@/api/tk/file";
 import {getToken} from "@/utils/auth";
 import {getById, list, save} from "@/api/base";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 import {useDict} from "@/utils/dict";
 import {useRoute} from "vue-router";
 import {useStore} from "@/stores";
+import {Base64} from "jsencrypt/lib/lib/asn1js/base64";
+import {base64} from "@/utils/ras";
+import {articleUpload} from "@/api/zdx/article";
 
 const { zdx_article_type, zdx_article_status } = useDict('zdx_article_type', 'zdx_article_status')
 
 const module = ref('article')
 const editorRef = ref()
+const fileUpload = ref()
 const formRef = ref()
 const dialog = ref(false)
 const title = ref('')
@@ -24,6 +28,7 @@ const entity = ref({})
 const categoryList = ref([])
 const categoryName = ref()
 const tagList = ref([])
+const fileList = ref([])
 const tagName = ref()
 const entryType = ref()
 
@@ -89,13 +94,39 @@ const searchCategory = (keyword, cb) => {
 		: categoryList.value
 	cb(results);
 }
-const handleImportSuccess = (file) => {
-	let reader = new FileReader();
-	reader.readAsText(file.raw)
-	reader.onload =  () => {
-		entity.value.content = reader.result
-		entryType.value = ''
+const handleImportChange = (option) => {
+	let file = option.file;
+	if (file.name.indexOf('.md') !== -1) {
+		let reader = new FileReader();
+		reader.readAsText(file, "UTF-8")
+		reader.onload =  () => {
+			entity.value.content = reader.result
+		}
+	} else {
+		fileList.value.push(file)
 	}
+}
+
+const articleDoUpload = () => {
+	if (fileList.value.length === 0) {
+		ElMessage.error("请先上传文件")
+		return
+	}
+	const paramsData = new FormData()
+	fileList.value.forEach((file) => {
+		paramsData.append(`files`, file)
+	})
+	paramsData.append("content", base64(entity.value.content))
+	const downloadLoadingInstance = ElLoading.service({ text: "正在处理上传文件，请稍候！~~~~", background: "rgba(0, 0, 0, 0.7)", })
+	articleUpload(paramsData).then((res) => {
+		if (res.code === 200) {
+			entity.value.content = res.data.content
+			entryType.value = ''
+		}
+		downloadLoadingInstance.close()
+	}).catch((error) => {
+		downloadLoadingInstance.close()
+	})
 }
 
 const createCategoryFilter = (queryString) => {
@@ -367,8 +398,10 @@ onMounted(() => {
 			</zdx-dialog>
 			<zdx-dialog title="文章导入" :dialog="entryType === 'import'" :is-open-close="false" @close="entryType === ''">
 				<template #content>
-					<el-upload drag :show-file-list="false" :auto-upload="false"
-							   accept=".md" :on-change="handleImportSuccess">
+					<el-alert title="文件先上传md文档，后上传文档涉及到的图片~~~~" type="success" :closable="false"/>
+					<br>
+					<el-upload ref="fileUpload" :file-list="fileList" drag multiple action="/api/zdx.article/upload"
+							   :http-request="handleImportChange">
 						<el-icon class="el-icon--upload">
 							<upload-filled/>
 						</el-icon>
@@ -376,6 +409,9 @@ onMounted(() => {
 							将文件拖到此处，或<em>点击上传</em>
 						</div>
 					</el-upload>
+				</template>
+				<template #footer>
+					<el-button @click="articleDoUpload">上传</el-button>
 				</template>
 			</zdx-dialog>
 		</el-form>

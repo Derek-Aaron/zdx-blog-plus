@@ -17,7 +17,9 @@ import com.zdx.entity.zdx.Article;
 import com.zdx.entity.zdx.ArticleContent;
 import com.zdx.entity.zdx.Category;
 import com.zdx.entity.zdx.Tag;
+import com.zdx.enums.FileTypeEnum;
 import com.zdx.event.EventObject;
+import com.zdx.exception.BaseException;
 import com.zdx.mapper.zdx.ArticleContentMapper;
 import com.zdx.mapper.zdx.ArticleMapper;
 import com.zdx.mapper.zdx.CategoryMapper;
@@ -29,6 +31,7 @@ import com.zdx.model.vo.ArticleSaveVo;
 import com.zdx.model.vo.front.*;
 import com.zdx.search.SearchTemplate;
 import com.zdx.security.UserSessionFactory;
+import com.zdx.service.tk.FileService;
 import com.zdx.service.zdx.ArticleService;
 import lombok.RequiredArgsConstructor;
 import org.elasticsearch.action.bulk.BulkRequest;
@@ -47,10 +50,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.io.IOException;
+import java.util.*;
 
 /**
  * @author zhaodengxuan
@@ -69,6 +72,8 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
     private final ArticleContentMapper articleContentMapper;
 
     private final ApplicationContext applicationContext;
+
+    private final FileService fileService;
 
     @Autowired(required = false)
     private SearchTemplate searchTemplate;
@@ -379,6 +384,29 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
             return searchTemplate.bulkDoc(esIndex, request);
         }
         return false;
+    }
+
+    @Override
+    public String articleUpload(MultipartFile[] files, String content) throws IOException {
+        if (ObjUtil.isNull(files)) {
+            throw new BaseException("zdx.operate.error");
+        }
+        for (MultipartFile file : files) {
+            Map<String, String> map = fileService.saveFile(file, FileTypeEnum.ARTICLE.name());
+            String[] split = content.split("!\\[");
+            if (ObjUtil.isNotNull(split)) {
+                for (String str : split) {
+                    if (str.contains(Objects.requireNonNull(file.getOriginalFilename()))) {
+                        String substring = str.substring(0, str.lastIndexOf(file.getOriginalFilename()));
+                        String oldStr = "![" + substring + file.getOriginalFilename() + ")";
+                        String newStr = "![](" + map.get("fileUrl") + ")";
+                        content = content.replace(oldStr, newStr);
+                        break;
+                    }
+                }
+            }
+        }
+        return content;
     }
 }
 
