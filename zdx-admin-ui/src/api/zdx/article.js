@@ -25,3 +25,14 @@ export const batchRecover = (ids) => {
 		data: ids
 	})
 }
+
+export const articleUpload = (formData) => {
+	return request({
+		url:'/zdx.article/upload',
+		method:"post",
+		headers:{
+			'Content-Type': 'multipart/form-data'
+		},
+		data: formData
+	})
+}
