@@ -53,7 +53,7 @@
 			  </button>
 				<n-popover trigger="click" :show="qrCodeShow" :on-update-show="clickoutside">
 					<template #trigger>
-						<button class="btn reward-btn">
+						<button class="btn reward-btn mobile-code">
 							<svg-icon icon-class="move" size="0.9rem"></svg-icon>
 							move
 						</button>
