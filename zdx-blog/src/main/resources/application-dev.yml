@@ -68,7 +68,6 @@ zdx:
   common:
     xss-excludes: false
     sensitive-excludes: false
-    article-download-path: /Users/zhaodengxuan/Documents/code3/zdx-blog-plus/zdx-blog/md/
   oss:
     oss-type: minio
     url: https://static.zhaodengxuan.top

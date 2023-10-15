@@ -1,31 +1,34 @@
-
+import { useEventListener } from "@vueuse/core";
 import NProgress from 'nprogress'
 import 'nprogress/nprogress.css'
 import router from './router'
-import {getToken} from "@/utils/auth";
 import {ElMessage} from "element-plus";
 import {useStore} from "@/stores";
 
 NProgress.configure({ showSpinner: false });
 
-function loadingData(obj, next) {
-    // useTagsViewStore().addTags(obj)
-    // if (useUser().userSession.userId === "") {
-    //     useUser().getUserInfo().then(() => {
-    //         useRouter().getRouter().then((res) => {
-    //             next()
-    //         })
-    //     }).catch((error) => {
-    //         console.log(error)
-    //         // user().getLogout().then(() => {
-    //         //     ElMessage.error(error)
-    //         //     next({path:'/'})
-    //         // })
-    //     })
-    // } else {
-    //     next()
-    // }
+
+function titleChange() {
+	// 动态标题
+	let OriginTitile = document.title;
+	let titleTime
+	useEventListener(document, "visibilitychange", () => {
+		if (document.hidden) {
+			//离开当前页面时标签显示内容
+			document.title = "w(ﾟДﾟ)w 不要走！再看看嘛！";
+			clearTimeout(titleTime);
+		} else {
+			//返回当前页面时标签显示内容
+			document.title = "♪(^∇^*)欢迎回来！";
+			location.replace(location.href)
+			//两秒后变回正常标题
+			titleTime = setTimeout(() => {
+				document.title = OriginTitile;
+			}, 2000);
+		}
+	});
 }
+titleChange();
 
 router.beforeEach((to, from, next) => {
     useStore().useSetting.setTitle(to.meta.title)
