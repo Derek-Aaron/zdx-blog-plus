@@ -47,10 +47,24 @@
               <Share class="share-info" :url="articleHref" :title="article.title"></Share>
             </div>
             <div class="reward">
-              <button class="btn" :class="isLike(article.id)" @click="like">
-                <svg-icon icon-class="like" size="0.9rem"></svg-icon> 点赞
-                <span>{{ article.likeCount }}</span>
-              </button>
+			  <button class="btn" :class="isLike(article.id)" @click="like">
+				<svg-icon icon-class="like" size="0.9rem"></svg-icon> 点赞
+				<span>{{ article.likeCount }}</span>
+			  </button>
+				<n-popover trigger="click" :show="qrCodeShow" :on-update-show="clickoutside">
+					<template #trigger>
+						<button class="btn reward-btn">
+							<svg-icon icon-class="move" size="0.9rem"></svg-icon>
+							move
+						</button>
+					</template>
+					<div class="reward-all">
+					 <span style="margin-left: 0.3rem;">
+                    	<img v-lazy="qrCodeUrl" alt="">
+                    	<div class="reward-desc">微信扫描</div>
+                  	 </span>
+					</div>
+				</n-popover>
               <n-popover trigger="click" v-if="blog.blogInfo.siteConfig.isReward">
                 <template #trigger>
                   <button class="btn reward-btn">
@@ -125,6 +139,7 @@
 import CommentList from "@/components/Comment/CommentList.vue";
 import Waves from "@/components/Waves/index.vue"
 import Catalog from "@/components/Catalog/index.vue"
+import QRCode from 'qrcode'
 import useStore from "@/stores";
 import { formatDate } from "@/utils/date";
 import { Share } from 'vue3-social-share';
@@ -134,6 +149,8 @@ import { computed, onMounted, reactive, ref, toRefs } from "vue";
 import { getHomeById, likeArticle } from "@/api/article";
 const { app, blog, user } = useStore();
 const articleRef = ref();
+const qrCodeShow = ref(false);
+const qrCodeUrl = ref('');
 const route = useRoute();
 const articleHref = window.location.href;
 const data = reactive({
@@ -190,6 +207,18 @@ const like = () => {
     }
   });
 };
+
+const clickoutside = (e) => {
+	qrCodeShow.value = !qrCodeShow.value;
+	if (qrCodeShow.value) {
+		QRCode.toDataURL(location.href, {
+			width: 130,
+			height: 130
+		}).then((url) => {
+			qrCodeUrl.value = url.toString()
+		})
+	}
+}
 onMounted(() => {
   getHomeById(route.params.id).then((res) => {
     article.value = res.data
@@ -359,6 +388,9 @@ onMounted(() => {
   .post-nav {
     flex-direction: column;
   }
+	.mobile-code{
+		display: none;
+	}
 
   .post-nav .item {
     width: 100%;
