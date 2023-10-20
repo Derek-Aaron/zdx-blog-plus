@@ -1,5 +1,7 @@
 package com.zdx;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.http.HttpUtil;
 import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
@@ -15,12 +17,19 @@ import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
 import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.RsaUtil;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.client.RestTemplate;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.List;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -116,6 +125,25 @@ class ZdxBlogApplicationTests {
     public void testMusic() {
         List<MusicVo> musicVos = strategyContext.executeMusic(MusicTypeEnum.QQ, "");
         System.out.println(musicVos);
+    }
+
+    @Test
+    public void test11() throws IOException {
+        RestTemplate restTemplate = new RestTemplate();
+        String str = restTemplate.getForObject("https://www.emojiall.com/zh-hans/image-emoji-platform/skype", String.class);
+        assert str != null;
+        Document document = Jsoup.parse(str);
+        Elements elements = document.getElementsByTag("img");
+        for (Element element : elements) {
+            if (element.hasAttr("data-src")) {
+                String src = element.attr("data-src");
+                String title = element.attr("title");
+                byte[] bytes = HttpUtil.downloadBytes("https://www.emojiall.com" + src);
+                FileOutputStream fos = new FileOutputStream("/Users/zhaodengxuan/Downloads/" + title + ".png");
+                fos.write(bytes);
+                IoUtil.writeUtf8(fos, true);
+            }
+        }
     }
 
 }
