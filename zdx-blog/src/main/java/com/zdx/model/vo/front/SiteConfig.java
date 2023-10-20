@@ -3,6 +3,8 @@ package com.zdx.model.vo.front;
 
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 public class SiteConfig {
 
@@ -145,5 +147,10 @@ public class SiteConfig {
      * websocket链接
      */
     private String websocketUrl;
+
+    /**
+     * 背景图片
+     */
+    private List<String> backgrounds;
 
 }
