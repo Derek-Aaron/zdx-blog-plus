@@ -240,6 +240,35 @@
 					</el-form-item>
 				</el-form>
 			</el-tab-pane>
+			<el-tab-pane label="background">
+				<template #label>
+                    <span class="custom-tabs-label">
+                        <el-icon>
+                            <PictureFilled />
+                        </el-icon>
+                        <span>背景图片</span>
+                    </span>
+				</template>
+				<el-form label-width="80px" :model="siteEntity" label-position="left">
+					<el-col :md="6">
+						<el-form-item label="首页背景">
+							<el-upload class="avatar-uploader" multiple :headers="authorization" action="/api/zdx.file/upload"
+									   :show-file-list="false" accept="image/*"
+									   :on-success="handleBackgroundsSuccess">
+								<div v-if="siteEntity.backgrounds">
+									<img v-for="url in siteEntity.backgrounds" :src="url" class="article-cover" />
+								</div>
+								<el-icon v-else class="avatar-uploader-icon">
+									<Plus />
+								</el-icon>
+							</el-upload>
+						</el-form-item>
+					</el-col>
+					<el-form-item>
+						<el-button type="primary" @click="handleUpdate">保 存</el-button>
+					</el-form-item>
+				</el-form>
+			</el-tab-pane>
 		</el-tabs>
 	</div>
 </template>
@@ -269,6 +298,15 @@ const handleTouristAvatarSuccess = (res) => {
 }
 const handleAuthorAvatarSuccess = (res) => {
 	siteEntity.value.authorAvatar = res.data.fileUrl
+}
+
+const handleBackgroundsSuccess = (res) => {
+	if (siteEntity.value.backgrounds) {
+		siteEntity.value.backgrounds.push(res.data.fileUrl)
+	} else {
+		siteEntity.value.backgrounds = []
+		siteEntity.value.backgrounds.push(res.data.fileUrl)
+	}
 }
 const handleWeiXinSuccess = (res) => {
 	siteEntity.value.weiXinCode = res.data.fileUrl

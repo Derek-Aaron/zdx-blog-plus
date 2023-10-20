@@ -36,7 +36,8 @@ export const useBlogStore = defineStore('useBlogStore', () => {
 			isMusic: true,
 			musicId: '',
 			isChat: '',
-			websocketUrl: ''
+			websocketUrl: '',
+			backgrounds:[],
 		}
 	})
 

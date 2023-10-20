@@ -1,7 +1,7 @@
 <template>
   <div class="imgs">
     <ul>
-      <li class="item" v-for="(image, index) in imageList" :key="index" :style="{
+      <li class="item" v-for="(image, index) in backgrounds" :key="index" :style="{
         'background-image': 'url(' + image + ')'
       }">
       </li>
@@ -10,15 +10,9 @@
 </template>
 
 <script setup>
-
-const imageList = [
-  "https://static.zhaodengxuan.top/image/exwgmr.jpg",
-  "https://static.zhaodengxuan.top/image/x6p9ez.jpg",
-  "https://static.zhaodengxuan.top/image/rrjvyq.jpg",
-  "https://static.zhaodengxuan.top/image/kxl39q.jpg",
-  "https://static.zhaodengxuan.top/image/jxv6jm.jpg",
-  "https://static.zhaodengxuan.top/image/exw528.jpg"
-]
+import useStore from "@/stores";
+const {blog} = useStore();
+const backgrounds = blog.blogInfo.siteConfig.backgrounds
 </script>
 
 <style lang="scss" scoped>
