@@ -84,12 +84,20 @@ public class LoginController {
     @PostMapping("/home/register")
     @Encrypt
     @ApiOperation("注册用户")
-    public Result<String> register(@RequestBody @Validated @Encrypt RegisterDto register) {
-        if (!emailService.checkCode(register.getUsername(), register.getCode())) {
+    public Result<Map<String, String>> register(@RequestBody @Validated @Encrypt RegisterDto register, HttpServletRequest request) {
+        if (!emailService.checkCode(register.getEmail(), register.getCode())) {
             return Result.error(MessageUtil.getLocaleMessage("zdx.email.check.error"));
         }
+        String password = register.getPassword();
         register.setPassword(passwordEncoder.encode(register.getPassword()));
-        return userService.register(register) ? Result.success() : Result.error();
+        if (userService.register(register)) {
+            UserLogin userLogin = new UserLogin();
+            userLogin.setUsername(register.getUsername());
+            userLogin.setPassword(password);
+            String token = loginService.login(request, userLogin);
+            return Result.success(Map.of("token", token));
+        }
+        return Result.error();
     }
 
 
