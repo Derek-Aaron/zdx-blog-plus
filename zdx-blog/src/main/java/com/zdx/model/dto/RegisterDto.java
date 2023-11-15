@@ -17,7 +17,4 @@ public class RegisterDto {
 
     @ApiModelProperty("验证码")
     private String code;
-
-    @ApiModelProperty("邮箱")
-    private String email;
 }

@@ -132,7 +132,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User>
         user = new User();
         user.setUsername(register.getUsername());
         user.setNickname(register.getUsername());
-        user.setEmail(register.getEmail());
+        user.setEmail(register.getUsername());
         user.setPassword(register.getPassword());
         if (saveOrUpdate(user)) {
             roleMapper.addResources(String.valueOf(user.getId()), List.of(Role.BLOG_USE_ID));
