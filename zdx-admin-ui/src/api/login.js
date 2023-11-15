@@ -26,6 +26,25 @@ export const loginType = (source) => {
     })
 }
 
+export const sendEmailCode = (email) => {
+    return request({
+        url:`/home/email/code/${email}`,
+        method:'get'
+    })
+}
+
+export const register = (data) => {
+    return request({
+        url:'/home/register',
+        method:'post',
+        headers:{
+            isToken: false,
+            isEncrypt: true
+        },
+        data: data
+    })
+}
+
 export function callback(params) {
     return request({
         url:'/oauth/callback/admin',

@@ -8,32 +8,32 @@ import {useStore} from "@/stores";
 NProgress.configure({ showSpinner: false });
 
 
-function titleChange() {
-	// 动态标题
-	let OriginTitile = document.title;
-	let titleTime
-	useEventListener(document, "visibilitychange", () => {
-		if (document.hidden) {
-			//离开当前页面时标签显示内容
-			document.title = "w(ﾟДﾟ)w 不要走！再看看嘛！";
-			clearTimeout(titleTime);
-		} else {
-			//返回当前页面时标签显示内容
-			document.title = "♪(^∇^*)欢迎回来！";
-			location.replace(location.href)
-			//两秒后变回正常标题
-			titleTime = setTimeout(() => {
-				document.title = OriginTitile;
-			}, 2000);
-		}
-	});
-}
-titleChange();
+// function titleChange() {
+// 	// 动态标题
+// 	let OriginTitile = document.title;
+// 	let titleTime
+// 	useEventListener(document, "visibilitychange", () => {
+// 		if (document.hidden) {
+// 			//离开当前页面时标签显示内容
+// 			document.title = "w(ﾟДﾟ)w 不要走！再看看嘛！";
+// 			clearTimeout(titleTime);
+// 		} else {
+// 			//返回当前页面时标签显示内容
+// 			document.title = "♪(^∇^*)欢迎回来！";
+// 			location.replace(location.href)
+// 			//两秒后变回正常标题
+// 			titleTime = setTimeout(() => {
+// 				document.title = OriginTitile;
+// 			}, 2000);
+// 		}
+// 	});
+// }
+// titleChange();
 
 router.beforeEach((to, from, next) => {
     useStore().useSetting.setTitle(to.meta.title)
     NProgress.start()
-    if (to.path === "/" || to.path === '/callback'){
+    if (to.path === "/" || to.path === '/callback' || to.path === '/register'){
         next()
     } else {
         if (useStore().usePermission.routers.length === 0) {

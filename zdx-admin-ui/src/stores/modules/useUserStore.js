@@ -2,7 +2,7 @@ import {defineStore} from 'pinia'
 import {ref} from "vue";
 import {getToken, removeToken, setToken} from "@/utils/auth";
 import defAva from '@/assets/images/profile.jpg'
-import {info, login, logout} from "@/api/login";
+import {info, login, logout, register} from "@/api/login";
 
 
 export const useUserStore = defineStore('useUserStore', () => {
@@ -58,8 +58,19 @@ export const useUserStore = defineStore('useUserStore', () => {
            }
            return resolve(permissions.value.indexOf(val) !== -1);
        })
-
     }
 
-    return {token, username, nickname, avatar,roles, permissions ,doLogin, doInfo, doLogout, checkPermission}
+    const doRegister = (data) => {
+        return new Promise((resolve,reject) => {
+            register(data).then(res => {
+                token.value = res.data.token
+                setToken(token.value)
+                resolve(res)
+            }).catch(err => {
+                reject(err)
+            })
+        })
+    }
+
+    return {token, username, nickname, avatar,roles, permissions ,doLogin, doInfo, doLogout, checkPermission, doRegister}
 })

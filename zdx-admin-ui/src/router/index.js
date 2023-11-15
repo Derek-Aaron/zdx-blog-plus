@@ -12,6 +12,14 @@ const router = createRouter({
       component: Login
     },
     {
+      path: '/register',
+      name: 'register',
+      meta:{
+        title:'注册页面'
+      },
+      component: () => import('@/views/Register.vue')
+    },
+    {
       path: '/callback',
       name: 'callback',
       meta:{

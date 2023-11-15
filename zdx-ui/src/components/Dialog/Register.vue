@@ -1,14 +1,15 @@
 <template>
   <n-modal class="bg" v-model:show="dialogVisible" preset="dialog" :show-icon="false" transform-origin="center"
     :block-scroll="false">
-    <n-input class="mt-11" placeholder="邮箱号" v-model:value="registerForm.username"></n-input>
-    <n-input-group class="mt-11">
+    <n-input class="mt-11" placeholder="用户名" v-model:value="registerForm.username"></n-input>
+	  <n-input class="mt-11" placeholder="邮箱" v-model:value="registerForm.email"></n-input>
+	  <n-input-group class="mt-11">
       <n-input placeholder="验证码" v-model:value="registerForm.code"></n-input>
       <n-button color="#49b1f5" :disabled="flag" @click="sendCode">
         {{ timer === 0 ? '发送' : `${timer}s` }}
       </n-button>
     </n-input-group>
-    <n-input class="mt-11" type="password" show-password-on="click" placeholder="密码"
+	  <n-input class="mt-11" type="password" show-password-on="click" placeholder="密码"
       v-model:value="registerForm.password"></n-input>
     <n-button ref="registerRef" class="mt-11" color="#e9546b" style="width:100%" :loading="loading"
       @click="handleRegister">
@@ -28,14 +29,15 @@ import {getEmailCode, login, register} from "@/api/login";
 const { app, user } = useStore();
 const registerRef = ref();
 const data = reactive({
-  timer: 0,
-  flag: false,
-  loading: false,
-  registerForm: {
-    username: "",
-    password: "",
-    code: "",
-  },
+	timer: 0,
+	flag: false,
+	loading: false,
+	registerForm: {
+		username: "",
+		password: "",
+		email: "",
+		code: "",
+	},
 });
 const { timer, flag, loading, registerForm } = toRefs(data);
 const { pause, resume } = useIntervalFn(() => {
@@ -73,23 +75,18 @@ const handleRegister = () => {
     return;
   }
   loading.value = true;
-  register(registerForm.value).then(() => {
-      let loginForm = {
-        username: registerForm.value.username,
-        password: registerForm.value.password,
-      }
-      login(loginForm).then((res) => {
-          registerForm.value = {
-			  username: "",
-			  password: "",
-			  code: "",
-		  }
-          setToken(res.data.token);
-          user.doUserInfo();
-          window.$message?.success("登录成功");
-          app.setRegisterFlag(false);
-      })
-    loading.value = false;
+  register(registerForm.value).then((res) => {
+  registerForm.value = {
+	  username: "",
+	  password: "",
+	  code: "",
+	  email:"",
+  }
+  setToken(res.data.token);
+  user.doUserInfo();
+  window.$message?.success("登录成功");
+  app.setRegisterFlag(false);
+  loading.value = false;
   })
 }
 const dialogVisible = computed({
