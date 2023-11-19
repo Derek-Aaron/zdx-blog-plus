@@ -54,7 +54,7 @@ public class ScheduleLogController extends BaseController<ScheduleLog> {
     @GetMapping("/clear/{scheduleId}")
     @Log(type = LogEventEnum.DELETE, desc = "清空任务日志")
     @ApiOperation("清空任务日志")
-    @PreAuthorize("hasAuthority('zdx:schedule:log:clear\n')")
+    @PreAuthorize("hasAuthority('zdx:schedule:log:clear')")
     public Result<String> clear(@PathVariable @NotBlank String scheduleId) {
         return scheduleLogService.clear(scheduleId) ? Result.success() : Result.error();
     }

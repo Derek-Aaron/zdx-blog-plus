@@ -33,18 +33,18 @@ public abstract class AbstractQuartzJob implements Job {
 		Object o = context.getMergedJobDataMap().get(Constants.TASK_PROPERTIES);
 		if (o instanceof Schedule schedule) {
 			try {
-				before(context, schedule);
+				before(schedule);
 				if (ObjectUtil.isNotNull(schedule)) {
 					doExecute(context, schedule);
 				}
-				executor.execute(() -> after(context, schedule, null));
+				executor.execute(() -> after(schedule, null));
 			} catch (Exception e) {
 				log.error("任务执行异常  - ：", e);
-				executor.execute(() -> after(context, schedule, e));
+				executor.execute(() -> after(schedule, e));
 			}
 		}
 	}
-	protected void after(JobExecutionContext context,Schedule schedule, Exception e) {
+	protected void after(Schedule schedule, Exception e) {
 		Date startTime = REMOVE.remove(schedule.getId());
 		ScheduleLog jobLog = new ScheduleLog();
 		jobLog.setJobId(schedule.getId());
@@ -61,13 +61,13 @@ public abstract class AbstractQuartzJob implements Job {
 
 	/**
 	 * 执行任务
-	 * @param context
-	 * @param schedule
-	 * @throws Exception
+	 * @param context 上下文
+	 * @param schedule 实体类
+	 * @throws Exception 异常
 	 */
 	protected abstract void doExecute(JobExecutionContext context, Schedule schedule) throws Exception;
 
-	protected void before(JobExecutionContext context, Schedule schedule) {
+	protected void before(Schedule schedule) {
 		REMOVE.put(schedule.getId(), new Date());
 	}
 }

@@ -97,17 +97,16 @@ public class EsSearchTemplateImpl implements SearchTemplate{
     }
 
     @Override
-    public String insertDoc(Object object, String index, String id) {
+    public void insertDoc(Object object, String index, String id) {
         IndexRequest request = new IndexRequest();
         request.index(index).id(id);
         request.source(JSON.toJSONString(object), XContentType.JSON);
         try {
             IndexResponse response = client.index(request, RequestOptions.DEFAULT);
             log.info("新增文档成功：{}", response.status().getStatus());
-            return response.getId();
+            response.getId();
         } catch (IOException e) {
             log.error("查询文档异常：{}", e.getMessage());
-            return null;
         }
     }
 

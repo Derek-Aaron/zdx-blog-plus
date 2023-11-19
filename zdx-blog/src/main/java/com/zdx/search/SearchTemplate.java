@@ -11,48 +11,48 @@ public interface SearchTemplate {
 
     /**
      * 创建索引
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 返回
      */
     Boolean createIndex(String index);
 
     /**
      * 删除索引
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 返回
      */
     Boolean deleteIndex(String index);
 
     /**
      * 判断索引是否存在
-     * @param index
-     * @return
+     * @param index 索引
+     * @return 返回
      */
     Boolean isIndexExist(String index);
 
 
     /**
      * 添加文档
-     * @param object
-     * @param index
-     * @param id
-     * @return
+     *
+     * @param object 值
+     * @param index  索引
+     * @param id     id
      */
-    String insertDoc(Object object, String index, String id);
+    void insertDoc(Object object, String index, String id);
 
 
     /**
      * 通过id删除文档
-     * @param index
-     * @param id
+     * @param index 索引
+     * @param id id
      */
     void deleteDoc(String index, String id);
 
     /**
      * 通过id更新文档
-     * @param data
-     * @param index
-     * @param id
+     * @param data 内容
+     * @param index 索引
+     * @param id id
      */
     void updateDoc(Object data, String index, String id);
 
@@ -66,16 +66,16 @@ public interface SearchTemplate {
 
     /**
      * 通过id判断文档是否存在
-     * @param index
-     * @param id
-     * @return
+     * @param index 索引
+     * @param id id
+     * @return 返回
      */
     Boolean existsDocById(String index, String id);
 
     /**
      * 批量插入
-     * @param index
-     * @param objects
+     * @param index 索引
+     * @param request 请求
      */
     Boolean bulkDoc(String index, BulkRequest request);
 
@@ -113,6 +113,7 @@ public interface SearchTemplate {
      * @param <T> 实体
      */
 
+    @SuppressWarnings("all")
     <T> IPage<T> searchDoc(String index,
                     SearchSourceBuilder query,
                     Integer limit,

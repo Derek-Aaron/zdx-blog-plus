@@ -87,7 +87,7 @@ public class ZdxSecurityExpressionRoot  implements MethodSecurityExpressionOpera
     }
 
     public final boolean hasAnyAuthority(String... authorities) {
-        return this.hasAnyAuthorityName((String)null, authorities);
+        return this.hasAnyAuthorityName(null, authorities);
     }
 
     public final boolean hasRole(String role) {

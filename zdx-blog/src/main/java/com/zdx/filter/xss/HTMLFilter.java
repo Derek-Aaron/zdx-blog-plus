@@ -1,5 +1,8 @@
 package com.zdx.filter.xss;
 
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -92,6 +95,7 @@ public class HTMLFilter {
 	 * flag determining whether to try to make tags when presented with "unbalanced" angle brackets (e.g. "<b text </b>"
 	 * becomes "<b> text </b>"). If set to false, unbalanced angle brackets will be html escaped.
 	 */
+	@Getter
 	private final boolean alwaysMakeTags;
 
 	/**
@@ -135,7 +139,7 @@ public class HTMLFilter {
 	 *
 	 * @param conf map containing configuration. keys match field names.
 	 */
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("all")
 	public HTMLFilter(final Map<String, Object> conf) {
 
 		assert conf.containsKey("vAllowed") : "configuration requires vAllowed";
@@ -205,10 +209,6 @@ public class HTMLFilter {
 		// s = validateEntities(s);
 
 		return s;
-	}
-
-	public boolean isAlwaysMakeTags() {
-		return alwaysMakeTags;
 	}
 
 	public boolean isStripComments() {
@@ -344,11 +344,7 @@ public class HTMLFilter {
 					paramName = paramNames.get(ii).toLowerCase();
 					paramValue = paramValues.get(ii);
 
-					// debug( "paramName='" + paramName + "'" );
-					// debug( "paramValue='" + paramValue + "'" );
-					// debug( "allowed? " + vAllowed.get( name ).contains( paramName ) );
-
-					if (allowedAttribute(name, paramName)) {
+                    if (allowedAttribute(name, paramName)) {
 						if (inArray(paramName, vProtocolAtts)) {
 							paramValue = processParamProtocol(paramValue);
 						}
@@ -364,7 +360,7 @@ public class HTMLFilter {
 					ending = "";
 				}
 
-				if (ending == null || ending.length() < 1) {
+				if (ending == null || ending.isEmpty()) {
 					if (vTagCounts.containsKey(name)) {
 						vTagCounts.put(name, vTagCounts.get(name) + 1);
 					} else {
@@ -419,30 +415,31 @@ public class HTMLFilter {
 
 		buf = new StringBuilder();
 		m = P_ENTITY_UNICODE.matcher(s);
-		while (m.find()) {
-			final String match = m.group(1);
-			final int decimal = Integer.valueOf(match, 16);
-			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
-		}
-		m.appendTail(buf);
-		s = buf.toString();
+		s = getString(buf, m);
 
 		buf = new StringBuilder();
 		m = P_ENCODE.matcher(s);
-		while (m.find()) {
-			final String match = m.group(1);
-			final int decimal = Integer.valueOf(match, 16);
-			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
-		}
-		m.appendTail(buf);
-		s = buf.toString();
+		s = getString(buf, m);
 
 		s = validateEntities(s);
 		return s;
 	}
 
+	@NotNull
+	private String getString(StringBuilder buf, Matcher m) {
+		String s;
+		while (m.find()) {
+			final String match = m.group(1);
+			final int decimal = Integer.valueOf(match, 16);
+			m.appendReplacement(buf, Matcher.quoteReplacement(chr(decimal)));
+		}
+		m.appendTail(buf);
+		s = buf.toString();
+		return s;
+	}
+
 	private String validateEntities(final String s) {
-		StringBuffer buf = new StringBuffer();
+		StringBuilder buf = new StringBuilder();
 
 		// validate entities throughout the string
 		Matcher m = P_VALID_ENTITIES.matcher(s);
@@ -458,7 +455,7 @@ public class HTMLFilter {
 
 	private String encodeQuotes(final String s) {
 		if (encodeQuotes) {
-			StringBuffer buf = new StringBuffer();
+			StringBuilder buf = new StringBuilder();
 			Matcher m = P_VALID_QUOTES.matcher(s);
 			while (m.find())
 			{

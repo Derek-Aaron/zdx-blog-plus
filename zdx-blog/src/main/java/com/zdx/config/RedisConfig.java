@@ -38,7 +38,7 @@ public class RedisConfig {
 	}
 
 	@Bean
-	public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer fastJson2JsonRedisSerialize){
+	public RedisTemplate<String,Object> redisTemplate(RedisConnectionFactory redisConnectionFactory, RedisSerializer<?> fastJson2JsonRedisSerialize){
 		RedisTemplate<String,Object> redisTemplate = new RedisTemplate<>();
 		redisTemplate.setConnectionFactory(redisConnectionFactory);
 		//设置Key的序列化采用StringRedisSerializer
@@ -53,7 +53,7 @@ public class RedisConfig {
 
 	@Bean
 	public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory,
-									 RedisSerializer Jackson2JsonRedisSerialize
+									 RedisSerializer<?> Jackson2JsonRedisSerialize
 	) {
 		// 生成一个默认配置，通过config对象即可对缓存进行自定义配置
 		RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();

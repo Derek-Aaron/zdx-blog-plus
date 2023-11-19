@@ -3,6 +3,8 @@ package com.zdx.utils;
 import cn.hutool.core.exceptions.UtilException;
 import cn.hutool.core.lang.TypeReference;
 import cn.hutool.core.util.ArrayUtil;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.ListableBeanFactory;
 import org.springframework.beans.factory.config.BeanFactoryPostProcessor;
@@ -24,22 +26,19 @@ import java.util.Map;
  */
 @Component
 public class SpringUtil  implements BeanFactoryPostProcessor, ApplicationContextAware {
+	@Getter
 	private static ApplicationContext applicationContext;
 
 	private static ConfigurableListableBeanFactory beanFactory;
 
 	@Override
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
+	public void postProcessBeanFactory(@NotNull ConfigurableListableBeanFactory configurableListableBeanFactory) throws BeansException {
 		SpringUtil.beanFactory = configurableListableBeanFactory;
 	}
 
 	@Override
-	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+	public void setApplicationContext(@NotNull ApplicationContext applicationContext) throws BeansException {
 		SpringUtil.applicationContext = applicationContext;
-	}
-
-	public static ApplicationContext getApplicationContext() {
-		return applicationContext;
 	}
 
 	public static ListableBeanFactory getBeanFactory() {
@@ -120,8 +119,7 @@ public class SpringUtil  implements BeanFactoryPostProcessor, ApplicationContext
 
 	public static void unregisterBean(String beanName) {
 		ConfigurableListableBeanFactory factory = getConfigurableBeanFactory();
-		if (factory instanceof DefaultSingletonBeanRegistry) {
-			DefaultSingletonBeanRegistry registry = (DefaultSingletonBeanRegistry)factory;
+		if (factory instanceof DefaultSingletonBeanRegistry registry) {
 			registry.destroySingleton(beanName);
 		} else {
 			throw new UtilException("Can not unregister bean, the factory is not a DefaultSingletonBeanRegistry!");

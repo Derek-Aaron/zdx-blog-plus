@@ -1,6 +1,7 @@
 package com.zdx.config.properties;
 
 import com.anji.captcha.model.common.CaptchaTypeEnum;
+import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
@@ -11,6 +12,7 @@ import java.awt.*;
  */
 @Component
 @ConfigurationProperties(prefix = CaptchaProperties.PREFIX)
+@Data
 public class CaptchaProperties {
 	public static final String PREFIX = "zdx.common.captcha";
 
@@ -115,90 +117,6 @@ public class CaptchaProperties {
 	 */
 	private int clickWordCount = 4;
 
-	public int getFontStyle() {
-		return fontStyle;
-	}
-
-	public void setFontStyle(int fontStyle) {
-		this.fontStyle = fontStyle;
-	}
-
-	public int getFontSize() {
-		return fontSize;
-	}
-
-	public void setFontSize(int fontSize) {
-		this.fontSize = fontSize;
-	}
-
-	public int getClickWordCount() {
-		return clickWordCount;
-	}
-
-	public void setClickWordCount(int clickWordCount) {
-		this.clickWordCount = clickWordCount;
-	}
-
-	public boolean isHistoryDataClearEnable() {
-		return historyDataClearEnable;
-	}
-
-	public void setHistoryDataClearEnable(boolean historyDataClearEnable) {
-		this.historyDataClearEnable = historyDataClearEnable;
-	}
-
-	public boolean isReqFrequencyLimitEnable() {
-		return reqFrequencyLimitEnable;
-	}
-
-	public boolean getReqFrequencyLimitEnable() {
-		return reqFrequencyLimitEnable;
-	}
-
-	public void setReqFrequencyLimitEnable(boolean reqFrequencyLimitEnable) {
-		this.reqFrequencyLimitEnable = reqFrequencyLimitEnable;
-	}
-
-	public int getReqGetLockLimit() {
-		return reqGetLockLimit;
-	}
-
-	public void setReqGetLockLimit(int reqGetLockLimit) {
-		this.reqGetLockLimit = reqGetLockLimit;
-	}
-
-	public int getReqGetLockSeconds() {
-		return reqGetLockSeconds;
-	}
-
-	public void setReqGetLockSeconds(int reqGetLockSeconds) {
-		this.reqGetLockSeconds = reqGetLockSeconds;
-	}
-
-	public int getReqGetMinuteLimit() {
-		return reqGetMinuteLimit;
-	}
-
-	public void setReqGetMinuteLimit(int reqGetMinuteLimit) {
-		this.reqGetMinuteLimit = reqGetMinuteLimit;
-	}
-
-	public int getReqCheckMinuteLimit() {
-		return reqGetMinuteLimit;
-	}
-
-	public void setReqCheckMinuteLimit(int reqCheckMinuteLimit) {
-		this.reqCheckMinuteLimit = reqCheckMinuteLimit;
-	}
-
-	public int getReqVerifyMinuteLimit() {
-		return reqVerifyMinuteLimit;
-	}
-
-	public void setReqVerifyMinuteLimit(int reqVerifyMinuteLimit) {
-		this.reqVerifyMinuteLimit = reqVerifyMinuteLimit;
-	}
-
 	public enum StorageType {
 		/**
 		 * 内存.
@@ -212,129 +130,5 @@ public class CaptchaProperties {
 		 * 其他.
 		 */
 		other,
-	}
-
-	public static String getPrefix() {
-		return PREFIX;
-	}
-
-	public CaptchaTypeEnum getType() {
-		return type;
-	}
-
-	public void setType(CaptchaTypeEnum type) {
-		this.type = type;
-	}
-
-	public String getJigsaw() {
-		return jigsaw;
-	}
-
-	public void setJigsaw(String jigsaw) {
-		this.jigsaw = jigsaw;
-	}
-
-	public String getPicClick() {
-		return picClick;
-	}
-
-	public void setPicClick(String picClick) {
-		this.picClick = picClick;
-	}
-
-	public String getWaterMark() {
-		return waterMark;
-	}
-
-	public void setWaterMark(String waterMark) {
-		this.waterMark = waterMark;
-	}
-
-	public String getWaterFont() {
-		return waterFont;
-	}
-
-	public void setWaterFont(String waterFont) {
-		this.waterFont = waterFont;
-	}
-
-	public String getFontType() {
-		return fontType;
-	}
-
-	public void setFontType(String fontType) {
-		this.fontType = fontType;
-	}
-
-	public String getSlipOffset() {
-		return slipOffset;
-	}
-
-	public void setSlipOffset(String slipOffset) {
-		this.slipOffset = slipOffset;
-	}
-
-	public Boolean getAesStatus() {
-		return aesStatus;
-	}
-
-	public void setAesStatus(Boolean aesStatus) {
-		this.aesStatus = aesStatus;
-	}
-
-	public StorageType getCacheType() {
-		return cacheType;
-	}
-
-	public void setCacheType(StorageType cacheType) {
-		this.cacheType = cacheType;
-	}
-
-	public String getInterferenceOptions() {
-		return interferenceOptions;
-	}
-
-	public void setInterferenceOptions(String interferenceOptions) {
-		this.interferenceOptions = interferenceOptions;
-	}
-
-	public String getCacheNumber() {
-		return cacheNumber;
-	}
-
-	public void setCacheNumber(String cacheNumber) {
-		this.cacheNumber = cacheNumber;
-	}
-
-	public String getTimingClear() {
-		return timingClear;
-	}
-
-	public void setTimingClear(String timingClear) {
-		this.timingClear = timingClear;
-	}
-
-	@Override
-	public String toString() {
-		return "\nAjCaptchaProperties{" +
-				"type=" + type +
-				", jigsaw='" + jigsaw + '\'' +
-				", picClick='" + picClick + '\'' +
-				", waterMark='" + waterMark + '\'' +
-				", waterFont='" + waterFont + '\'' +
-				", fontType='" + fontType + '\'' +
-				", slipOffset='" + slipOffset + '\'' +
-				", aesStatus=" + aesStatus +
-				", interferenceOptions='" + interferenceOptions + '\'' +
-				", cacheNumber='" + cacheNumber + '\'' +
-				", timingClear='" + timingClear + '\'' +
-				", cacheType=" + cacheType +
-				", reqFrequencyLimitEnable=" + reqFrequencyLimitEnable +
-				", reqGetLockLimit=" + reqGetLockLimit +
-				", reqGetLockSeconds=" + reqGetLockSeconds +
-				", reqGetMinuteLimit=" + reqGetMinuteLimit +
-				", reqCheckMinuteLimit=" + reqCheckMinuteLimit +
-				", reqVerifyMinuteLimit=" + reqVerifyMinuteLimit +
-				'}';
 	}
 }

@@ -18,7 +18,7 @@ import java.nio.charset.StandardCharsets;
 public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
 
-	public XssHttpServletRequestWrapper(HttpServletRequest request) throws IOException {
+	public XssHttpServletRequestWrapper(HttpServletRequest request) {
 		super(request);
 
 	}
@@ -67,14 +67,10 @@ public class XssHttpServletRequestWrapper extends HttpServletRequestWrapper {
 			}
 
 			@Override
-			public int read() throws IOException {
+			public int read() {
 				return bis.read();
 			}
 		};
 	}
-	/**
-	 * 是否是Json请求
-	 *
-	 */
 
 }

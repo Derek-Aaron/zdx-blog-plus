@@ -32,13 +32,13 @@ public class IpAddressUtil{
 		String ipAddress;
 		try {
 			ipAddress = request.getHeader("x-forwarded-for");
-			if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
 				ipAddress = request.getHeader("Proxy-Client-IP");
 			}
-			if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
 				ipAddress = request.getHeader("WL-Proxy-Client-IP");
 			}
-			if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			if (ipAddress == null || ipAddress.isEmpty() || "unknown".equalsIgnoreCase(ipAddress)) {
 				ipAddress = request.getRemoteAddr();
 				if (localIp.equals(ipAddress)) {
 					// 根据网卡取本机配置的IP
@@ -46,7 +46,7 @@ public class IpAddressUtil{
 					try {
 						inet = InetAddress.getLocalHost();
 					} catch (UnknownHostException e) {
-						e.printStackTrace();
+						throw new RuntimeException(e);
 					}
 					assert inet != null;
 					ipAddress = inet.getHostAddress();
@@ -100,7 +100,8 @@ public class IpAddressUtil{
 	public static String getHostIp(){
 		try{
 			return InetAddress.getLocalHost().getHostAddress();
-		}catch (UnknownHostException e){
+		}catch (UnknownHostException ignored){
+
 		}
 		return localIp;
 	}
@@ -113,7 +114,7 @@ public class IpAddressUtil{
 	public static String getHostName(){
 		try{
 			return InetAddress.getLocalHost().getHostName();
-		} catch (UnknownHostException e) {
+		} catch (UnknownHostException ignored) {
 		}
 		return "未知";
 	}
@@ -154,8 +155,8 @@ public class IpAddressUtil{
 				if (in != null) {
 					in.close();
 				}
-			} catch (Exception e2) {
-				e2.printStackTrace();
+			} catch (Exception ignored) {
+
 			}
 		}
 		return result.toString();

@@ -1,6 +1,7 @@
 package com.zdx.utils;
 
 import cn.hutool.core.util.ArrayUtil;
+import lombok.Data;
 import org.springframework.context.MessageSource;
 import org.springframework.context.MessageSourceAware;
 import org.springframework.context.support.ReloadableResourceBundleMessageSource;
@@ -12,6 +13,7 @@ import java.util.Locale;
  * @author zhaodengxuan
  */
 @Component
+@Data
 public class MessageUtil implements MessageSourceAware {
 	private static MessageSource defaultMessageSource;
 
@@ -33,10 +35,6 @@ public class MessageUtil implements MessageSourceAware {
 		return ArrayUtil.clone(resources);
 	}
 
-	public static MessageSource getDefaultMessageSource() {
-		return defaultMessageSource;
-	}
-
 	public static void initDefaultMessageResources(String[] resources) {
 		MessageUtil.resources = (resources == null ? null : ArrayUtil.clone(resources));
 		ReloadableResourceBundleMessageSource ms = new ReloadableResourceBundleMessageSource();
@@ -50,10 +48,6 @@ public class MessageUtil implements MessageSourceAware {
 
 	public static void setDefaultMessageSource(MessageSource defaultMessageSource) {
 		MessageUtil.defaultMessageSource = defaultMessageSource;
-	}
-
-	public static MessageSource getCustomMessageSource() {
-		return customMessageSource;
 	}
 
 	public static void setCustomMessageSource(MessageSource customMessageSource) {

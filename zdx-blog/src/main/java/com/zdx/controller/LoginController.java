@@ -125,7 +125,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth/render/{source}/{type}")
-    public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, @PathVariable @NotBlank String type) throws IOException {
+    public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, @PathVariable @NotBlank String type) {
         Auth auth = authService.getAuthBySourceAndType(source, type);
         AuthRequest authRequest = strategyContext.executeAuth(AuthSourceEnum.valueOf(source), auth);
         if (ObjUtil.isNull(authRequest)) {
@@ -141,15 +141,15 @@ public class LoginController {
     }
 
     @GetMapping("/oauth/callback/{type}")
-    public Result<Map<String, String>> login(AuthCallback callback, HttpServletRequest request, @PathVariable @NotBlank String type) throws IOException {
+    public Result<Map<String, String>> login(AuthCallback callback, HttpServletRequest request, @PathVariable String type) throws IOException {
         AuthRequest authRequest = AuthStrategy.AUTH_REQUEST_MAP.get(callback.getState());
         if (ObjUtil.isNull(authRequest)) {
             return Result.error();
         }
-        AuthResponse authResponse = authRequest.login(callback);
+        AuthResponse<?> authResponse = authRequest.login(callback);
         if (authResponse.getCode() == 2000) {
             if (authResponse.getData() instanceof AuthUser authUser) {
-                String token = loginService.authLogin(authUser, type, request);
+                String token = loginService.authLogin(authUser, request);
                 Map<String, String> map = Maps.newHashMap();
                 map.put("token", token);
                 AuthStrategy.AUTH_REQUEST_MAP.remove(callback.getState());

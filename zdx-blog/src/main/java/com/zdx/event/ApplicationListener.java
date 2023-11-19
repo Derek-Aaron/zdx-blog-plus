@@ -1,5 +1,6 @@
 package com.zdx.event;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ public class ApplicationListener implements org.springframework.context.Applicat
 	private ApplicationContext applicationContext;
 
 	@Override
-	public void onApplicationEvent(EventObject event) {
+	public void onApplicationEvent(@NotNull EventObject event) {
 		Map<String, EventHandle> beans = applicationContext.getBeansOfType(EventHandle.class);
 		beans.forEach((key, value) -> {
 			if (event.getName().equals(value.getKey())) {

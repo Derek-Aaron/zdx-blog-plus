@@ -4,7 +4,6 @@ import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.core.util.StrUtil;
 import com.zdx.entity.tk.Schedule;
 import com.zdx.utils.SpringUtil;
-import org.quartz.JobExecutionContext;
 
 import java.util.Map;
 
@@ -13,7 +12,7 @@ import java.util.Map;
  */
 public class JobInvokeUtil {
 
-	public static void invokeMethod(JobExecutionContext context, Schedule schedule) throws Exception {
+	public static void invokeMethod(Schedule schedule) throws Exception {
 		String invokeTarget = schedule.getInvoke();
 		String backName = StrUtil.subSuf(invokeTarget, invokeTarget.lastIndexOf(":") + 1);
 		Class<?> clz = Class.forName(backName);
@@ -21,7 +20,7 @@ public class JobInvokeUtil {
 		if (!beanMap.isEmpty()) {
 			for (Map.Entry<?, ?> entry : beanMap.entrySet()) {
 				if (entry.getValue().getClass().getName().equals(backName)) {
-					ScheduleHandle taskHandle = ScheduleHandle.class.cast(entry.getValue());
+					ScheduleHandle taskHandle = (ScheduleHandle) entry.getValue();
 					if (ObjectUtil.isNotNull(taskHandle)) {
 						taskHandle.handle();
 					}

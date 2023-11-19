@@ -1,9 +1,5 @@
 package com.zdx.filter.read;
 
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.MediaType;
-import org.springframework.util.StringUtils;
-
 import javax.servlet.ReadListener;
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
@@ -31,15 +27,7 @@ public class RepeatableHttpServletRequestWrapper extends HttpServletRequestWrapp
 
     @Override
     public ServletInputStream getInputStream() throws IOException {
-        if (!isJsonRequest()) {
-            return getServletInputStream(body);
-        }
         return getServletInputStream(body);
-    }
-
-    public boolean isJsonRequest() {
-        String header = super.getHeader(HttpHeaders.CONTENT_TYPE);
-        return StringUtils.startsWithIgnoreCase(header, MediaType.APPLICATION_JSON_VALUE);
     }
 
 
@@ -57,7 +45,7 @@ public class RepeatableHttpServletRequestWrapper extends HttpServletRequestWrapp
             }
 
             @Override
-            public int available() throws IOException {
+            public int available() {
                 return body.length;
             }
 
@@ -67,7 +55,7 @@ public class RepeatableHttpServletRequestWrapper extends HttpServletRequestWrapp
             }
 
             @Override
-            public int read() throws IOException {
+            public int read() {
                 return bis.read();
             }
         };

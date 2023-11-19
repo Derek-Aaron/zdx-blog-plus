@@ -24,7 +24,7 @@ public class XssFilter implements Filter {
 	private Boolean open;
 
 	@Override
-	public void init(FilterConfig filterConfig) throws ServletException {
+	public void init(FilterConfig filterConfig) {
 		open = Boolean.parseBoolean(filterConfig.getInitParameter("excludes"));
 		String tempExcludes = filterConfig.getInitParameter("urlPatterns");
 		if (StrUtil.isNotEmpty(tempExcludes)) {

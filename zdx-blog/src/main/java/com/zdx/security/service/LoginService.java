@@ -23,7 +23,6 @@ import com.zdx.service.tk.EmailService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.tk.RedisService;
 import com.zdx.service.us.AclService;
-import com.zdx.service.us.AuthService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
 import com.zdx.utils.IpAddressUtil;
@@ -68,9 +67,6 @@ public class LoginService {
 
 
     private final AclService aclService;
-
-
-    private final AuthService authService;
 
 
     private final UserService userService;
@@ -163,7 +159,7 @@ public class LoginService {
         return menus.stream().map(menu -> BeanUtil.copyProperties(menu, Router.class)).toList();
     }
 
-    public String authLogin(AuthUser authUser, String type, HttpServletRequest request) {
+    public String authLogin(AuthUser authUser, HttpServletRequest request) {
         User user = userService.getOne(new LambdaQueryWrapper<User>().eq(User::getUsername, authUser.getUsername()));
         if (ObjUtil.isNull(user)) {
             user = new User();

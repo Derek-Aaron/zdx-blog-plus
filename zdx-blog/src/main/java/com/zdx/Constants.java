@@ -35,10 +35,10 @@ public class Constants {
     public static final String MUSIC_CACHE = "music_cache";
     public static final String ZDX_KEY_GENERATOR = "zdx-key-generator";
 
-    public static final List<String> IMAGETYPE = Arrays.asList(".jpg",".png",".gif",".bmp",".eps",".jpeg");
-    public static final List<String> DOCUMENTTYPE = Arrays.asList(".xls",".xlsx",".doc",".md",".docx",".pdf");
-    public static final List<String> AUDIOTTYPE = Arrays.asList(".mp3",".m4a",".cda",".wav",".aif",".aiff",".wma",".ape",".oggl");
-    public static final List<String> VIDEOTTYPE = Arrays.asList(".mp4",".avi",".wmv",".mpg",".mpeg",".mov", ".ram", ".rm");
+    public static final List<String> IMAGE_TYPE = Arrays.asList(".jpg",".png",".gif",".bmp",".eps",".jpeg");
+    public static final List<String> DOCUMENT_TYPE = Arrays.asList(".xls",".xlsx",".doc",".md",".docx",".pdf");
+    public static final List<String> AUDIO_TAPE = Arrays.asList(".mp3",".m4a",".cda",".wav",".aif",".aiff",".wma",".ape",".oggl");
+    public static final List<String> VIDEO_TAPE = Arrays.asList(".mp4",".avi",".wmv",".mpg",".mpeg",".mov", ".ram", ".rm");
 
     public static final Long DOWNSIZE = 1024 * 1024 * 30L;
 

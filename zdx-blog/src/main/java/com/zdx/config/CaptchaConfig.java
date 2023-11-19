@@ -92,7 +92,7 @@ public class CaptchaConfig {
 				imgMap.put(filename, string);
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 		return imgMap;
 	}

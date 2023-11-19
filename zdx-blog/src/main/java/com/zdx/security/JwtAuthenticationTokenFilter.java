@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjUtil;
 import com.zdx.security.service.PermissionService;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -23,7 +24,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
     @Autowired
     private PermissionService permissionService;
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(@NotNull HttpServletRequest request, @NotNull HttpServletResponse response, @NotNull FilterChain filterChain) throws ServletException, IOException {
         UserSession userSession = permissionService.getLoginUserInfo(request);
         if (ObjUtil.isNotNull(userSession)) {
             permissionService.refreshToken(userSession);

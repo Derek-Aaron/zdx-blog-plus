@@ -19,43 +19,43 @@ public interface FileTemplate {
 
     /**
      * 上传文件
-     * @param file
-     * @param bucketName
-     * @return
+     * @param file 文件
+     * @param bucketName 路径
+     * @return 返回
      */
     String uploadFile(MultipartFile file, String bucketName) throws IOException;
 
 
     /**
      * 文件是否存在
-     * @param bucketName
-     * @param fileName
-     * @return
+     * @param bucketName 路径
+     * @param fileName 文件名
+     * @return 返回
      */
     Boolean checkFileIsExist(String bucketName, String fileName);
 
     /**
      * 获取文件访问路径
-     * @param bucketName
-     * @param fileName
-     * @return
+     * @param bucketName 路径
+     * @param fileName 文件名
+     * @return 返回
      */
     String getFileUrl(String bucketName, String fileName);
 
     /**
      * 删除文件
-     * @param bucketName
-     * @param fileName
-     * @return
+     * @param bucketName 路径
+     * @param fileName 文件名
+     * @return 返回
      */
     Boolean removeFile(String bucketName, String fileName);
 
     /**
      * 下载文件
-     * @param bucketName
-     * @param fileName
-     * @param response
-     * @param request
+     * @param bucketName 路径
+     * @param fileName 文件名
+     * @param response 响应
+     * @param request 请求
      */
     void downloadFile(String bucketName, String fileName, HttpServletResponse response, HttpServletRequest request) throws Exception;
 
@@ -69,7 +69,7 @@ public interface FileTemplate {
     InputStream getInputStream(String bucketName, String fileName) throws Exception;
 
     default String getEncodedFilename(HttpServletRequest request, String fileName) {
-        String encodedFilename = null;
+        String encodedFilename;
         String agent = request.getHeader("User-Agent");
         if (agent.contains("MSIE")) {
             //IE浏览器
@@ -87,7 +87,7 @@ public interface FileTemplate {
     }
 
     default byte[] getCompression(MultipartFile file, String bucketName) throws IOException {
-        ByteArrayOutputStream bos = null;
+        ByteArrayOutputStream bos;
         if (FileTypeEnum.IMAGE.name().equals(bucketName) && file.getSize() >= (1024 * 1024 * 2)) {
             bos = new ByteArrayOutputStream();
             ImgUtil.scale(file.getInputStream(), bos, 0.8F);

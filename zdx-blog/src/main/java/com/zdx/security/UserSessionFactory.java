@@ -16,7 +16,7 @@ public class UserSessionFactory{
 
     /**
      * 获取当前登录用户
-     * @return
+     * @return 返回
      */
     public static Optional<UserSession> currentUser()  {
         Object principal = getAuthentication().getPrincipal();
