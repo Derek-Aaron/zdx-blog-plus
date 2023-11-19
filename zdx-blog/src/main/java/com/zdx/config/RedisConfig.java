@@ -28,9 +28,8 @@ public class RedisConfig {
 	 * 默认采用Jackson序列化方式
 	 */
 	@Bean
-	@SuppressWarnings("all")
-	public RedisSerializer Jackson2JsonRedisSerialize(){
-		Jackson2JsonRedisSerializer jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
+	public RedisSerializer<?> Jackson2JsonRedisSerialize(){
+		Jackson2JsonRedisSerializer<?> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setTimeZone(TimeZone.getDefault());
 		jsonRedisSerializer.setObjectMapper(objectMapper);
