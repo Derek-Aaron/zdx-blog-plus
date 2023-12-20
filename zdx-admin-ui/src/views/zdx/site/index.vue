@@ -255,14 +255,17 @@
 							<el-upload class="avatar-uploader" multiple :headers="authorization" action="/api/zdx.file/upload"
 									   :show-file-list="false" accept="image/*"
 									   :on-success="handleBackgroundsSuccess">
-								<div v-if="siteEntity.backgrounds">
-									<img v-for="url in siteEntity.backgrounds" :src="url" class="article-cover" />
-								</div>
-								<el-icon v-else class="avatar-uploader-icon">
+
+								<el-icon class="avatar-uploader-icon">
 									<Plus />
 								</el-icon>
 							</el-upload>
 						</el-form-item>
+						<div v-if="siteEntity.backgrounds">
+							<div v-for="url in siteEntity.backgrounds">
+								<img  :src="url" class="article-cover" /> <el-icon @click="remove(url)"><Remove /></el-icon>
+							</div>
+						</div>
 					</el-col>
 					<el-form-item>
 						<el-button type="primary" @click="handleUpdate">保 存</el-button>
@@ -344,6 +347,11 @@ const doGetSite = () => {
 			socialList.value = res.data.socialList.split(",");
 		}
 	})
+}
+const remove = (url) => {
+	if (siteEntity.value.backgrounds) {
+		siteEntity.value.backgrounds.splice(siteEntity.value.backgrounds.indexOf(url), 1)
+	}
 }
 onMounted(() => {
 	doGetSite()
