@@ -28,11 +28,6 @@ public class ResourcesConfig implements WebMvcConfigurer {
     @Autowired
     private Environment environment;
 
-    @Bean
-    public Jackson2ObjectMapperBuilderCustomizer jacksonObjectMapperCustomization() {
-        return jacksonObjectMapperBuilder -> jacksonObjectMapperBuilder.timeZone(TimeZone.getDefault());
-    }
-
     @Bean(AbstractApplicationContext.APPLICATION_EVENT_MULTICASTER_BEAN_NAME)
     public SimpleApplicationEventMulticaster applicationEventMulticaster(ThreadPoolTaskExecutor executor, BeanFactory beanFactory) {
         SimpleApplicationEventMulticaster multicaster = new SimpleApplicationEventMulticaster(beanFactory);
@@ -43,6 +38,7 @@ public class ResourcesConfig implements WebMvcConfigurer {
     @Bean
     public Jackson2ObjectMapperBuilderCustomizer customizer() {
         return builder -> {
+            builder.timeZone(TimeZone.getDefault());
             // Long转换成String避免JS超长问题
             builder.serializerByType(Long.class, ToStringSerializer.instance);
             builder.serializerByType(Long.TYPE, ToStringSerializer.instance);
