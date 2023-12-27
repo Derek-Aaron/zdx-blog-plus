@@ -2,6 +2,7 @@ package com.zdx.security.service;
 
 import com.zdx.Constants;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.security.access.PermissionEvaluator;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.access.hierarchicalroles.RoleHierarchy;
@@ -18,26 +19,18 @@ import java.util.Set;
 public class ZdxSecurityExpressionRoot  implements MethodSecurityExpressionOperations {
 
     protected final Authentication authentication;
+    @Setter
     @Getter
     private AuthenticationTrustResolver trustResolver;
+    @Setter
     @Getter
     private RoleHierarchy roleHierarchy;
     private Set<String> roles;
+    @Setter
     private String defaultRolePrefix = "ROLE_";
+    @Setter
     @Getter
     private PermissionEvaluator permissionEvaluator;
-
-    public void setTrustResolver(AuthenticationTrustResolver trustResolver) {
-        this.trustResolver = trustResolver;
-    }
-
-    public void setRoleHierarchy(RoleHierarchy roleHierarchy) {
-        this.roleHierarchy = roleHierarchy;
-    }
-
-    public void setPermissionEvaluator(PermissionEvaluator permissionEvaluator) {
-        this.permissionEvaluator = permissionEvaluator;
-    }
 
     private Object filterObject;
     private Object returnObject;
@@ -141,11 +134,6 @@ public class ZdxSecurityExpressionRoot  implements MethodSecurityExpressionOpera
         return this.authentication.getPrincipal();
     }
 
-
-
-    public void setDefaultRolePrefix(String defaultRolePrefix) {
-        this.defaultRolePrefix = defaultRolePrefix;
-    }
 
     private Set<String> getAuthoritySet() {
         if (this.roles == null) {
