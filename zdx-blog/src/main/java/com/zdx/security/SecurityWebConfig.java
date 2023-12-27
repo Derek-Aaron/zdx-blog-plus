@@ -87,6 +87,13 @@ public class SecurityWebConfig {
         http.userDetailsService(userDetailsService);
         return http.build();
     }
+
+    /**
+     * 认证
+     * @param authenticationConfiguration 认证
+     * @return 返回
+     * @throws Exception 异常
+     */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
