@@ -316,8 +316,6 @@ onMounted(() => {
 }
 
 .upload-container {
-	height: 400px;
-
 	.upload {
 		display: flex;
 		align-items: center;

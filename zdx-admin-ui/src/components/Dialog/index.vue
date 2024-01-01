@@ -1,6 +1,6 @@
 <template>
     <el-dialog :model-value="$props.dialog" :title="$props.title" :width="$props.width" :before-close="handleClose"
-        :center="$props.center" draggable :fullscreen="$props.fullscreen">
+        :center="$props.center" top="100%" draggable :fullscreen="$props.fullscreen" close-on-press-escape>
         <slot name="content"></slot>
         <template #footer>
             <span class="dialog-footer">
@@ -25,7 +25,7 @@ const props = defineProps({
     },
     width: {
         type: String,
-        default: '40%'
+        default: '50%'
     },
     center: {
         type: Boolean,
