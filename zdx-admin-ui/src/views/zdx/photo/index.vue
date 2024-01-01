@@ -51,7 +51,6 @@ const handleCheckAllChange = (val) => {
 }
 
 const handleCommand = (photo) => {
-	photoFormRef.value.resetFields();
 	update.value = true;
 	entity.value = photo;
 
@@ -61,6 +60,9 @@ const pagePhoto = () => {
 	loading.value = true
 	page(module.value, queryParams).then(res => {
 		photoList.value = res.data.records
+		photoList.value.forEach(item => {
+			photoIdList.value.push(item.id)
+		})
 		loading.value = false
 		total.value = parseInt(res.data.total)
 	})
