@@ -109,6 +109,14 @@ const routes = [
     },
   },
   {
+    name: "navigation",
+    path: "/navigation",
+    component: () => import("@/views/navigation/index.vue"),
+    meta: {
+      title: "导航",
+    },
+  },
+  {
     path: "/404",
     component: () => import("@/views/404/index.vue"),
     meta: {

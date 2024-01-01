@@ -293,6 +293,15 @@ const router = createRouter({
             permission:'zdx:site'
           },
           component: () => import('@/views/zdx/site/index.vue')
+        },
+        {
+          path: '/navigation',
+          name:'navigation',
+          meta: {
+            title:'导航管理',
+            permission:'zdx:navigation'
+          },
+          component: () => import('@/views/zdx/navigation/index.vue')
         }
       ]
     }

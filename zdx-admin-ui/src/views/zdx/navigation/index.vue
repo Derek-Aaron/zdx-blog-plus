@@ -2,9 +2,14 @@
 import zdxRightToolbar from "@/components/RightToolbar/index.vue";
 import zdxPagination from "@/components/Pagination/index.vue";
 import zdxDialog from "@/components/Dialog/index.vue"
+import zdxDictTag from "@/components/DictTag/index.vue"
 import {computed, onMounted, reactive, ref} from "vue";
 import {page, batchDel, save} from '@/api/base'
 import {ElMessage, ElMessageBox} from "element-plus";
+import {getToken} from "@/utils/auth";
+import {useDict} from "@/utils/dict";
+
+const {zdx_navigation_group} = useDict('zdx_navigation_group')
 
 const queryParams = reactive({
 	params: {
@@ -15,9 +20,9 @@ const queryParams = reactive({
 })
 
 const rules = reactive({
-	name: [{ required: true, message: "友链名不能为空", trigger: "blur" }, { min: 2, max: 20, message: "友链名长度必须介于 2 和 20 之间", trigger: "blur" }],
-	color: [{required: true, message: "颜色不能为空", trigger: "blur"}],
-	avatar: [{required: true, message: "颜色不能为空", trigger: "blur"}],
+	name: [{ required: true, message: "导航名不能为空", trigger: "blur" }, { min: 2, max: 20, message: "导航名长度必须介于 2 和 20 之间", trigger: "blur" }],
+	avatar: [{required: true, message: "头像不能为空", trigger: "blur"}],
+	group: [{required: true, message: "分组不能为空", trigger: "blur"}],
 	url: [{required: true, message: "链接不能为空", trigger: "blur"}]
 })
 
@@ -27,12 +32,12 @@ const authorization = computed(() => {
 	}
 })
 
-const module = ref('friend')
+const module = ref('navigation')
 const queryRef = ref()
 const showSearch = ref(true)
 const loading = ref(false)
 const total = ref(0)
-const friendList = ref([])
+const navigationList = ref([])
 const ids = ref([])
 const entity = ref({})
 const dialog = ref(false)
@@ -42,7 +47,7 @@ const formRef = ref()
 const pageFriend = () => {
 	loading.value = true
 	page(module.value, queryParams).then(res => {
-		friendList.value = res.data.records
+		navigationList.value = res.data.records
 		loading.value = false
 		total.value = parseInt(res.data.total)
 	})
@@ -62,7 +67,7 @@ const handleSelectionChange = (selection) => {
 
 const handleAdd = () => {
 	dialog.value = true
-	title.value = '新增友链'
+	title.value = '新增导航'
 	entity.value = {}
 }
 
@@ -73,7 +78,7 @@ const handleUpdate = (row) => {
 		}
 	}
 	dialog.value = true
-	title.value = '编辑友链 【' + entity.value.name + '】'
+	title.value = '编辑导航 【' + entity.value.name + '】'
 }
 
 const handleDelete = (id) => {
@@ -114,7 +119,7 @@ const successHandle = (formEl) => {
 }
 
 const handleSuccess = (res) => {
-  entity.value.avatar = res.data.fileUrl
+	entity.value.avatar = res.data.fileUrl
 }
 
 onMounted(() => {
@@ -127,9 +132,14 @@ onMounted(() => {
 	<div class="app-container">
 		<!--用户数据-->
 		<el-form :model="queryParams.params" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
-			<el-form-item label="友链名" prop="name">
-				<el-input v-model="queryParams.params.name" placeholder="请输入友链名" clearable style="width: 240px"
+			<el-form-item label="导航名" prop="name">
+				<el-input v-model="queryParams.params.name" placeholder="请输入导航名" clearable style="width: 240px"
 						  @keyup.enter="pageFriend" @clear="pageFriend"/>
+			</el-form-item>
+			<el-form-item label="分组" prop="name">
+				<el-select v-model="queryParams.params.group" class="m-2" placeholder="请选择" clearable>
+					<el-option v-for="item in zdx_navigation_group" :key="item.value" :label="item.value" :value="item.key" />
+				</el-select>
 			</el-form-item>
 			<el-form-item>
 				<el-button type="primary" icon="Search" @click="pageFriend">搜索</el-button>
@@ -154,16 +164,16 @@ onMounted(() => {
 			></zdx-right-toolbar>
 		</el-row>
 
-		<el-table v-loading="loading" :data="friendList" @selection-change="handleSelectionChange">
+		<el-table v-loading="loading" :data="navigationList" @selection-change="handleSelectionChange">
 			<el-table-column type="selection" width="50" align="center"/>
 			<el-table-column label="编号" align="center" key="id" prop="id" show-overflow-tooltip/>
-			<el-table-column label="友链名" align="center" key="name" prop="name"/>
-			<el-table-column label="颜色" align="center" key="color" prop="color">
+			<el-table-column label="导航名" align="center" key="name" prop="name"/>
+			<el-table-column label="分组" align="center" key="group" prop="group">
 				<template #default="scope">
-					<el-color-picker v-model="scope.row.color" disabled/>
+					<zdx-dict-tag :options="zdx_navigation_group" :value="scope.row.group"/>
 				</template>
 			</el-table-column>
-			<el-table-column label="链接" align="center" key="url" prop="url"/>
+			<el-table-column label="链接" align="center" key="url" prop="url" show-overflow-tooltip/>
 			<el-table-column label="介绍" align="center" key="introduction" prop="introduction" show-overflow-tooltip/>
 			<el-table-column label="创建时间" align="center" key="createTime" prop="createTime"/>
 			<el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
@@ -187,13 +197,15 @@ onMounted(() => {
 				<el-form :model="entity" :rules="rules" ref="formRef" label-width="80px">
 					<el-row>
 						<el-col :span="12">
-							<el-form-item label="友链名" prop="name">
-								<el-input v-model="entity.name" clearable placeholder="请输入友链名"/>
+							<el-form-item label="导航名" prop="name">
+								<el-input v-model="entity.name" clearable placeholder="请输入导航名"/>
 							</el-form-item>
 						</el-col>
 						<el-col :span="12">
-							<el-form-item label="颜色" prop="color">
-								<el-color-picker v-model="entity.color"/>
+							<el-form-item label="分组" prop="group">
+								<el-select v-model="entity.group" class="m-2" placeholder="请选择" clearable>
+									<el-option v-for="item in zdx_navigation_group" :key="item.value" :label="item.value" :value="item.key" />
+								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="24">

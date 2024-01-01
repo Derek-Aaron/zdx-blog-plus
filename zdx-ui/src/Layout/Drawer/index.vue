@@ -101,6 +101,11 @@ const menuList = [
       },
     ]
   },
+	{
+		name: "导航",
+		icon: "navigation",
+		path: "/navigation"
+	},
   {
     name: "友链",
     icon: "friend",

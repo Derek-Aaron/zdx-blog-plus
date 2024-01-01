@@ -1,0 +1,14 @@
+package com.zdx.enums;
+
+public enum NavigationGroupEnum {
+    DEVELOPMENT_TOOL,
+    FOUNDATION_FRAME,
+    HIGH_LEVEL_FRAMEWORK,
+    DEVELOP_TOOL,
+    MIDDLEWARE,
+    DATABASE,
+    PERFORMANCE_OPTIMIZATION,
+    EXCELLENT_OPEN_SOURCE,
+
+
+}
