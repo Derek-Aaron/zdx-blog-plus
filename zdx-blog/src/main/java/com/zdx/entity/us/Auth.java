@@ -27,14 +27,11 @@ public class Auth extends BaseTimeEntity {
     @ApiModelProperty("密匙")
     private String secret;
 
-    @ApiModelProperty("回调地址")
-    private String callback;
-
-    @ApiModelProperty("类型")
-    private String type;
-
     @ApiModelProperty("类型")
     private String icon;
+
+    @ApiModelProperty("回调地址")
+    private String callback;
 
     @ApiModelProperty("是否禁用")
     private Boolean isEnabled;

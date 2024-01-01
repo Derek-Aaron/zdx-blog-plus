@@ -32,10 +32,9 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth>
     }
 
     @Override
-    public Auth getAuthBySourceAndType(String source, String type) {
+    public Auth getAuthBySourceAndType(String source) {
         return getOne(new LambdaQueryWrapper<Auth>()
                 .eq(Auth::getSource, source)
-                .eq(Auth::getType, type)
         );
     }
 }

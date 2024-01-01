@@ -32,5 +32,5 @@ public interface AuthService extends IService<Auth> {
      * @param type 类型
      * @return 返回
      */
-    Auth getAuthBySourceAndType(String source, String type);
+    Auth getAuthBySourceAndType(String source);
 }

@@ -17,9 +17,11 @@ import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
@@ -32,12 +34,11 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping("/home/zdx.auth/list/{type}")
+    @GetMapping("/home/zdx.auth/list")
     @ApiOperation("前台查询登录项列表")
-    public Result<List<AuthVo>> homeList(@PathVariable @NotBlank String type) {
+    public Result<List<AuthVo>> homeList() {
         return Result.success(authService.list(new LambdaQueryWrapper<Auth>()
                 .eq(Auth::getIsEnabled, Boolean.FALSE)
-                .eq(Auth::getType, type)
         ).stream().map(auth -> BeanUtil.copyProperties(auth, AuthVo.class)).toList());
     }
     @GetMapping("/zdx.auth/page")

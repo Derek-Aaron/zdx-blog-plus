@@ -5,13 +5,13 @@ import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.lang.tree.Tree;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
-import com.google.common.collect.Maps;
 import com.zdx.annotation.Encrypt;
 import com.zdx.entity.us.Auth;
 import com.zdx.enums.AuthSourceEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RegisterDto;
 import com.zdx.model.dto.UserLogin;
+import com.zdx.model.vo.AuthRequestVo;
 import com.zdx.model.vo.Router;
 import com.zdx.model.vo.UserInfo;
 import com.zdx.model.vo.front.AuthRenderVo;
@@ -30,6 +30,7 @@ import com.zdx.utils.TreeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthCallback;
 import me.zhyd.oauth.model.AuthResponse;
 import me.zhyd.oauth.model.AuthUser;
@@ -40,6 +41,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.io.IOException;
@@ -50,6 +52,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 @Api(tags = "登录模块")
+@Slf4j
 public class LoginController {
 
     private final LoginService loginService;
@@ -124,38 +127,39 @@ public class LoginController {
         return Result.success(TreeUtil.createTree(routers, "order"));
     }
 
-    @GetMapping("/oauth/render/{source}/{type}")
-    public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, @PathVariable @NotBlank String type) {
-        Auth auth = authService.getAuthBySourceAndType(source, type);
+    @GetMapping("/oauth/render/{source}")
+    public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, HttpServletRequest request) {
+        Auth auth = authService.getAuthBySourceAndType(source);
         AuthRequest authRequest = strategyContext.executeAuth(AuthSourceEnum.valueOf(source), auth);
         if (ObjUtil.isNull(authRequest)) {
             return Result.error(MessageUtil.getLocaleMessage("zdx.auth.error"));
         }
         String uuid = AuthStateUtils.createState();
         String authorize = authRequest.authorize(uuid);
-        AuthStrategy.AUTH_REQUEST_MAP.put(uuid, authRequest);
+        AuthRequestVo authRequestVo = new AuthRequestVo();
+        authRequestVo.setState(uuid);
+        authRequestVo.setAuthRequest(authRequest);
+        authRequestVo.setAttribute("address", request.getServerName());
+        AuthStrategy.AUTH_REQUEST_MAP.put(uuid, authRequestVo);
         AuthRenderVo authRenderVo = new AuthRenderVo();
         authRenderVo.setUuid(uuid);
         authRenderVo.setUrl(authorize);
         return Result.success(authRenderVo);
     }
 
-    @GetMapping("/oauth/callback/{type}")
-    public Result<Map<String, String>> login(AuthCallback callback, HttpServletRequest request, @PathVariable String type) throws IOException {
-        AuthRequest authRequest = AuthStrategy.AUTH_REQUEST_MAP.get(callback.getState());
-        if (ObjUtil.isNull(authRequest)) {
-            return Result.error();
+    @GetMapping("/oauth/callback")
+    public void login(AuthCallback callback, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        AuthRequestVo authRequestVo = AuthStrategy.AUTH_REQUEST_MAP.get(callback.getState());
+        if (ObjUtil.isNull(authRequestVo)) {
+            return;
         }
-        AuthResponse<?> authResponse = authRequest.login(callback);
+        AuthResponse<?> authResponse = authRequestVo.getAuthRequest().login(callback);
         if (authResponse.getCode() == 2000) {
             if (authResponse.getData() instanceof AuthUser authUser) {
                 String token = loginService.authLogin(authUser, request);
-                Map<String, String> map = Maps.newHashMap();
-                map.put("token", token);
                 AuthStrategy.AUTH_REQUEST_MAP.remove(callback.getState());
-                return Result.success(map);
+                response.sendRedirect("https://" + authRequestVo.getAttributes().get("address") + "/?token=" + token);
             }
         }
-        return Result.error();
     }
 }

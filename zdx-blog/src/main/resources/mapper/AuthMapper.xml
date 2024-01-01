@@ -9,17 +9,16 @@
             <result property="source" column="source" jdbcType="VARCHAR"/>
             <result property="clientId" column="client_id" jdbcType="VARCHAR"/>
             <result property="secret" column="secret" jdbcType="VARCHAR"/>
-            <result property="callback" column="callback" jdbcType="VARCHAR"/>
-            <result property="type" column="type" jdbcType="VARCHAR"/>
             <result property="icon" column="icon" jdbcType="VARCHAR"/>
+            <result property="callback" column="callback" jdbcType="VARCHAR"/>
             <result property="isEnabled" column="is_enabled" jdbcType="BIT"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
     </resultMap>
 
     <sql id="Base_Column_List">
-        id,source,callback,type,
-        client_id,secret,
+        id,source,
+        client_id,secret,callback,
         icon,is_enabled,create_time,
         update_time
     </sql>
