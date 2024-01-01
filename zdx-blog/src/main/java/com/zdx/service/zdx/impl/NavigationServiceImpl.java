@@ -6,16 +6,15 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.zdx.entity.zdx.Navigation;
 import com.zdx.enums.NavigationGroupEnum;
-import com.zdx.model.dto.RequestParams;
-import com.zdx.service.zdx.NavigationService;
 import com.zdx.mapper.zdx.NavigationMapper;
+import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.NavigationVo;
+import com.zdx.service.zdx.NavigationService;
 import com.zdx.utils.MessageUtil;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
 * @author zhaodengxuan
@@ -36,13 +35,17 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
     }
 
     @Override
-    public Map<String, List<Navigation>> homeGroup() {
-        Map<String, List<Navigation>> map = list().stream().collect(Collectors.groupingBy(Navigation::getGroup, Collectors.toList()));
-        Map<String, List<Navigation>> resultMap = new HashMap<>();
-        for (Map.Entry<String, List<Navigation>> entry : map.entrySet()) {
-            resultMap.put(MessageUtil.getLocaleMessage(NavigationGroupEnum.valueOf(entry.getKey())), entry.getValue());
+    public List<NavigationVo> homeGroup() {
+        List<Navigation> list = list(new LambdaQueryWrapper<Navigation>().orderByAsc(Navigation::getOrder));
+        List<NavigationVo> navigationList = new ArrayList<>();
+        for (NavigationGroupEnum groupEnum : NavigationGroupEnum.values()) {
+            NavigationVo navigationVo = new NavigationVo();
+            navigationVo.setName(MessageUtil.getLocaleMessage(groupEnum));
+            List<Navigation> navigations = list.stream().filter(navigation -> navigation.getGroup().equals(groupEnum.name())).toList();
+            navigationVo.setList(navigations);
+            navigationList.add(navigationVo);
         }
-        return resultMap;
+        return navigationList;
     }
 }
 

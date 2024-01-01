@@ -1,7 +1,7 @@
 <template>
   <div class="page-header">
     <h1 class="page-title">{{ photoInfo.albumName }}</h1>
-    <img class="page-cover" src="https://static.ttkwsd.top/config/0639b8855aab4dcbb827a9884e8ec57d.jpg" alt="">
+    <img class="page-cover" :src="photoInfo.albumCover" alt="">
     <Waves></Waves>
   </div>
   <div class="bg">
@@ -24,6 +24,7 @@ import {onMounted, ref} from "vue";
 const route = useRoute();
 const photoInfo = ref({
   albumName: "",
+	albumCover: "https://static.zhaodengxuan.top/config/112202SWbdj.jpg",
   photoVOList: [],
 });
 onMounted(() => {

@@ -10,6 +10,7 @@
             <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
             <result property="url" column="url" jdbcType="VARCHAR"/>
             <result property="group" column="group_" jdbcType="VARCHAR"/>
+            <result property="order" column="order_" jdbcType="INTEGER"/>
             <result property="introduction" column="introduction" jdbcType="VARCHAR"/>
             <result property="createTime" column="create_time" jdbcType="TIMESTAMP"/>
             <result property="updateTime" column="update_time" jdbcType="TIMESTAMP"/>
@@ -17,7 +18,7 @@
 
     <sql id="Base_Column_List">
         id,name,avatar,
-        url,group_,introduction,create_time,
+        url,group_,order_,introduction,create_time,
         update_time
     </sql>
 </mapper>

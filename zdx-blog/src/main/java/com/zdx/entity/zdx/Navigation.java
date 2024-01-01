@@ -25,6 +25,9 @@ public class Navigation extends BaseTimeEntity {
     @TableField("group_")
     private String group;
 
+    @TableField("order_")
+    private Integer order;
+
     private String introduction;
 
     @Serial

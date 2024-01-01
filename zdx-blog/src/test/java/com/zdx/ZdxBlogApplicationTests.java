@@ -6,6 +6,7 @@ import com.zdx.entity.tk.Dict;
 import com.zdx.entity.tk.Menu;
 import com.zdx.entity.us.Role;
 import com.zdx.entity.us.User;
+import com.zdx.entity.zdx.Navigation;
 import com.zdx.enums.*;
 import com.zdx.event.EventObject;
 import com.zdx.model.dto.MailDto;
@@ -15,6 +16,7 @@ import com.zdx.service.tk.DictService;
 import com.zdx.service.tk.MenuService;
 import com.zdx.service.us.RoleService;
 import com.zdx.service.us.UserService;
+import com.zdx.service.zdx.NavigationService;
 import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.RsaUtil;
 import org.jsoup.Jsoup;
@@ -31,6 +33,8 @@ import org.springframework.web.client.RestTemplate;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class ZdxBlogApplicationTests {
@@ -143,6 +147,19 @@ class ZdxBlogApplicationTests {
                 fos.write(bytes);
                 IoUtil.writeUtf8(fos, true);
             }
+        }
+    }
+
+    @Autowired
+    private NavigationService navigationService;
+    @Test
+    public void test111() throws IOException {
+
+        Map<String, List<Navigation>> map = navigationService.list().stream().collect(Collectors.groupingBy(Navigation::getGroup, Collectors.toList()));
+        for (Map.Entry<String, List<Navigation>> entry : map.entrySet()) {
+            NavigationGroupEnum groupEnum = NavigationGroupEnum.valueOf(entry.getKey());
+            List<Navigation> list = entry.getValue().stream().peek(item -> item.setOrder(groupEnum.ordinal())).toList();
+            navigationService.saveOrUpdateBatch(list);
         }
     }
 

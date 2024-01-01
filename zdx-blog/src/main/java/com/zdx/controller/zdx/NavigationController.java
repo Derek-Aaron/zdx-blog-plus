@@ -7,6 +7,7 @@ import com.zdx.entity.zdx.Navigation;
 import com.zdx.enums.LogEventEnum;
 import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.NavigationVo;
 import com.zdx.service.zdx.NavigationService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,7 +21,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -37,7 +37,7 @@ public class NavigationController {
 
 
     @GetMapping("/home/zdx.navigation/group")
-    public Result<Map<String, List<Navigation>>> group() {
+    public Result<List<NavigationVo>> group() {
         return Result.success(navigationService.homeGroup());
     }
 

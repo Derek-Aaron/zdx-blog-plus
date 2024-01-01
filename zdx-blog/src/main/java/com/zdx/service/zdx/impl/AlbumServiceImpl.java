@@ -70,6 +70,7 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album>
         PhotoInfoVo photoInfoVo = new PhotoInfoVo();
         if (ObjUtil.isNotNull(album)) {
             photoInfoVo.setAlbumName(album.getName());
+            photoInfoVo.setAlbumCover(album.getCover());
         }
         List<Photo> photos = photoMapper.selectList(new LambdaQueryWrapper<Photo>()
                 .eq(Photo::getAlbumId, albumId));

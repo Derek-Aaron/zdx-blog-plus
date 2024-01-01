@@ -1,12 +1,12 @@
 package com.zdx.service.zdx;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
-import com.zdx.entity.zdx.Navigation;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.entity.zdx.Navigation;
 import com.zdx.model.dto.RequestParams;
+import com.zdx.model.vo.NavigationVo;
 
 import java.util.List;
-import java.util.Map;
 
 /**
 * @author zhaodengxuan
@@ -28,6 +28,6 @@ public interface NavigationService extends IService<Navigation> {
      *
      * @return 前端查询
      */
-    Map<String, List<Navigation>> homeGroup();
+    List<NavigationVo> homeGroup();
 
 }

@@ -38,13 +38,7 @@ const navigationList = ref([]);
 onMounted(() => {
 	group().then((res) => {
 		if (res.data) {
-			let keys = Object.keys(res.data);
-			keys.forEach((item) => {
-				let navigation = {}
-				navigation.name = item
-				navigation.list = res.data[item]
-				navigationList.value.push(navigation)
-			})
+			navigationList.value = res.data
 		}
 	})
 });
