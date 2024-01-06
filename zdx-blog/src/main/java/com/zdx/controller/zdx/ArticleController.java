@@ -82,7 +82,7 @@ public class ArticleController {
     @PostMapping("/zdx.article/save")
     @ApiOperation("保存文章")
     @Log(type = LogEventEnum.SAVE, desc = "保存文章")
-    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:add:article')")
+    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:article:add')")
     public Result<String> save(@RequestBody @Validated ArticleSaveVo articleSave) {
         return articleService.adminSave(articleSave) ? Result.success() : Result.error();
     }
@@ -120,6 +120,7 @@ public class ArticleController {
     @PostMapping("/zdx.article/batchRecover")
     @ApiOperation("批量恢复文章")
     @Log(type = LogEventEnum.OTHER, desc = "批量恢复文章")
+    @PreAuthorize("hasAuthority('zdx:article:recover')")
     public Result<String> batchRecover(@RequestBody @ApiParam("文章id") @NotEmpty List<String> ids) {
         return articleService.batchRecover(ids) ? Result.success() : Result.error();
     }
@@ -127,7 +128,7 @@ public class ArticleController {
     @PostMapping("/zdx.article/upload")
     @ApiOperation("文章导入")
     @Log(type = LogEventEnum.IMPORT, desc = "文章导入")
-    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:add:article')")
+    @PreAuthorize("hasAnyAuthority('zdx:article:save','zdx:article:add')")
     public Result<Map<String, String>> articleImport(MultipartFile[] files, String content) throws IOException {
         return Result.success(Map.of("content", articleService.articleUpload(files, Base64Decoder.decodeStr(content))));
     }

@@ -1,6 +1,6 @@
 import router from "@/router";
 import useStore from "@/stores";
-import { getToken } from "@/utils/token";
+import {getToken, setToken} from "@/utils/token";
 import NProgress from "nprogress";
 
 NProgress.configure({
@@ -12,8 +12,25 @@ NProgress.configure({
 });
 
 router.beforeEach((to, from, next) => {
-  NProgress.start();
   const { user } = useStore();
+  NProgress.start();
+  if (to.query.token) {
+    setToken(to.query.token)
+    user.doUserInfo();
+    if (user.email === "") {
+      window.$message?.warning("请绑定邮箱以便及时收到回复");
+    } else {
+      window.$message?.success("登录成功");
+    }
+    // 跳转回原页面
+    const loginUrl = user.path;
+    if (loginUrl != null && loginUrl !== "") {
+      to.path = loginUrl
+    } else {
+      to.path = "/"
+    }
+    next(to.path)
+  }
   if (to.meta.title) {
     document.title = to.meta.title;
   }

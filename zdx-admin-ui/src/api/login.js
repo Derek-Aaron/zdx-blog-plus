@@ -14,14 +14,14 @@ export const login = (data) => {
 
 export const authList = () => {
     return request({
-        url:'/home/zdx.auth/list/admin',
+        url:'/home/zdx.auth/list',
         method:'GET'
     })
 }
 
 export const loginType = (source) => {
     return request({
-        url:`/oauth/render/${source}/admin`,
+        url:`/oauth/render/${source}`,
         method:'GET'
     })
 }
@@ -47,7 +47,7 @@ export const register = (data) => {
 
 export function callback(params) {
     return request({
-        url:'/oauth/callback/admin',
+        url:'/oauth/callback',
         method:'GET',
         params: params
     })

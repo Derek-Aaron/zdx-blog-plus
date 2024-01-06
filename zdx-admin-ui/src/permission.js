@@ -4,6 +4,7 @@ import 'nprogress/nprogress.css'
 import router from './router'
 import {ElMessage} from "element-plus";
 import {useStore} from "@/stores";
+import {setToken} from "@/utils/auth";
 
 NProgress.configure({ showSpinner: false });
 
@@ -33,6 +34,11 @@ NProgress.configure({ showSpinner: false });
 router.beforeEach((to, from, next) => {
     useStore().useSetting.setTitle(to.meta.title)
     NProgress.start()
+	if (to.query.token) {
+		setToken(to.query.token)
+		to.path = "/profile"
+		next(to.path)
+	}
     if (to.path === "/" || to.path === '/callback' || to.path === '/register'){
         next()
     } else {

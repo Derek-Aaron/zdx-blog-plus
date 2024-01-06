@@ -25,21 +25,8 @@ onMounted(() => {
 		code: useRouter().currentRoute.value.query.code
 	}
 	callback(formBody).then((res) => {
-		setToken(res.data.token)
-		user.doUserInfo();
-		if (user.email === "") {
-			window.$message?.warning("请绑定邮箱以便及时收到回复");
-		} else {
-			window.$message?.success("登录成功");
-		}
+
 	})
-	// 跳转回原页面
-	const loginUrl = user.path;
-	if (loginUrl != null && loginUrl !== "") {
-		router.push(loginUrl);
-	} else {
-		router.push("/");
-	}
 });
 </script>
 

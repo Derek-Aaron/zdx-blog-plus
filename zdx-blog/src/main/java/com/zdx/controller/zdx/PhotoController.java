@@ -13,6 +13,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -38,6 +39,7 @@ public class PhotoController {
     @PostMapping("/zdx.photo/add")
     @ApiOperation("增加相册图片")
     @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
+    @PreAuthorize("hasAnyAuthority('zdx:photo:add')")
     public Result<String> addPhoto(@RequestBody @Validated PhotoAddDto photoAddDto) {
         return photoService.addPhoto(photoAddDto) ? Result.success() : Result.error();
     }
@@ -45,6 +47,7 @@ public class PhotoController {
     @PostMapping("/zdx.photo/save")
     @ApiOperation("保存相册图片")
     @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
+    @PreAuthorize("hasAnyAuthority('zdx:photo:save')")
     public Result<String> save(@RequestBody @Validated Photo photo) {
         return photoService.saveOrUpdate(photo) ? Result.success() : Result.error();
     }
@@ -52,6 +55,7 @@ public class PhotoController {
     @PostMapping("/zdx.photo/batchDelete")
     @ApiOperation("批量删除相册图片")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除相册图片")
+    @PreAuthorize("hasAnyAuthority('zdx:photo:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("图片id") @NotEmpty List<String> ids) {
         return photoService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }

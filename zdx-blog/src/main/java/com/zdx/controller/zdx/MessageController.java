@@ -62,7 +62,7 @@ public class MessageController {
     @PostMapping("/zdx.message/batchDelete")
     @ApiOperation("批量删除留言数据")
     @Log(type = LogEventEnum.SAVE, desc = "批量删除留言数据")
-    @PreAuthorize("hasAuthority('zdx:message:examine')")
+    @PreAuthorize("hasAuthority('zdx:message:delete')")
     public Result<String> batchDelete(@RequestBody @ApiParam("留言id") @NotEmpty List<String> ids) {
         return messageService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
