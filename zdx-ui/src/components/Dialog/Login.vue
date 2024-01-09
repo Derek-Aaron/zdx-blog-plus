@@ -51,7 +51,7 @@ const getLoginType = (source) => {
 	user.savePath(route.path);
 	app.setLoginFlag(false);
 	loginType(source).then((res) => {
-		window.open(res.data.url)
+		location.href = res.data.url
 	})
 }
 const handlelogin = () => {
