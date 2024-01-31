@@ -67,13 +67,6 @@ const routes = [
     },
   },
   {
-    path: "/picture",
-    component: () => import("@/views/Picture/index.vue"),
-    meta: {
-      title: "图床",
-    },
-  },
-  {
     path: "/album",
     component: () => import("@/views/Album/Album.vue"),
     meta: {

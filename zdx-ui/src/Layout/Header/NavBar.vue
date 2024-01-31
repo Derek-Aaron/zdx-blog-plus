@@ -90,12 +90,7 @@ const menuList = [
         name: "相册",
         icon: "album",
         path: "/album"
-      },
-      {
-        name: "图床",
-        icon: "upload",
-        path: "/picture"
-      },
+      }
     ]
   },
 	{
