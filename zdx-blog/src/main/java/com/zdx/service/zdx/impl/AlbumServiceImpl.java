@@ -35,7 +35,9 @@ public class AlbumServiceImpl extends ServiceImpl<AlbumMapper, Album>
     public IPage<AlbumPhotoCountVo> adminPage(RequestParams params) {
         IPage<Album> iPage = new Page<>(params.getPage(), params.getLimit());
         IPage<Album> page = page(iPage, new LambdaQueryWrapper<Album>()
-                .like(params.hasParam("name"), Album::getName, params.getParam("name")));
+                .like(params.hasParam("name"), Album::getName, params.getParam("name"))
+                .orderByAsc(Album::getCreateTime)
+        );
         List<AlbumPhotoCountVo> albumPageVos = new ArrayList<>();
         for (Album album : page.getRecords()) {
             Long count = photoMapper.selectCount(new LambdaQueryWrapper<Photo>().eq(Photo::getAlbumId, album.getId()));

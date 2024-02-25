@@ -77,6 +77,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
         }
         queryWrapper.eq(params.hasParam("isCheck"), Comment::getIsCheck, params.getParam("isCheck", Boolean.class));
         queryWrapper.eq(params.hasParam("commentType"), Comment::getCommentType, params.getParam("commentType"));
+        queryWrapper.orderByDesc(Comment::getCreateTime);
         Page<Comment> page = page(new Page<>(params.getPage(), params.getLimit()), queryWrapper);
         List<CommentPageVo> commentPageVos = new ArrayList<>();
         for (Comment comment : page.getRecords()) {
@@ -110,6 +111,7 @@ public class CommentServiceImpl extends ServiceImpl<CommentMapper, Comment>
         queryWrapper.eq(Comment::getTypeId, params.getParam("typeId"));
         queryWrapper.eq(Comment::getIsCheck, Boolean.TRUE);
         queryWrapper.isNull(Comment::getParentId);
+        queryWrapper.orderByDesc(Comment::getCreateTime);
         IPage<Comment> page = page(iPage, queryWrapper);
         if (page.getRecords().isEmpty()) {
             return new Page<>(params.getPage(), params.getLimit());

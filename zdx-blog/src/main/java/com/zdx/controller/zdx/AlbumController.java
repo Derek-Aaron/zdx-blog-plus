@@ -36,6 +36,7 @@ public class AlbumController {
     public Result<List<Album>> homeList() {
         LambdaQueryWrapper<Album> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Album::getStatus, Boolean.TRUE);
+        queryWrapper.orderByDesc(Album::getCreateTime);
         return Result.success(albumService.list(queryWrapper));
     }
 

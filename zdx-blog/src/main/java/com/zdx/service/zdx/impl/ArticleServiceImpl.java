@@ -98,6 +98,7 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article>
         }
         queryWrapper.eq(params.hasParam("trash"), Article::getTrash, params.getParam("trash", Boolean.class));
         queryWrapper.eq(params.hasParam("status"), Article::getStatus, params.getParam("status"));
+        queryWrapper.orderByDesc(Article::getCreateTime);
         IPage<Article> page = page(articleIPage, queryWrapper);
         List<ArticleAdminVo> articleAdminVos = new ArrayList<>();
         for (Article article : page.getRecords()) {

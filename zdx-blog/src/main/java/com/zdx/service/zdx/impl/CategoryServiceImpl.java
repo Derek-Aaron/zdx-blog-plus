@@ -40,7 +40,9 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category>
         IPage<Category> iPage = new Page<>(params.getPage(), params.getLimit());
 
         return page(iPage, new LambdaQueryWrapper<Category>()
-                .like(params.hasParam("name"), Category::getName, params.getParam("name")));
+                .like(params.hasParam("name"), Category::getName, params.getParam("name"))
+                .orderByAsc(Category::getCreateTime)
+        );
     }
 
     @Override

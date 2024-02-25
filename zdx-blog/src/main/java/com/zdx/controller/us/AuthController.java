@@ -39,6 +39,7 @@ public class AuthController {
     public Result<List<AuthVo>> homeList() {
         return Result.success(authService.list(new LambdaQueryWrapper<Auth>()
                 .eq(Auth::getIsEnabled, Boolean.FALSE)
+                .orderByAsc(Auth::getCreateTime)
         ).stream().map(auth -> BeanUtil.copyProperties(auth, AuthVo.class)).toList());
     }
     @GetMapping("/zdx.auth/page")

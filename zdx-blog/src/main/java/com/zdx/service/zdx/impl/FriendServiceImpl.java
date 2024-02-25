@@ -24,6 +24,7 @@ public class FriendServiceImpl extends ServiceImpl<FriendMapper, Friend>
         IPage<Friend> iPage = new Page<>(params.getPage(), params.getLimit());
         return page(iPage, new LambdaQueryWrapper<Friend>()
                 .like(params.hasParam("name"), Friend::getName, params.getParam("name"))
+                .orderByAsc(Friend::getCreateTime)
         );
     }
 }

@@ -28,6 +28,7 @@ public class PhotoServiceImpl extends ServiceImpl<PhotoMapper, Photo>
     public IPage<Photo> adminPage(RequestParams params) {
         LambdaQueryWrapper<Photo> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(Photo::getAlbumId, params.getParam("albumId"));
+        queryWrapper.orderByDesc(Photo::getCreateTime);
         IPage<Photo> iPage = new Page<>(params.getPage(), params.getLimit());
         return page(iPage, queryWrapper);
     }

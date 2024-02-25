@@ -1,5 +1,6 @@
 package com.zdx.controller.zdx;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Friend;
@@ -32,7 +33,7 @@ public class FriendController {
     @GetMapping("/home/zdx.friend/list")
     @ApiOperation("前台查询友链列表")
     public Result<List<Friend>> homeList() {
-        return Result.success(friendService.list());
+        return Result.success(friendService.list(new LambdaQueryWrapper<Friend>().orderByAsc(Friend::getCreateTime)));
     }
     @GetMapping("/zdx.friend/page")
     @ApiOperation("分页查询友链数据")

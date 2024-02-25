@@ -49,7 +49,9 @@ public class TagServiceImpl extends ServiceImpl<TagMapper, Tag>
     public IPage<Tag> adminTag(RequestParams params) {
         IPage<Tag> iPage = new Page<>(params.getPage(), params.getLimit());
         return page(iPage, new LambdaQueryWrapper<Tag>()
-                .like(params.hasParam("name"), Tag::getName, params.getParam("name")));
+                .like(params.hasParam("name"), Tag::getName, params.getParam("name"))
+                .orderByAsc(Tag::getCreateTime)
+        );
     }
 
     @Override

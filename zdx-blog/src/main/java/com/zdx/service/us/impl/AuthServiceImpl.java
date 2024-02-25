@@ -23,6 +23,7 @@ public class AuthServiceImpl extends ServiceImpl<AuthMapper, Auth>
     public IPage<Auth> adminPage(RequestParams params) {
         LambdaQueryWrapper<Auth> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(params.hasParam("source"), Auth::getSource, params.getParam("source"));
+        queryWrapper.orderByDesc(Auth::getCreateTime);
         return page(new Page<>(params.getPage(), params.getLimit()), queryWrapper);
     }
 

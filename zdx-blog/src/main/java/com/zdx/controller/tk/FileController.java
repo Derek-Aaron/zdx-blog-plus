@@ -51,6 +51,7 @@ public class FileController extends BaseController<File> {
         LambdaQueryWrapper<File> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(params.hasParam("name"), File::getName, params.getParam("name"));
         queryWrapper.like(params.hasParam("bucketName"), File::getBucketName, params.getParam("bucketName"));
+        queryWrapper.orderByDesc(File::getCreateTime);
         return queryWrapper;
     }
 

@@ -30,6 +30,7 @@ public class NavigationServiceImpl extends ServiceImpl<NavigationMapper, Navigat
         LambdaQueryWrapper<Navigation> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.like(params.hasParam("group"), Navigation::getGroup, params.getParam("group"));
         queryWrapper.like(params.hasParam("name"), Navigation::getName, params.getParam("name"));
+        queryWrapper.orderByDesc(Navigation::getCreateTime);
         IPage<Navigation> iPage = new Page<>(params.getPage(), params.getLimit());
         return page(iPage, queryWrapper);
     }

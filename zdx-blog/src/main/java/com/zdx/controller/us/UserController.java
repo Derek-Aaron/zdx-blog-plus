@@ -68,6 +68,7 @@ public class UserController extends BaseController<User> {
         queryWrapper.like(params.hasParam("email"), User::getUsername, params.getParam("email"));
         queryWrapper.like(params.hasParam("mobile"), User::getUsername, params.getParam("mobile"));
         queryWrapper.eq(params.hasParam("personId"), User::getUsername, params.getParam("personId"));
+        queryWrapper.orderByDesc(User::getCreateTime);
         return queryWrapper;
     }
 

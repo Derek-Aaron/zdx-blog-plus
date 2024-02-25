@@ -41,6 +41,7 @@ public class ScheduleController extends BaseController<Schedule> {
         queryWrapper.like(params.hasParam("name"), Schedule::getName, params.getParam("name"));
         queryWrapper.like(params.hasParam("group"), Schedule::getGroup, params.getParam("group"));
         queryWrapper.eq(params.hasParam("status"), Schedule::getStatus, params.getParam("status", Boolean.class));
+        queryWrapper.orderByDesc(Schedule::getCreateTime);
         return queryWrapper;
     }
 

@@ -48,6 +48,7 @@ public class ScheduleLogController extends BaseController<ScheduleLog> {
             queryWrapper.ge(ScheduleLog::getStartTime, split[0]);
             queryWrapper.le(ScheduleLog::getStartTime, split[1]);
         }
+        queryWrapper.orderByDesc(ScheduleLog::getStartTime);
         return queryWrapper;
     }
 

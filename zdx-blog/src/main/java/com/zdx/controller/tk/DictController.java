@@ -37,6 +37,7 @@ public class DictController extends BaseController<Dict> {
         queryWrapper.like(params.hasParam("name"), Dict::getName, params.getParam("name"));
         queryWrapper.like(params.hasParam("key"), Dict::getKey, params.getParam("key"));
         queryWrapper.eq(params.hasParam("type"), Dict::getType, params.getParam("type"));
+        queryWrapper.orderByDesc(Dict::getCreateTime);
         return queryWrapper;
     }
 

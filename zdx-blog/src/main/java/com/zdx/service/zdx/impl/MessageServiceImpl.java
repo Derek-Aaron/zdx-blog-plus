@@ -27,6 +27,7 @@ public class MessageServiceImpl extends ServiceImpl<MessageMapper, Message>
         IPage<Message> iPage = new Page<>(params.getPage(), params.getLimit());
         return page(iPage, new LambdaQueryWrapper<Message>()
                 .like(params.hasParam("nickname"), Message::getNickname, params.getParam("nickname"))
+                .orderByAsc(Message::getCreateTime)
         );
     }
 

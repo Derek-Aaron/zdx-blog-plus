@@ -51,7 +51,9 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk>
             queryWrapper.eq(Talk::getUserId, UserSessionFactory.getUserId());
         }
         IPage<Talk> page = page(iPage, queryWrapper
-                .eq(params.hasParam("status"), Talk::getStatus, params.getParam("status", Boolean.class)));
+                .eq(params.hasParam("status"), Talk::getStatus, params.getParam("status", Boolean.class))
+                .orderByAsc(Talk::getCreateTime)
+        );
 
         List<TalkPageVo> talkPageVos = new ArrayList<>();
         for (Talk talk : page.getRecords()) {
@@ -78,7 +80,7 @@ public class TalkServiceImpl extends ServiceImpl<TalkMapper, Talk>
         IPage<Talk> iPage = new Page<>(params.getPage(), params.getLimit());
         LambdaQueryWrapper<Talk> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.select(Talk::getId, Talk::getUserId, Talk::getImages, Talk::getLikeCount, Talk::getContent);
-        IPage<Talk> page = page(iPage, queryWrapper.eq(Talk::getStatus, Boolean.TRUE));
+        IPage<Talk> page = page(iPage, queryWrapper.eq(Talk::getStatus, Boolean.TRUE).orderByAsc(Talk::getCreateTime));
         List<TalkHomeListVo> talkHomeListVos = new ArrayList<>();
         for (Talk talk : page.getRecords()) {
             TalkHomeListVo talkHomeListVo = BeanUtil.copyProperties(talk, TalkHomeListVo.class);

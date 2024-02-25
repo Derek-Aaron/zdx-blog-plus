@@ -1,5 +1,6 @@
 package com.zdx.controller.zdx;
 
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.zdx.annotation.Log;
 import com.zdx.entity.zdx.Message;
@@ -34,7 +35,7 @@ public class MessageController {
     @GetMapping("/home/zdx.message/list")
     @ApiOperation("前台查询留言列表")
     public Result<List<Message>> homeList() {
-        return  Result.success(messageService.list());
+        return  Result.success(messageService.list(new LambdaQueryWrapper<Message>().orderByAsc(Message::getCreateTime)));
     }
     @PostMapping("/home/zdx.message/add")
     @ApiOperation("前台添加评论")
