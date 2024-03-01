@@ -4,6 +4,8 @@ import com.zdx.Constants;
 import com.zdx.model.dto.MailDto;
 import com.zdx.service.tk.EmailService;
 import com.zdx.service.tk.RedisService;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.mail.MailProperties;
@@ -15,8 +17,6 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
 
 
 @Service

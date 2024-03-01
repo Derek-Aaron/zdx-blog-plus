@@ -1,25 +1,24 @@
 package com.zdx.model.vo.front;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Map;
 
 @Data
-@ApiModel("文章搜索实体")
+@Schema(description = "文章搜索实体")
 public class ArticleSearchVo {
 
-    @ApiModelProperty("文章id")
+    @Schema(description = "文章id")
     private Long id;
 
-    @ApiModelProperty("文章标题")
+    @Schema(description = "文章标题")
     private String title;
 
-    @ApiModelProperty("文章描述")
+    @Schema(description = "文章描述")
     private String description;
 
-    @ApiModelProperty("展示高亮的字段")
+    @Schema(description = "展示高亮的字段")
     private Map<String, Object> highlight;
 }

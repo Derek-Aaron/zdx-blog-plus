@@ -10,10 +10,10 @@ import com.zdx.security.vo.UserSession;
 import com.zdx.service.us.LogService;
 import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.UserAgentUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Component

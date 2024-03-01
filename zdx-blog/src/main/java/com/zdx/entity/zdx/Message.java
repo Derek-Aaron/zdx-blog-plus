@@ -2,8 +2,7 @@ package com.zdx.entity.zdx;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,25 +14,25 @@ import java.io.Serial;
 @TableName(value ="zdx_message")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("留言消息实体")
+@Schema(description = "留言消息实体")
 public class Message extends BaseTimeEntity {
 
-    @ApiModelProperty("昵称")
+    @Schema(description = "昵称")
     private String nickname;
 
-    @ApiModelProperty("头像")
+    @Schema(description = "头像")
     private String avatar;
 
-    @ApiModelProperty("内容")
+    @Schema(description = "内容")
     private String content;
 
-    @ApiModelProperty("ip")
+    @Schema(description = "ip")
     private String ip;
 
-    @ApiModelProperty("来源")
+    @Schema(description = "来源")
     private String source;
 
-    @ApiModelProperty("是否审核通过")
+    @Schema(description = "是否审核通过")
     private Boolean isCheck;
 
     @Serial

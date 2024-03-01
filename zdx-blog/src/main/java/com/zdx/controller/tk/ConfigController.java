@@ -5,10 +5,10 @@ import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.controller.BaseController;
-import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.tk.Config;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.service.tk.ConfigService;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/zdx.config")
 @Validated
 @RequiredArgsConstructor
-@Api(tags = "配置管理")
+@Tag(name = "配置管理")
 public class ConfigController extends BaseController<Config> {
 
     private final ConfigService configService;

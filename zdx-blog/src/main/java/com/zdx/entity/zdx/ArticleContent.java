@@ -2,6 +2,7 @@ package com.zdx.entity.zdx;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -13,11 +14,13 @@ import java.io.Serial;
 @TableName(value ="zdx_article_content")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Schema(description = "博客内容")
 public class ArticleContent extends BaseEntity {
-    private Long id;
 
+    @Schema(description = "内容")
     private String content;
 
+    @Schema(description = "博客id")
     private Long articleId;
 
     @Serial

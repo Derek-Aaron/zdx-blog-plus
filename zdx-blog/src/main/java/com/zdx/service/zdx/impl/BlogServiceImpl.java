@@ -27,11 +27,11 @@ import com.zdx.service.zdx.BlogService;
 import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.ServletUtils;
 import com.zdx.utils.UserAgentUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.DigestUtils;
 
-import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;

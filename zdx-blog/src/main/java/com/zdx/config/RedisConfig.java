@@ -29,11 +29,9 @@ public class RedisConfig {
 	 */
 	@Bean
 	public RedisSerializer<?> Jackson2JsonRedisSerialize(){
-		Jackson2JsonRedisSerializer<?> jsonRedisSerializer = new Jackson2JsonRedisSerializer<>(Object.class);
 		ObjectMapper objectMapper = new ObjectMapper();
 		objectMapper.setTimeZone(TimeZone.getDefault());
-		jsonRedisSerializer.setObjectMapper(objectMapper);
-		return jsonRedisSerializer;
+        return new Jackson2JsonRedisSerializer<>(objectMapper, Object.class);
 	}
 
 	@Bean

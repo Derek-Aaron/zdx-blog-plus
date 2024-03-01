@@ -8,21 +8,21 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.tk.Dict;
 import com.zdx.handle.Result;
 import com.zdx.service.tk.DictService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.constraints.NotBlank;
 
 
 @RestController
 @Validated
 @RequiredArgsConstructor
 @RequestMapping("/zdx.dict")
-@Api(tags = "数据字典管理")
+@Tag(name= "数据字典管理")
 public class DictController extends BaseController<Dict> {
 
     private final DictService dictService;
@@ -43,7 +43,7 @@ public class DictController extends BaseController<Dict> {
 
 
     @GetMapping("/key/{key}")
-    @ApiOperation("获取数据字典")
+    @Operation(summary = "获取数据字典")
     public Result<Object> dict(@PathVariable @NotBlank String key) {
         return Result.success(dictService.getDictByKey(key));
     }
@@ -51,7 +51,7 @@ public class DictController extends BaseController<Dict> {
 
     @Override
     @PostMapping("/save")
-    @ApiOperation("保存字典")
+    @Operation(summary = "保存字典")
     @PreAuthorize("hasAnyAuthority('zdx:dict:add','zdx:dict:save','zdx:dict:disable')")
     public Result<String> save(@RequestBody @Validated Dict data) {
         return dictService.saveDict(data) ? Result.success() : Result.error();

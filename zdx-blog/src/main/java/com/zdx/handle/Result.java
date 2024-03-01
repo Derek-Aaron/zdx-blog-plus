@@ -1,8 +1,7 @@
 package com.zdx.handle;
 
 import com.zdx.utils.MessageUtil;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,16 +10,16 @@ import java.io.Serializable;
  * @author zhaodengxuan
  */
 @Data
-@ApiModel("相应实体")
+@Schema(description = "相应实体")
 public class Result<T> implements Serializable {
 
-	@ApiModelProperty("相应码")
+	@Schema(description = "相应码")
 	private int code;
 
-	@ApiModelProperty("相应消息")
+	@Schema(description = "相应消息")
 	private String message;
 
-	@ApiModelProperty("相应数据")
+	@Schema(description = "相应数据")
 	private T data;
 
 	public Result(int code, String message, T data) {

@@ -9,9 +9,10 @@ import com.zdx.handle.Result;
 import com.zdx.model.dto.PhotoAddDto;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.service.zdx.PhotoService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -20,24 +21,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Validated
-@Api(tags = "相册图片管理")
+@Tag(name = "相册图片管理")
 public class PhotoController {
 
     private final PhotoService photoService;
     @GetMapping("/zdx.photo/page")
-    @ApiOperation("后台分页查询相册图片")
+    @Operation(summary = "后台分页查询相册图片")
     public Result<IPage<Photo>> adminPage(RequestParams params) {
         return Result.success(photoService.adminPage(params));
     }
 
     @PostMapping("/zdx.photo/add")
-    @ApiOperation("增加相册图片")
+    @Operation(summary = "增加相册图片")
     @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
     @PreAuthorize("hasAnyAuthority('zdx:photo:add')")
     public Result<String> addPhoto(@RequestBody @Validated PhotoAddDto photoAddDto) {
@@ -45,7 +45,7 @@ public class PhotoController {
     }
 
     @PostMapping("/zdx.photo/save")
-    @ApiOperation("保存相册图片")
+    @Operation(summary = "保存相册图片")
     @Log(type = LogEventEnum.SAVE, desc = "增加相册图片")
     @PreAuthorize("hasAnyAuthority('zdx:photo:save')")
     public Result<String> save(@RequestBody @Validated Photo photo) {
@@ -53,10 +53,10 @@ public class PhotoController {
     }
 
     @PostMapping("/zdx.photo/batchDelete")
-    @ApiOperation("批量删除相册图片")
+    @Operation(summary = "批量删除相册图片")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除相册图片")
     @PreAuthorize("hasAnyAuthority('zdx:photo:delete')")
-    public Result<String> batchDelete(@RequestBody @ApiParam("图片id") @NotEmpty List<String> ids) {
+    public Result<String> batchDelete(@RequestBody @Parameter(description = "图片id") @NotEmpty List<String> ids) {
         return photoService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
 }

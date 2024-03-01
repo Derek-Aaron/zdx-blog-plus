@@ -1,11 +1,11 @@
 package com.zdx.service.tk;
 
-import com.zdx.entity.tk.File;
 import com.baomidou.mybatisplus.extension.service.IService;
+import com.zdx.entity.tk.File;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;

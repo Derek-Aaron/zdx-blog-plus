@@ -1,8 +1,8 @@
 package com.zdx.wx.service;
 
 import com.zdx.wx.entity.WxAccessToken;
+import jakarta.servlet.ServletInputStream;
 
-import javax.servlet.ServletInputStream;
 import java.util.Map;
 
 public interface WxService {

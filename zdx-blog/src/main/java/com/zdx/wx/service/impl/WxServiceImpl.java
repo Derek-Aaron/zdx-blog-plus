@@ -8,6 +8,7 @@ import com.zdx.wx.entity.WxAccessToken;
 import com.zdx.wx.entity.WxBaseMessage;
 import com.zdx.wx.service.WxService;
 import com.zdx.wx.strategy.WxMessageStrategy;
+import jakarta.servlet.ServletInputStream;
 import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
@@ -19,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.socket.TextMessage;
 
-import javax.servlet.ServletInputStream;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

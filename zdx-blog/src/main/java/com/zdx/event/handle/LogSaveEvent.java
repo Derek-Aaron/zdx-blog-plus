@@ -9,6 +9,7 @@ import com.zdx.security.vo.UserSession;
 import com.zdx.service.us.LogService;
 import com.zdx.utils.IpAddressUtil;
 import com.zdx.utils.UserAgentUtils;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -16,7 +17,6 @@ import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StopWatch;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 @Component

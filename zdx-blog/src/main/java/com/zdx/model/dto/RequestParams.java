@@ -4,10 +4,10 @@ import cn.hutool.core.date.DateUtil;
 import cn.hutool.core.util.ObjUtil;
 import cn.hutool.core.util.StrUtil;
 import com.google.common.collect.Maps;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Max;
 import lombok.Data;
 
-import javax.validation.constraints.Max;
 import java.util.*;
 
 
@@ -15,17 +15,17 @@ import java.util.*;
 public class RequestParams {
 
 
-    @ApiModelProperty("加密值")
+    @Schema(description = "加密值")
     private String encrypt;
 
 
-    @ApiModelProperty("请求参数")
+    @Schema(description = "请求参数")
     private Map<String, Object> params = Maps.newHashMap();
 
-    @ApiModelProperty("页数")
+    @Schema(description = "页数")
     private Integer page;
 
-    @ApiModelProperty("页数大小")
+    @Schema(description = "页数大小")
     @Max(value = 50, message = "{zdx.params.size}")
     private Integer limit;
 

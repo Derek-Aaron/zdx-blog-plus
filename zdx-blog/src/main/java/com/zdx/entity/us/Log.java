@@ -6,8 +6,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zdx.Constants;
 import com.zdx.entity.BaseEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -20,42 +19,42 @@ import java.util.Date;
 @TableName(value ="us_log")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("日志实体")
+@Schema(description = "日志实体")
 public class Log extends BaseEntity {
 
-    @ApiModelProperty("日志事件")
+    @Schema(description = "日志事件")
     private String event;
 
-    @ApiModelProperty("用户名")
+    @Schema(description = "用户名")
     private String username;
 
-    @ApiModelProperty("访问链接")
+    @Schema(description = "访问链接")
     private String url;
 
-    @ApiModelProperty("日志内容")
+    @Schema(description = "日志内容")
     private String content;
 
-    @ApiModelProperty("ip")
+    @Schema(description = "ip")
     private String ip;
 
-    @ApiModelProperty("来源")
+    @Schema(description = "来源")
     private String source;
 
-    @ApiModelProperty("系统")
+    @Schema(description = "系统")
     private String os;
 
-    @ApiModelProperty("浏览器")
+    @Schema(description = "浏览器")
     private String browser;
 
     @JsonFormat(pattern = Constants.FORMAT_STRING)
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     private Long userId;
 
-    @ApiModelProperty("状态")
+    @Schema(description = "状态")
     private Boolean status;
 
     @Serial

@@ -5,12 +5,11 @@ import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zdx.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
-import javax.validation.constraints.NotBlank;
 import java.io.Serial;
 
 /**
@@ -19,7 +18,7 @@ import java.io.Serial;
 @TableName(value ="us_user")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("用户实体")
+@Schema(description = "用户实体")
 public class User extends BaseTimeEntity {
 
     /**
@@ -30,39 +29,39 @@ public class User extends BaseTimeEntity {
     private static final long serialVersionUID = 1L;
 
     @NotBlank
-    @ApiModelProperty(value = "用户名", required = true)
+    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
     @JsonIgnore
-    @ApiModelProperty("密码")
+    @Schema(description = "密码")
     private String password;
 
-    @ApiModelProperty("昵称")
+    @Schema(description = "昵称")
     private String nickname;
 
-    @ApiModelProperty("头像")
+    @Schema(description = "头像")
     private String avatar;
 
-    @ApiModelProperty(value = "邮箱", required = true)
+    @Schema(description = "邮箱", requiredMode = Schema.RequiredMode.REQUIRED)
     private String email;
 
-    @ApiModelProperty(value = "手机号", required = true)
+    @Schema(description = "手机号", requiredMode = Schema.RequiredMode.REQUIRED)
     private String mobile;
 
-    @ApiModelProperty("性别")
+    @Schema(description = "性别")
     private String gender;
 
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("唯一标识")
+    @Schema(description = "唯一标识")
     private String personId;
 
-    @ApiModelProperty("是否禁用")
+    @Schema(description = "是否禁用")
     private Boolean isDisabled;
 
-    @ApiModelProperty("是否锁定")
+    @Schema(description = "是否锁定")
     private Boolean isLocked;
 
-    @ApiModelProperty("描述")
+    @Schema(description = "描述")
     private String description;
 
 

@@ -5,6 +5,8 @@ import com.zdx.config.properties.CommonProperties;
 import com.zdx.filter.read.RepeatableFilter;
 import com.zdx.filter.sensitive.SensitiveFilter;
 import com.zdx.filter.xss.XssFilter;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.Filter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -14,8 +16,6 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
-import javax.servlet.DispatcherType;
-import javax.servlet.Filter;
 import java.util.HashMap;
 import java.util.Map;
 

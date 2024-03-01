@@ -2,8 +2,7 @@ package com.zdx.entity.zdx;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,34 +14,34 @@ import java.io.Serial;
 @TableName(value ="zdx_comment")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("评论实体")
+@Schema(description = "评论实体")
 public class Comment extends BaseTimeEntity {
 
-    @ApiModelProperty("评论类型")
+    @Schema(description = "评论类型")
     private String commentType;
 
-    @ApiModelProperty("类型id")
+    @Schema(description = "类型id")
     private Long typeId;
 
-    @ApiModelProperty("父级评论")
+    @Schema(description = "父级评论")
     private Long parentId;
 
-    @ApiModelProperty("回复评论id")
+    @Schema(description = "回复评论id")
     private Long replyId;
 
-    @ApiModelProperty("评论点赞数")
+    @Schema(description = "评论点赞数")
     private Long likeCount;
 
-    @ApiModelProperty("评理内容")
+    @Schema(description = "评理内容")
     private String content;
 
-    @ApiModelProperty("评论人id")
+    @Schema(description = "评论人id")
     private Long fromUid;
 
-    @ApiModelProperty("回复人id")
+    @Schema(description = "回复人id")
     private Long toUid;
 
-    @ApiModelProperty("是否审核通过")
+    @Schema(description = "是否审核通过")
     private Boolean isCheck;
 
 

@@ -5,8 +5,7 @@ package com.zdx.model.vo.server;
  * 
  * @author ruoyi
  */
-public class SysFile
-{
+public class SysFile {
     /**
      * 盘符路径
      */

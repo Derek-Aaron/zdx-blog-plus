@@ -1,17 +1,16 @@
 package com.zdx.model.vo.front;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel("登录实体")
+@Schema(description = "登录实体")
 public class AuthRenderVo {
 
-    @ApiModelProperty("登录id")
+    @Schema(description = "登录id")
     private String uuid;
 
-    @ApiModelProperty("链接")
+    @Schema(description = "链接")
     private String url;
 }

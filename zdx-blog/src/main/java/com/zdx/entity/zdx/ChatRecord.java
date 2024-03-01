@@ -6,10 +6,11 @@ import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zdx.Constants;
 import com.zdx.entity.BaseEntity;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.io.Serial;
 import java.util.Date;
 
 /**
@@ -18,30 +19,32 @@ import java.util.Date;
 @TableName(value ="zdx_chat_record")
 @Data
 @EqualsAndHashCode(callSuper = true)
+@Schema(description = "聊天")
 public class ChatRecord extends BaseEntity {
 
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     private Long userId;
 
-    @ApiModelProperty("昵称")
+    @Schema(description = "昵称")
     private String nickname;
 
-    @ApiModelProperty("头像")
+    @Schema(description = "头像")
     private String avatar;
 
-    @ApiModelProperty("内容")
+    @Schema(description = "内容")
     private String content;
 
-    @ApiModelProperty("ip")
+    @Schema(description = "ip")
     private String ip;
 
-    @ApiModelProperty("来源")
+    @Schema(description = "来源")
     private String source;
 
     @JsonFormat(pattern = Constants.FORMAT_STRING)
     @TableField(fill = FieldFill.INSERT)
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
+    @Serial
     private static final long serialVersionUID = 1L;
 }

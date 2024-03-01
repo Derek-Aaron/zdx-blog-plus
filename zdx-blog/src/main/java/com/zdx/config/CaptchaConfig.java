@@ -17,9 +17,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
-import org.springframework.util.Base64Utils;
 import org.springframework.util.FileCopyUtils;
 
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
@@ -87,7 +87,7 @@ public class CaptchaConfig {
 			Resource[] resources = resolver.getResources(path);
 			for (Resource resource : resources) {
 				byte[] bytes = FileCopyUtils.copyToByteArray(resource.getInputStream());
-				String string = Base64Utils.encodeToString(bytes);
+				String string = Base64.getEncoder().encodeToString(bytes);
 				String filename = resource.getFilename();
 				imgMap.put(filename, string);
 			}

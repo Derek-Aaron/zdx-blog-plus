@@ -27,8 +27,8 @@ import com.zdx.security.vo.UserSession;
 import com.zdx.service.tk.EmailService;
 import com.zdx.service.us.UserService;
 import com.zdx.utils.MessageUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -44,7 +44,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/zdx.user")
 @RequiredArgsConstructor
 @Validated
-@Api(tags = "用户管理")
+@Tag(name = "用户管理")
 public class UserController extends BaseController<User> {
 
     private final UserService userService;
@@ -74,7 +74,7 @@ public class UserController extends BaseController<User> {
 
 
     @GetMapping("/profile")
-    @ApiOperation("查询个人用户信息")
+    @Operation(summary = "查询个人用户信息")
     public Result<UserProfile> profile() {
         UserSession userSession = UserSessionFactory.userDetails();
         UserProfile profile = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), UserProfile.class);
@@ -84,13 +84,13 @@ public class UserController extends BaseController<User> {
     }
 
     @GetMapping("/listUserAll")
-    @ApiOperation("获取用户信息")
+    @Operation(summary = "获取用户信息")
     public Result<List<Map<String, Object>>> listUserAll(String words) {
         return Result.success(userService.listUserAll(words));
     }
 
     @PostMapping("/updateProfile")
-    @ApiOperation("更改个人用户信息")
+    @Operation(summary = "更改个人用户信息")
     @Log(type = LogEventEnum.SAVE, desc = "更改个人用户信息")
     public Result<String> updateProfile(@RequestBody @Validated UserProfile userProfile) {
         User user = BeanUtil.copyProperties(userProfile, User.class);
@@ -105,7 +105,7 @@ public class UserController extends BaseController<User> {
     }
 
     @PostMapping("/updateEmail")
-    @ApiOperation("更改个人邮箱信息")
+    @Operation(summary = "更改个人邮箱信息")
     @Log(type = LogEventEnum.SAVE, desc = "更改个人邮箱信息")
     public Result<String> updateEmail(@RequestBody @Validated UserEmailDto userEmail) {
         if (!emailService.checkCode(userEmail.getEmail(), userEmail.getCode())) {
@@ -124,7 +124,7 @@ public class UserController extends BaseController<User> {
 
 
     @PostMapping("/resetPwd")
-    @ApiOperation("重置密码")
+    @Operation(summary = "重置密码")
     @Log(type = LogEventEnum.PASSWORD, desc = "重置密码")
     @Encrypt
     @PreAuthorize("hasAuthority('zdx:user:reset')")
@@ -148,7 +148,7 @@ public class UserController extends BaseController<User> {
     }
 
     @PostMapping("/updateUserStatus")
-    @ApiOperation("更改用户状态")
+    @Operation(summary = "更改用户状态")
     @Log(type = LogEventEnum.SAVE, desc = "更改用户状态")
     @PreAuthorize("hasAuthority('zdx:user:status')")
     public Result<String> updateUserStatus(@RequestBody @Validated UserStatus userStatus) {
@@ -157,7 +157,7 @@ public class UserController extends BaseController<User> {
 
     @Override
     @PostMapping("/save")
-    @ApiOperation("保存用户数据")
+    @Operation(summary = "保存用户数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存用户数据")
     @PreAuthorize("hasAnyAuthority('zdx:user:save', 'zdx:user:add')")
     public Result<String> save(@RequestBody @Validated User data) {

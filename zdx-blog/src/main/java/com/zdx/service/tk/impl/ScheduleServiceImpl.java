@@ -8,6 +8,7 @@ import com.zdx.mapper.tk.ScheduleMapper;
 import com.zdx.schedule.handle.CronUtil;
 import com.zdx.schedule.handle.ScheduleUtils;
 import com.zdx.service.tk.ScheduleService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.JobDataMap;
@@ -17,7 +18,6 @@ import org.quartz.SchedulerException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.PostConstruct;
 import java.util.List;
 
 /**

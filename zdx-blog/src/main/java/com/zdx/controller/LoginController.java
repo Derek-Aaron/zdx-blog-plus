@@ -27,8 +27,12 @@ import com.zdx.strategy.AuthStrategy;
 import com.zdx.strategy.context.StrategyContext;
 import com.zdx.utils.MessageUtil;
 import com.zdx.utils.TreeUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import me.zhyd.oauth.model.AuthCallback;
@@ -40,10 +44,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +51,7 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @Validated
-@Api(tags = "登录模块")
+@Tag(name = "登录模块")
 @Slf4j
 public class LoginController {
 
@@ -70,7 +70,7 @@ public class LoginController {
     private final EmailService emailService;
 
     @PostMapping("/login")
-    @ApiOperation(value = "登录", notes = "登录")
+    @Operation(summary = "登录")
     @Encrypt
     public Result<Map<String, String>> login(@RequestBody @Validated @Encrypt UserLogin userLogin, HttpServletRequest request) {
         String token = loginService.login(request, userLogin);
@@ -78,7 +78,7 @@ public class LoginController {
     }
 
     @GetMapping("/home/email/code/{email}")
-    @ApiOperation("通过邮箱发送验证码")
+    @Operation(summary = "通过邮箱发送验证码")
     public Result<String> emailCode(@PathVariable @Email String email) {
         loginService.sendCode(email);
         return Result.success();
@@ -86,7 +86,7 @@ public class LoginController {
 
     @PostMapping("/home/register")
     @Encrypt
-    @ApiOperation("注册用户")
+    @Operation(summary = "注册用户")
     public Result<Map<String, String>> register(@RequestBody @Validated @Encrypt RegisterDto register, HttpServletRequest request) {
         if (!emailService.checkCode(register.getEmail(), register.getCode())) {
             return Result.error(MessageUtil.getLocaleMessage("zdx.email.check.error"));
@@ -105,7 +105,7 @@ public class LoginController {
 
 
     @GetMapping("/info")
-    @ApiOperation("后台登录用户信息")
+    @Operation(summary = "后台登录用户信息")
     public Result<UserInfo> info() {
         UserSession userSession = UserSessionFactory.userDetails();
         UserInfo userInfo = BeanUtil.copyProperties(((UserPrincipal) userSession).getUser(), UserInfo.class);
@@ -121,13 +121,14 @@ public class LoginController {
 
 
     @GetMapping("/router")
-    @ApiOperation("获取路由信息")
+    @Operation(summary = "获取路由信息")
     public Result<List<Tree<Router>>> router() {
         List<Router> routers = loginService.routers();
         return Result.success(TreeUtil.createTree(routers, "order"));
     }
 
     @GetMapping("/oauth/render/{source}")
+    @Operation(summary = "单点登录")
     public Result<AuthRenderVo> renderAuth(@PathVariable @NotBlank String source, HttpServletRequest request) {
         Auth auth = authService.getAuthBySourceAndType(source);
         AuthRequest authRequest = strategyContext.executeAuth(AuthSourceEnum.valueOf(source), auth);
@@ -148,6 +149,7 @@ public class LoginController {
     }
 
     @GetMapping("/oauth/callback")
+    @Operation(summary = "单点登录回调")
     public void login(AuthCallback callback, HttpServletRequest request, HttpServletResponse response) throws IOException {
         AuthRequestVo authRequestVo = AuthStrategy.AUTH_REQUEST_MAP.get(callback.getState());
         if (ObjUtil.isNull(authRequestVo)) {

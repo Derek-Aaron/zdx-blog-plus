@@ -11,10 +11,11 @@ import org.springframework.security.access.expression.method.DefaultMethodSecuri
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configurers.ExpressionUrlAuthorizationConfigurer;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -27,7 +28,7 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
+@EnableMethodSecurity(prePostEnabled = true, jsr250Enabled = true)
 public class SecurityWebConfig {
     /**
      * 跨域过滤器
@@ -59,26 +60,26 @@ public class SecurityWebConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+        http.csrf(AbstractHttpConfigurer::disable);
         // CSRF禁用，因为不使用session
-        ExpressionUrlAuthorizationConfigurer<HttpSecurity>.ExpressionInterceptUrlRegistry registry = http
+         http
                 // 认证失败处理类
-                .exceptionHandling().authenticationEntryPoint(authenticationEntryPoint).and()
+                .exceptionHandling(e -> e.authenticationEntryPoint(authenticationEntryPoint))
                 // 基于token，所以不需要session
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 // 过滤请求
-                .authorizeRequests();
-        registry.antMatchers(commonProperties.getOpenPath()).permitAll();
-        registry.antMatchers("/zdx/file/**").permitAll();
-        registry.antMatchers("/doc.html").permitAll();
-        registry.antMatchers("/webjars/**").permitAll();
-        registry.antMatchers("/swagger-resources").permitAll();
-        registry.antMatchers("/v2/api-docs").permitAll();
-        registry.antMatchers("/wx/**").permitAll();
-        registry.anyRequest().authenticated()
-                .and()
-                .headers().frameOptions().disable();
-        http.logout().logoutUrl("/logout").logoutSuccessHandler(logoutSuccessHandler);
+                .authorizeHttpRequests(a -> {
+                   a.requestMatchers(commonProperties.getOpenPath()).permitAll()
+                           .requestMatchers("zdx/file/**").permitAll()
+                           .requestMatchers("/doc.html").permitAll()
+                           .requestMatchers("/webjars/**").permitAll()
+                           .requestMatchers("/v3/api-docs/**").permitAll()
+                           .requestMatchers("/wx/**").permitAll()
+                           .anyRequest().authenticated();
+                })
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::disable));
+        http.logout(l -> l.logoutUrl("/logout")
+                        .logoutSuccessHandler(logoutSuccessHandler));
         // 添加JWT filter
         http.addFilterBefore(authenticationTokenFilter, UsernamePasswordAuthenticationFilter.class);
         // 添加CORS filter

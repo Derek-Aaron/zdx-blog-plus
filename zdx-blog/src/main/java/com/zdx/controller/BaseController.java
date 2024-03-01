@@ -7,13 +7,16 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.zdx.annotation.Log;
-import com.zdx.exception.BaseException;
-import com.zdx.model.dto.RequestParams;
 import com.zdx.enums.LogEventEnum;
+import com.zdx.exception.BaseException;
 import com.zdx.handle.Result;
+import com.zdx.model.dto.RequestParams;
 import com.zdx.strategy.context.StrategyContext;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,9 +26,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.io.IOException;
 import java.util.List;
 
@@ -42,27 +42,27 @@ public abstract class BaseController<T>{
     private StrategyContext strategyContext;
 
     @GetMapping("/page")
-    @ApiOperation("分页查询")
+    @Operation(summary = "分页查询")
     public Result<IPage<T>> page(@Validated RequestParams params) {
         IPage<T> page = new Page<>(params.getPage(), params.getLimit());
         return Result.success(getService().page(page, getQueryWrapper(params)));
     }
 
     @GetMapping("/list")
-    @ApiOperation("查询全部")
+    @Operation(summary = "查询全部")
     public Result<List<T>> list() {
         return Result.success(getService().list());
     }
 
     @GetMapping("/getById/{id}")
-    @ApiOperation("id获取一个")
+    @Operation(summary = "id获取一个")
     public Result<T> getById(@PathVariable @NotBlank String id) {
         return  Result.success(getService().getById(id));
     }
 
 
     @PostMapping("/save")
-    @ApiOperation("保存数据")
+    @Operation(summary = "保存数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存数据")
     @PreAuthorize("hasAnyAuthority('zdx:role:save', 'zdx:role:add','zdx:config:add', 'zdx:config:save')")
     public Result<String> save(@RequestBody @Validated T data) {
@@ -70,9 +70,9 @@ public abstract class BaseController<T>{
     }
 
     @PostMapping("/import")
-    @ApiOperation("导入数据")
+    @Operation(summary = "导入数据")
     @Log(type = LogEventEnum.IMPORT, desc = "导入数据")
-    public Result<?> importData(@ApiParam("文件") MultipartFile file, @ApiParam("类型") String type) {
+    public Result<?> importData(@Parameter(description = "文件") MultipartFile file, @Parameter(description = "类型") String type) {
         try {
             strategyContext.importData(file, type, getService());
         } catch (IOException e) {
@@ -82,9 +82,9 @@ public abstract class BaseController<T>{
     }
 
     @GetMapping("/export")
-    @ApiOperation("导出数据")
+    @Operation(summary = "导出数据")
     @Log(type = LogEventEnum.SAVE, desc = "导出数据")
-    public void exportData(@ApiParam("类型") String type, HttpServletResponse response) {
+    public void exportData(@Parameter(description = "类型") String type, HttpServletResponse response) {
         try {
             strategyContext.exportData(response, type, new LambdaQueryWrapper<>(), getService());
         } catch (Exception e) {
@@ -94,7 +94,7 @@ public abstract class BaseController<T>{
 
 
     @GetMapping("/delete/{id}")
-    @ApiOperation("id删除")
+    @Operation(summary = "id删除")
     @Log(type = LogEventEnum.DELETE, desc = "删除")
     @PreAuthorize("hasAnyAuthority('zdx:user:delete','zdx:role:delete','zdx:menu:delete','zdx:dict:delete','zdx:config:delete')")
     public Result<String> delete(@PathVariable @NotBlank String id) {
@@ -102,7 +102,7 @@ public abstract class BaseController<T>{
     }
 
     @PostMapping("/batchDelete")
-    @ApiOperation("id批量删除")
+    @Operation(summary = "id批量删除")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除")
     @PreAuthorize("hasAnyAuthority('zdx:user:delete','zdx:role:delete','zdx:menu:delete','zdx:dict:delete','zdx:config:delete')")
     public Result<String> batchDelete(@RequestBody @NotEmpty List<String> ids) {

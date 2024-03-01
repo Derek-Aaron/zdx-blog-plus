@@ -2,45 +2,44 @@ package com.zdx.model.vo.front;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.zdx.Constants;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 import java.util.Date;
 
 @Data
-@ApiModel("评论回复实体")
+@Schema(description = "评论回复实体")
 public class ReplyVo {
 
 
-    @ApiModelProperty("回复id")
+    @Schema(description = "回复id")
     private Long id;
 
-    @ApiModelProperty("父级评论id")
+    @Schema(description = "父级评论id")
     private Long  parentId;
 
-    @ApiModelProperty("头像")
+    @Schema(description = "头像")
     private String avatar;
 
-    @ApiModelProperty("评论用户昵称")
+    @Schema(description = "评论用户昵称")
     private String fromNickname;
 
-    @ApiModelProperty("评论用户id")
+    @Schema(description = "评论用户id")
     private Long fromUid;
 
-    @ApiModelProperty("被评论用户id")
+    @Schema(description = "被评论用户id")
     private Long toUid;
 
-    @ApiModelProperty("被评论用户昵称")
+    @Schema(description = "被评论用户昵称")
     private String toNickname;
 
-    @ApiModelProperty("评论内容")
+    @Schema(description = "评论内容")
     private String content;
 
     @JsonFormat(pattern = Constants.FORMAT_STRING)
-    @ApiModelProperty("创建时间")
+    @Schema(description = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty("点赞数")
+    @Schema(description = "点赞数")
     private Long likeCount;
 }

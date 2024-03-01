@@ -13,8 +13,9 @@ import com.zdx.security.vo.UserAgent;
 import com.zdx.security.vo.UserPrincipal;
 import com.zdx.security.vo.UserSession;
 import com.zdx.service.tk.RedisService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -23,21 +24,20 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotBlank;
 import java.util.*;
 
 @RestController
 @Validated
 @RequestMapping("/zdx.online")
 @RequiredArgsConstructor
-@Api(tags = "在线用户管理")
+@Tag(name = "在线用户管理")
 public class OnlineController {
 
     private final RedisService redisService;
 
 
     @GetMapping("/page")
-    @ApiOperation("查询在线登录用户")
+    @Operation(summary = "查询在线登录用户")
     public Result<Map<String, Object>> page(RequestParams params) {
         List<Object> objects = new ArrayList<>();
         Collection<String> keys = redisService.getKeys(Constants.LOGIN_TOKEN_KEY + "**");
@@ -84,7 +84,7 @@ public class OnlineController {
 
     @GetMapping("/out/{id}")
     @Log(type = LogEventEnum.DELETE, desc = "退出用户登录")
-    @ApiOperation("退出用户登录状态")
+    @Operation(summary = "退出用户登录状态")
     @PreAuthorize("hasAuthority('zdx:online:exit')")
     public Result<String> out(@PathVariable @NotBlank String id) {
         return Boolean.TRUE.equals(redisService.deleteObject(Constants.LOGIN_TOKEN_KEY + id)) ? Result.success() : Result.error();

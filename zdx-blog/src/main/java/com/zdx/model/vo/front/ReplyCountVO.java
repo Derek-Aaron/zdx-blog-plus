@@ -1,23 +1,22 @@
 package com.zdx.model.vo.front;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel(description = "回复数VO")
+@Schema(description = "回复数VO")
 public class ReplyCountVO {
 
     /**
      * 评论id
      */
-    @ApiModelProperty(value = "评论id")
+    @Schema(description = "评论id")
     private Long commentId;
 
     /**
      * 回复数
      */
-    @ApiModelProperty(value = "回复数")
+    @Schema(description = "回复数")
     private Long replyCount;
 }

@@ -1,27 +1,26 @@
 package com.zdx.model.dto;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
-@ApiModel("权限")
+@Schema(description = "权限")
 public class AclDto {
 
     @NotEmpty
-    @ApiModelProperty("主体")
+    @Schema(description = "主体")
     private List<String> subjects;
 
     @NotBlank
-    @ApiModelProperty("类型")
+    @Schema(description = "类型")
     private String type;
 
     @NotEmpty
-    @ApiModelProperty("资源")
+    @Schema(description = "资源")
     private List<String> resources;
 }

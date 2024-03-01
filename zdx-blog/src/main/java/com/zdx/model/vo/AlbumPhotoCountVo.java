@@ -1,29 +1,28 @@
 package com.zdx.model.vo;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
 @Data
-@ApiModel("相册列表")
+@Schema(description = "相册列表")
 public class AlbumPhotoCountVo {
 
-    @ApiModelProperty("相册id")
+    @Schema(description = "相册id")
     private Long id;
 
-    @ApiModelProperty("相册名")
+    @Schema(description = "相册名")
     private String name;
 
-    @ApiModelProperty("相册封面")
+    @Schema(description = "相册封面")
     private String cover;
 
-    @ApiModelProperty("相册描述")
+    @Schema(description = "相册描述")
     private String description;
 
-    @ApiModelProperty("相册状态")
+    @Schema(description = "相册状态")
     private Boolean status;
 
-    @ApiModelProperty("相册图片大小")
+    @Schema(description = "相册图片大小")
     private Long photoCount;
 }

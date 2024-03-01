@@ -1,23 +1,22 @@
 package com.zdx.model.dto;
 
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import javax.validation.constraints.Size;
 
 @Data
-@ApiModel("用户登录实体")
+@Schema(description = "用户登录实体")
 public class UserLogin {
 
-    @ApiModelProperty(value = "用户名", required = true)
+    @Schema(description = "用户名", requiredMode = Schema.RequiredMode.REQUIRED)
     private String username;
 
-    @ApiModelProperty(value = "密码", required = true)
+    @Schema(description = "密码", requiredMode = Schema.RequiredMode.REQUIRED)
     @Size(min = 6, message = "{zdx.password.min}")
     private String password;
 
-    @ApiModelProperty("记住我")
+    @Schema(description = "记住我")
     private Boolean rememberMe;
 }

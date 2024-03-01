@@ -8,14 +8,14 @@ import com.zdx.model.vo.front.ChatRecordVo;
 import com.zdx.model.vo.front.WebsocketMessageVo;
 import com.zdx.service.zdx.ChatRecordService;
 import com.zdx.utils.IpAddressUtil;
+import jakarta.websocket.*;
+import jakarta.websocket.server.HandshakeRequest;
+import jakarta.websocket.server.ServerEndpoint;
+import jakarta.websocket.server.ServerEndpointConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.websocket.*;
-import javax.websocket.server.HandshakeRequest;
-import javax.websocket.server.ServerEndpoint;
-import javax.websocket.server.ServerEndpointConfig;
 import java.io.IOException;
 import java.util.Date;
 import java.util.List;

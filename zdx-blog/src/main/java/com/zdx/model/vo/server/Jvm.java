@@ -3,6 +3,8 @@ package com.zdx.model.vo.server;
 import cn.hutool.core.date.DateUtil;
 import com.zdx.Constants;
 import com.zdx.utils.Arith;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.management.ManagementFactory;
 import java.util.Date;
@@ -12,8 +14,8 @@ import java.util.Date;
  * 
  * @author ruoyi
  */
-public class Jvm
-{
+@Setter
+public class Jvm {
     /**
      * 当前JVM占用的内存总数(M)
      */
@@ -32,11 +34,13 @@ public class Jvm
     /**
      * JDK版本
      */
+    @Getter
     private String version;
 
     /**
      * JDK路径
      */
+    @Getter
     private String home;
 
     public double getTotal()
@@ -44,29 +48,14 @@ public class Jvm
         return Arith.div(total, (1024 * 1024), 2);
     }
 
-    public void setTotal(double total)
-    {
-        this.total = total;
-    }
-
     public double getMax()
     {
         return Arith.div(max, (1024 * 1024), 2);
     }
 
-    public void setMax(double max)
-    {
-        this.max = max;
-    }
-
     public double getFree()
     {
         return Arith.div(free, (1024 * 1024), 2);
-    }
-
-    public void setFree(double free)
-    {
-        this.free = free;
     }
 
     public double getUsed()
@@ -85,26 +74,6 @@ public class Jvm
     public String getName()
     {
         return ManagementFactory.getRuntimeMXBean().getVmName();
-    }
-
-    public String getVersion()
-    {
-        return version;
-    }
-
-    public void setVersion(String version)
-    {
-        this.version = version;
-    }
-
-    public String getHome()
-    {
-        return home;
-    }
-
-    public void setHome(String home)
-    {
-        this.home = home;
     }
 
     /**

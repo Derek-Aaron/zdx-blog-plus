@@ -5,13 +5,13 @@ import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.util.StrUtil;
 import io.minio.*;
 import io.minio.http.Method;
+import jakarta.servlet.ServletOutputStream;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Locale;
@@ -48,6 +48,7 @@ public class MinioTemplateImpl implements FileTemplate {
                     StatObjectArgs.builder().bucket(bucketName.toLowerCase(Locale.ROOT)).object(fileName).build()
             );
         } catch (Exception e) {
+            log.error("error:{}", e.getMessage(), e);
             return false;
         }
         return true;

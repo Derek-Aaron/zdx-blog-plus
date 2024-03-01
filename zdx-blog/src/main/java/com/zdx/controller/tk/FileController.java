@@ -14,18 +14,19 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.service.tk.FileService;
 import com.zdx.utils.FileUtil;
 import com.zdx.utils.MessageUtil;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.constraints.NotBlank;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ import java.util.Map;
 @RequestMapping("/zdx.file")
 @Validated
 @RequiredArgsConstructor
-@Api(tags = "文件管理")
+@Tag(name = "文件管理")
 public class FileController extends BaseController<File> {
 
     private final FileService fileService;
@@ -56,7 +57,7 @@ public class FileController extends BaseController<File> {
     }
 
     @GetMapping("/getUrl/{fileId}")
-    @ApiOperation("通过文件id获取访问地址")
+    @Operation(summary = "通过文件id获取访问地址")
     public Result<Map<String, String>> getUrl(@PathVariable @NotBlank String fileId) {
         return Result.success(Map.of("fileUrl", fileService.getFileUrl(fileId)));
     }
@@ -64,9 +65,10 @@ public class FileController extends BaseController<File> {
 
     @PostMapping("/upload")
     @Log(type = LogEventEnum.UPLOAD, desc = "上传文件")
-    @ApiOperation("上传文件")
+    @Operation(summary = "上传文件")
     @PreAuthorize("hasAuthority('zdx:file:upload')")
-    public Result<Object> upload(@ApiParam("文件") MultipartFile[] file, @ApiParam("文件类型") String type) throws IOException {
+    public Result<Object> upload(@Parameter(name = "file", description = "文件", required = true, schema = @Schema(type = "file")) MultipartFile[] file,
+                                 @Parameter(name = "type", description = "文件类型", schema = @Schema(type = "type")) String type) throws IOException {
         List<Map<String, String>> list = new ArrayList<>();
         for (MultipartFile multipartFile : file) {
             if (multipartFile.getSize() > Constants.DOWNSIZE) {
@@ -86,7 +88,7 @@ public class FileController extends BaseController<File> {
 
     @Override
     @PostMapping("/batchDelete")
-    @ApiOperation("批量删除文件")
+    @Operation(summary = "批量删除文件")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除文件")
     @PreAuthorize("hasAuthority('zdx:upload:delete')")
     public Result<String> batchDelete(@RequestBody List<String> ids) {
@@ -96,7 +98,7 @@ public class FileController extends BaseController<File> {
 
     @GetMapping("/{id}/download")
     @Log(type = LogEventEnum.DOWNLOAD, desc = "下载文件")
-    @ApiOperation("文件下载")
+    @Operation(summary = "文件下载")
     @PreAuthorize("hasAuthority('zdx:file:download')")
     public void download(@PathVariable @NotBlank String id, HttpServletRequest request, HttpServletResponse response) throws Exception {
         fileService.download(id, request, response);

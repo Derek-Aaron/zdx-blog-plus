@@ -8,7 +8,6 @@ import com.zdx.Constants;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.InputStream;
@@ -31,9 +30,9 @@ public class JWTUtil {
     public static String parseToken(String token) {
 
         Jws<Claims> claimsJws = Jwts.parser()
-                .setSigningKey(getPublicKey())
-                .parseClaimsJws(token);
-        Claims claims = claimsJws.getBody();
+                .verifyWith(getPublicKey())
+                .build().parseSignedClaims(token);
+        Claims claims = claimsJws.getPayload();
         if (claims.getExpiration().before(Calendar.getInstance().getTime())) {
             return null;
         }
@@ -68,10 +67,10 @@ public class JWTUtil {
         nowTime.add(Calendar.DAY_OF_MONTH, expire);
         return Jwts.builder()
                 .claim(Constants.JWT_USER_INFO_KEY, token)
-                .setIssuedAt(new Date())
-                .setId(IdUtil.fastUUID())
-                .setExpiration(nowTime.getTime())
-                .signWith(SignatureAlgorithm.RS256, getPrivateKey())
+                .issuedAt(new Date())
+                .id(IdUtil.fastUUID())
+                .expiration(nowTime.getTime())
+                .signWith(getPrivateKey(), Jwts.SIG.RS256)
                 .compact();
     }
 

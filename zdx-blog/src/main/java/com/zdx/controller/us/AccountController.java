@@ -15,7 +15,8 @@ import com.zdx.handle.Result;
 import com.zdx.model.dto.RequestParams;
 import com.zdx.service.us.AccountService;
 import com.zdx.utils.MybatisPlusUtils;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +30,7 @@ import java.util.List;
 @RequestMapping("/zdx.account")
 @Validated
 @RequiredArgsConstructor
+@Tag(name = "账号管理")
 public class AccountController extends BaseController<Account> {
 
     private final AccountService accountService;
@@ -47,7 +49,7 @@ public class AccountController extends BaseController<Account> {
 
     @Override
     @GetMapping("/page")
-    @ApiOperation("分页查询账号")
+    @Operation(summary = "分页查询账号")
     public Result<IPage<Account>> page(RequestParams params) {
         Result<IPage<Account>> page = super.page(params);
         List<Account> records = page.getData().getRecords();
@@ -63,7 +65,7 @@ public class AccountController extends BaseController<Account> {
     @Log(type = LogEventEnum.SAVE, desc = "保存用户账号")
     @PreAuthorize("hasAnyAuthority('zdx:account:save','zdx:account:add')")
     @Encrypt
-    @ApiOperation("保存用户账号")
+    @Operation(summary = "保存用户账号")
     public Result<String> save(@RequestBody @Validated @Encrypt Account data) {
         if (StrUtil.isNotBlank(data.getPassword())) {
             data.setPassword(passwordEncoder.encode(data.getPassword()));

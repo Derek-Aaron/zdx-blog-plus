@@ -2,8 +2,7 @@ package com.zdx.entity.zdx;
 
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.zdx.entity.BaseTimeEntity;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,19 +14,19 @@ import java.io.Serial;
 @TableName(value ="zdx_photo")
 @Data
 @EqualsAndHashCode(callSuper = true)
-@ApiModel("照片实体")
+@Schema(description = "照片实体")
 public class Photo extends BaseTimeEntity {
 
-    @ApiModelProperty("相册id")
+    @Schema(description = "相册id")
     private Long albumId;
 
-    @ApiModelProperty("照片名称")
+    @Schema(description = "照片名称")
     private String name;
 
-    @ApiModelProperty("描述")
+    @Schema(description = "描述")
     private String description;
 
-    @ApiModelProperty("链接")
+    @Schema(description = "链接")
     private String url;
 
 

@@ -1,28 +1,28 @@
 package com.zdx.model.dto;
 
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
+
 
 @Data
-@ApiModel("更改用户信息")
+@Schema(description = "更改用户信息")
 public class UserStatus {
 
-    @ApiModelProperty("用户id")
+    @Schema(description = "用户id")
     @NotNull
     private Long userId;
 
-    @ApiModelProperty("类型(disabled)禁用(locked)锁定")
+    @Schema(description = "类型(disabled)禁用(locked)锁定")
     @NotBlank
     private String type;
 
-    @ApiModelProperty("禁用")
+    @Schema(description = "禁用")
     private Boolean isDisabled;
 
-    @ApiModelProperty("锁定")
+    @Schema(description = "锁定")
     private Boolean isLocked;
 
 }

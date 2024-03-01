@@ -10,9 +10,9 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.model.vo.front.CategoryTagArticleVo;
 import com.zdx.model.vo.front.TagCountVo;
 import com.zdx.service.zdx.TagService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -21,13 +21,12 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @RestController
 @Validated
 @RequiredArgsConstructor
-@Api(tags = "标签管理")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "标签管理")
 public class TagController {
 
 
@@ -35,31 +34,31 @@ public class TagController {
     private final TagService tagService;
 
     @GetMapping("/home/zdx.tag/list")
-    @ApiOperation("前台查询标签列表")
+    @Operation(summary = "前台查询标签列表")
     public Result<List<TagCountVo>> homeList() {
         return Result.success(tagService.homeList());
     }
 
     @GetMapping("/home/zdx.tag/articlePage")
-    @ApiOperation("前台分页查询标签文章")
+    @Operation(summary = "前台分页查询标签文章")
     public Result<IPage<CategoryTagArticleVo>> homeArticlePage(RequestParams params) {
         return Result.success(tagService.homeArticlePage(params));
     }
 
     @GetMapping("/zdx.tag/page")
-    @ApiOperation("分页查询标签")
+    @Operation(summary = "分页查询标签")
     public Result<IPage<Tag>> adminPage(RequestParams params) {
         return Result.success(tagService.adminTag(params));
     }
 
     @GetMapping("/zdx.tag/list")
-    @ApiOperation("查询全部标签")
+    @Operation(summary = "查询全部标签")
     public Result<List<Tag>> adminList() {
         return Result.success(tagService.list());
     }
 
     @PostMapping("/zdx.tag/save")
-    @ApiOperation("保存标签数据")
+    @Operation(summary = "保存标签数据")
     @Log(type = LogEventEnum.SAVE, desc = "保存标签数据")
     @PreAuthorize("hasAnyAuthority('zdx:tag:add', 'zdx:tag:save')")
     public Result<String> save(@RequestBody @Validated Tag tag) {
@@ -67,10 +66,10 @@ public class TagController {
     }
 
     @PostMapping("/zdx.tag/batchDelete")
-    @ApiOperation("批量删除标签")
+    @Operation(summary = "批量删除标签")
     @Log(type = LogEventEnum.DELETE, desc = "批量删除标签")
     @PreAuthorize("hasAuthority('zdx:tag:delete')")
-    public Result<String> batchDelete(@RequestBody @ApiParam("标签id") @NotEmpty List<String> ids) {
+    public Result<String> batchDelete(@RequestBody @Parameter(description = "标签id") @NotEmpty List<String> ids) {
         return tagService.removeBatchByIds(ids) ? Result.success() : Result.error();
     }
 }

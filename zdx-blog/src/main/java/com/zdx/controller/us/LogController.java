@@ -8,8 +8,8 @@ import com.zdx.model.dto.RequestParams;
 import com.zdx.entity.us.Log;
 import com.zdx.handle.Result;
 import com.zdx.service.us.LogService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/zdx.log")
 @Validated
 @RequiredArgsConstructor
-@Api(tags = "日志管理")
+@Tag(name = "日志管理")
 public class LogController extends BaseController<Log> {
 
     private final LogService logService;
@@ -40,7 +40,7 @@ public class LogController extends BaseController<Log> {
     }
 
     @GetMapping("/clear")
-    @ApiOperation("清除日志")
+    @Operation(summary = "清除日志")
     @PreAuthorize("hasAnyAuthority('zdx:log-login:clear', 'zdx:log-operate:clear')")
     public Result<String> clear(String event) {
         return logService.clear(event) ? Result.success() : Result.error();
