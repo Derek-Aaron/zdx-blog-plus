@@ -3,3 +3,5 @@ spring:
     active: win
   jackson:
     date-format: 'yyyy-MM-dd HH:mm:ss'
+knife4j:
+  enable: true

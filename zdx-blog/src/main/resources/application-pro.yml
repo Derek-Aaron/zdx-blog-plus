@@ -4,45 +4,37 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: xxxxx
+    password: ENC(VPqshbMo9fJSYA0zq8Y5/ScdNkVzVwos8ika/ZgRSnoB0qyJFhbcwe1/6iIij34b)
     url: jdbc:mysql://10.0.4.6:3306/zdx-blog-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
     druid:
       stat-view-servlet:
         enabled: true
         url-pattern: "/druid/*"
         login-username: admin
-        login-password: xxxxx
+        login-password: ENC(/H6VbauP3osh1neVT3ROcTMFC7buFeZZo4gHnaHG4ltvBMVZxI1wtAQJ7FSvnFA/)
         allow: ""
       web-stat-filter:
         enabled: true
-      filter:
-        stat:
-          enabled: true
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: true
-        wall:
-          config:
-            multi-statement-allow: true
   messages:
     basename: i18n/messages
   servlet:
     multipart:
       max-file-size: 30MB
       max-request-size: 20MB
-  redis:
-    host: 10.0.4.6
-    password: xxxxx
-    lettuce:
-      pool:
-        enabled: true
   mvc:
     path match:
       matching-strategy: ant_path_matcher
+  data:
+    redis:
+      host: 10.0.4.6
+      password: ENC(PHs3EnEMjzPBt7T0QWr1tnnYecWlVL+OlTcx729vNF6Do9cjZbHGzSZqLuDkoBtm)
+      lettuce:
+        pool:
+          enabled: true
   mail:
     host: smtp.qq.com
     username: 2488288090@qq.com
-    password: xxxxx
+    password: ENC(JymTmV1gLsEpXJ/nGw0NnTjx4qB9oc1/ZZbMheo+Cdx8Ei9VUkb2B50KmJFWApDpaUJFfuTI71ySQOZqmRb1BQ==)
     properties:
       mail:
         smtp:
@@ -69,13 +61,13 @@ zdx:
   oss:
     oss-type: minio
     url: https://static.zhaodengxuan.top
-    access-key: xxxxx
-    secret-key: xxxxx
+    access-key: zhaodengxuan
+    secret-key: ENC(KN/1NLjjntha4uFp+8to7mOvqk5dIcpeldZAXrocjLJDQ+uq1WfFm6Y22aB+Hh7o)
     username: admin
-    password: xxxxx
+    password: 123456789
   es:
     open: true
-    url: http://81.69.247.228:9200
+    url: https://es.zhaodengxuan.top
     username: elastic
-    password: xxxxx
+    password: ENC(Scd3h5N89s38nL/EFoaJ5x2lJ60aezvlRys+82u1EQrMiL2D+d2P+OCcEwdTuxOL)
     index: articles

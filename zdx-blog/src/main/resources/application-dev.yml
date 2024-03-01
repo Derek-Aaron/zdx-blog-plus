@@ -3,30 +3,21 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     username: root
-    password: xxxxx
+    password: 123456789
     url: jdbc:mysql://localhost:3306/zdx-blog-plus?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8&allowMultiQueries=true
     druid:
       stat-view-servlet:
         enabled: true
         url-pattern: "/druid/*"
         login-username: admin
-        login-password: xxxxx
+        login-password: 123456
         allow: ""
       web-stat-filter:
         enabled: true
-      filter:
-        stat:
-          enabled: true
-          log-slow-sql: true
-          slow-sql-millis: 1000
-          merge-sql: true
-        wall:
-          config:
-            multi-statement-allow: true
   mail:
     host: smtp.qq.com
     username: 2488288090@qq.com
-    password: xxxxx
+    password: sodnylrdltkpdjjf
     properties:
       mail:
         smtp:
@@ -45,11 +36,12 @@ spring:
   mvc:
     path match:
       matching-strategy: ant_path_matcher
-  redis:
-    lettuce:
-      pool:
-        enabled: true
-    host: localhost
+  data:
+    redis:
+      host: localhost
+      lettuce:
+        pool:
+          enabled: true
 mybatis-plus:
   global-config:
     banner: false
@@ -71,13 +63,13 @@ zdx:
   oss:
     oss-type: minio
     url: https://static.zhaodengxuan.top
-    access-key: xxxxx
-    secret-key: xxxxx
+    access-key: zhaodengxuan
+    secret-key: zhaodengxuan
     username: admin
-    password: xxxxx
+    password: 123456789
   es:
     open: true
-    url: http://81.69.247.228:9200
+    url: https://es.zhaodengxuan.top
     username: elastic
-    password: xxxxx
+    password: zdx@123456
     index: dev_articles
