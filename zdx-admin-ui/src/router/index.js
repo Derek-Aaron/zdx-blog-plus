@@ -43,7 +43,7 @@ const router = createRouter({
             title: '首页',
             permission: false
           },
-          component: () => import('@/views/index.vue')
+          component: () => import('@/views/Index.vue')
         },
         {
           path:'/profile',
