@@ -72,7 +72,7 @@ service.interceptors.response.use(response => {
   }
   const errorCode = response?.data?.code;
   if (errorCode === 401) {
-    ElMessageBox.confirm('登录状态已过期，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
+    ElMessageBox.confirm( response.data.message + '，您可以继续留在该页面，或者重新登录', '系统提示', { confirmButtonText: '重新登录', cancelButtonText: '取消', type: 'warning' }).then(() => {
       useUserStore().doLogout().then(() => {
         location.href = "/"
       })
