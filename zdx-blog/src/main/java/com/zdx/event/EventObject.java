@@ -73,7 +73,9 @@ public class EventObject extends ApplicationEvent {
 		public static final String REFRESH_LOGIN_TOKEN_CACHE = "refresh_login_token_cache";
 		public static final String LOG_SAVE = "log_save";
 		public static final String USER_SESSION = "user_session";
-		public static final String REQUEST = "request";
+		public static final String IP = "ip";
+		public static final String USERAGENT = "user-agent";
+		public static final String REQUEST_URI = "request_uri";
 		public static final String THROWABLE = "throwable";
 		public static final String STOP_WATCH = "stop_Watch";
 

@@ -4,9 +4,13 @@ package com.zdx.security;
 import com.zdx.config.properties.CommonProperties;
 import com.zdx.security.service.ZdxSecurityExpressionRoot;
 import org.aopalliance.intercept.MethodInvocation;
+import org.springframework.aop.framework.AopProxyUtils;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.expression.MethodBasedEvaluationContext;
+import org.springframework.expression.EvaluationContext;
 import org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler;
 import org.springframework.security.access.expression.method.MethodSecurityExpressionOperations;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -25,6 +29,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.web.filter.CorsFilter;
+
+import java.lang.reflect.Method;
+import java.util.Objects;
+import java.util.function.Supplier;
 
 @Configuration
 @EnableWebSecurity
@@ -111,6 +119,19 @@ public class SecurityWebConfig {
     @Bean
     public DefaultMethodSecurityExpressionHandler defaultMethodSecurityExpressionHandler() {
         return new DefaultMethodSecurityExpressionHandler(){
+
+            @Override
+            public EvaluationContext createEvaluationContext(Supplier<Authentication> authentication, MethodInvocation mi) {
+                MethodSecurityExpressionOperations root = this.createSecurityExpressionRoot(authentication.get(), mi);
+                MethodBasedEvaluationContext ctx = new MethodBasedEvaluationContext(root,getSpecificMethod(mi), mi.getArguments(), this.getParameterNameDiscoverer());
+                ctx.setBeanResolver(this.getBeanResolver());
+                return ctx;
+            }
+
+            private Method getSpecificMethod(MethodInvocation mi) {
+                return AopUtils.getMostSpecificMethod(mi.getMethod(), AopProxyUtils.ultimateTargetClass(Objects.requireNonNull(mi.getThis())));
+            }
+
             @Override
             protected MethodSecurityExpressionOperations createSecurityExpressionRoot(Authentication authentication, MethodInvocation invocation) {
                 ZdxSecurityExpressionRoot root = new ZdxSecurityExpressionRoot(authentication);

@@ -8,8 +8,6 @@ import com.zdx.event.EventObject;
 import com.zdx.security.vo.UserSession;
 import com.zdx.service.us.LogService;
 import com.zdx.utils.IpAddressUtil;
-import com.zdx.utils.UserAgentUtils;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -34,7 +32,9 @@ public class LogSaveEvent implements EventHandle {
     public void invokeEvent(EventObject event) {
         JoinPoint point = event.getSource(JoinPoint.class);
         UserSession userSession = event.getAttribute(EventObject.Attribute.USER_SESSION, UserSession.class);
-        HttpServletRequest request = event.getAttribute(EventObject.Attribute.REQUEST, HttpServletRequest.class);
+        String ip = event.getAttribute(EventObject.Attribute.IP, String.class);
+        Map<String, String> map = event.getAttribute(EventObject.Attribute.USERAGENT, Map.class);
+        String requestURI = event.getAttribute(EventObject.Attribute.REQUEST_URI, String.class);
         StopWatch stopWatch = event.getAttribute(EventObject.Attribute.STOP_WATCH, StopWatch.class);
         Throwable throwable = event.getAttribute(EventObject.Attribute.THROWABLE, Throwable.class);
         if (point.getSignature() instanceof MethodSignature methodSignature) {
@@ -44,7 +44,7 @@ public class LogSaveEvent implements EventHandle {
                 if (ObjUtil.isNotNull(throwable)) {
                     logDb.setContent(throwable.getMessage());
                     logDb.setStatus(Boolean.FALSE);
-                    log.error("用户访问：【{}】, 访问：【{}】-> 异常信息：【{}】", userSession.getUsername(), request.getRequestURI(), throwable.getMessage(), throwable);
+                    log.error("用户访问：【{}】, 访问：【{}】-> 异常信息：【{}】", userSession.getUsername(), requestURI, throwable.getMessage(), throwable);
                 } else {
                     long time = stopWatch.getTotalTimeMillis();
                     logDb.setContent(annotation.desc() + "运行时长：" + time + "毫秒");
@@ -53,11 +53,9 @@ public class LogSaveEvent implements EventHandle {
                 logDb.setEvent(annotation.type().name());
                 logDb.setUsername(userSession.getUsername());
                 logDb.setUserId(userSession.getUserId());
-                logDb.setUrl(request.getRequestURI());
-                String ip = IpAddressUtil.getIp(request);
+                logDb.setUrl(requestURI);
                 logDb.setIp(ip);
                 logDb.setSource(IpAddressUtil.getCityInfo(ip));
-                Map<String, String> map = UserAgentUtils.parseOsAndBrowser(request);
                 logDb.setOs(map.get("os"));
                 logDb.setBrowser(map.get("browser"));
                 if (annotation.save()) {
