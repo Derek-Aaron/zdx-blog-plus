@@ -26,7 +26,7 @@ public class GlobalHandlerException {
     @ExceptionHandler(AuthenticationException.class)
     public Result<String> handleAuthenticationException(AuthenticationException e, HttpServletRequest request) {
         log.error("请求地址【{}】,权限校验失败【{}】", request.getRequestURI(), e.getMessage(), e);
-        return Result.error(HttpStatus.FORBIDDEN.value(), e.getMessage());
+        return Result.error(HttpStatus.UNAUTHORIZED.value(), e.getMessage());
     }
 
     /**
