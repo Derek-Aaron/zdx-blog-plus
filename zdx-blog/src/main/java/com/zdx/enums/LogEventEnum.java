@@ -8,5 +8,6 @@ public enum LogEventEnum {
     IMPORT,
     DELETE,
     PASSWORD,
-    OTHER
+    OTHER,
+    BROWSE
 }

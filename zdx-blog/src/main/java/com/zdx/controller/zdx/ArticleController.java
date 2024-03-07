@@ -75,6 +75,7 @@ public class ArticleController {
     }
     @GetMapping("/zdx.article/getById/{id}")
     @Operation(summary = "后台通过文章id查询文章")
+    @Log(type = LogEventEnum.BROWSE, desc = "博客浏览")
     public Result<ArticleSaveVo> adminGetById(@PathVariable @NotBlank String id) {
         return Result.success(articleService.adminGetById(id));
     }
